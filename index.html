@@ -1,0 +1,3856 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIVACCO·70 — Quaderno di Campo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<!-- LUCIDE ICONS (libreria di icone SVG, line style, perfette per il vibe outdoor) -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<!-- LEAFLET (mappe interattive con tile OpenTopoMap / OpenStreetMap, no API key) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+<style>
+  :root {
+    /* PALETTE NATURA — sabbia + foresta + terracotta */
+    --sand:        #ebe2cd;   /* main paper */
+    --sand-light:  #f3ebd6;   /* hover, light surface */
+    --sand-mid:    #dccfb1;   /* dividers, soft borders */
+    --sand-dark:   #c8b890;   /* stronger borders */
+
+    --forest:      #1f2d1c;   /* primary ink */
+    --forest-soft: #3a4d36;   /* secondary text */
+    --forest-faint:#6a7853;   /* tertiary, labels */
+    --forest-ghost:rgba(31, 45, 28, 0.28);
+
+    --moss:        #607d4d;   /* accent green (camp / vegetation) */
+    --olive:       #87904e;   /* warm green (trail / activity) */
+    --clay:        #b85a1f;   /* terracotta accent (food / town) */
+    --clay-soft:   #d68256;   /* lighter terracotta */
+    --water:       #4f7378;   /* blue-grey for water/viewpoint */
+    --stone:       #7a7466;   /* muted neutral (shop) */
+    --bone:        #faf3e0;   /* cream for inverted text */
+    --rust:        #8b3a1a;   /* deeper terracotta, danger */
+
+    /* shadows */
+    --shadow-soft: 0 1px 0 rgba(31, 45, 28, 0.06), 0 4px 14px rgba(31, 45, 28, 0.07);
+    --shadow-card: 0 1px 0 rgba(31, 45, 28, 0.08), 0 2px 0 rgba(31, 45, 28, 0.03), 0 12px 30px rgba(31, 45, 28, 0.09);
+
+    --serif: 'Fraunces', 'Georgia', serif;
+    --mono: 'JetBrains Mono', 'Menlo', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--sand);
+    color: var(--forest);
+    font-family: var(--serif);
+    font-feature-settings: "ss01", "ss02";
+    font-optical-sizing: auto;
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+
+  /* PAPER GRAIN OVERLAY — texture carta */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.45;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.18 0 0 0 0 0.11 0 0 0 0.16 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* SUBTLE VIGNETTE */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    background: radial-gradient(ellipse at center, transparent 55%, rgba(31, 45, 28, 0.10) 100%);
+  }
+
+  ::selection { background: var(--moss); color: var(--bone); }
+
+  /* LUCIDE ICONS — sizing & color reset */
+  [data-lucide], svg.lucide {
+    stroke-width: 1.6;
+    stroke: currentColor;
+    fill: none;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+  .icon-xs { width: 12px; height: 12px; }
+  .icon-sm { width: 14px; height: 14px; }
+  .icon-md { width: 18px; height: 18px; }
+  .icon-lg { width: 24px; height: 24px; }
+  .icon-xl { width: 36px; height: 36px; stroke-width: 1.3; }
+  .icon-xxl { width: 64px; height: 64px; stroke-width: 1.1; }
+
+  /* ============ TOP NAV ============ */
+  .frame {
+    border-bottom: 1px solid var(--forest);
+    background: var(--sand);
+    position: sticky; top: 0;
+    z-index: 50;
+  }
+
+  .frame-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 16px 32px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .brand-icon {
+    color: var(--moss);
+    width: 26px; height: 26px;
+    stroke-width: 1.5;
+  }
+  .brand-text { display: flex; flex-direction: column; gap: 1px; }
+  .brand-mark {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: -0.015em;
+    font-variation-settings: "SOFT" 80, "opsz" 144;
+    color: var(--forest);
+    line-height: 1;
+  }
+  .brand-mark .dot { color: var(--clay); margin: 0 1px; }
+  .brand-sub {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--forest-faint);
+  }
+
+  .nav {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+  }
+  .nav-link {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--forest-soft);
+    padding: 8px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    background: none;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-link:hover { color: var(--forest); background: var(--sand-light); }
+  .nav-link.active {
+    color: var(--bone);
+    background: var(--forest);
+    border-color: var(--forest);
+  }
+  .nav-link .num { opacity: 0.7; }
+
+  .frame-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--forest-faint);
+    letter-spacing: 0.06em;
+  }
+  .frame-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ============ MAIN ============ */
+  main {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+    position: relative;
+  }
+
+  /* CONTOUR DECORATION (subtle topo lines as a wallpaper, NOT a drawn image) */
+  .contour-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.18;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'><g fill='none' stroke='%231f2d1c' stroke-width='0.8'><path d='M-50,420 Q150,380 320,400 T700,360'/><path d='M-50,440 Q140,410 310,420 T700,388'/><path d='M-50,460 Q130,440 300,450 T700,422'/><path d='M-50,480 Q120,468 290,478 T700,455'/><path d='M-50,500 Q110,490 280,500 T700,484'/><path d='M-50,520 Q100,512 270,522 T700,510'/><path d='M-50,540 Q90,535 260,545 T700,536'/><path d='M-50,200 Q170,180 330,190 T700,170'/><path d='M-50,220 Q160,205 320,215 T700,192'/><path d='M-50,240 Q150,230 310,238 T700,218'/></g></svg>");
+    background-size: 800px;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1.45fr 1fr;
+    gap: 48px;
+    align-items: end;
+    padding-bottom: 36px;
+    border-bottom: 1px solid var(--forest);
+    margin-bottom: 36px;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--clay);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--clay);
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    font-variation-settings: "SOFT" 80, "opsz" 144;
+    color: var(--forest);
+    margin-bottom: 22px;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--clay);
+    font-variation-settings: "SOFT" 100, "opsz" 144;
+  }
+
+  .hero-desc {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--forest-soft);
+    max-width: 540px;
+    font-variation-settings: "opsz" 14;
+  }
+  .hero-desc em { color: var(--clay); font-style: italic; }
+
+  .hero-side { display: flex; flex-direction: column; gap: 20px; }
+
+  .hero-image-wrap {
+    aspect-ratio: 4 / 3;
+    position: relative;
+    overflow: hidden;
+    background: var(--sand-mid);
+    border: 1px solid var(--forest-ghost);
+  }
+  .hero-image-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .hero-image-placeholder {
+    position: absolute; inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--forest-faint);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><g fill='none' stroke='%231f2d1c' stroke-width='0.6' opacity='0.22'><path d='M0,220 Q80,200 160,210 T400,190'/><path d='M0,235 Q80,218 160,228 T400,210'/><path d='M0,250 Q80,238 160,246 T400,232'/><path d='M0,265 Q80,256 160,264 T400,252'/><path d='M0,280 Q80,274 160,282 T400,272'/><path d='M0,150 Q90,128 180,140 T400,120'/><path d='M0,165 Q90,148 180,158 T400,142'/></g></svg>");
+    background-size: cover;
+  }
+  .hero-image-placeholder .ph-label {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--forest-faint);
+  }
+
+  .hero-image-btn {
+    position: absolute;
+    bottom: 10px; right: 10px;
+    background: rgba(31, 45, 28, 0.85);
+    color: var(--bone);
+    border: none;
+    padding: 6px 10px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+  }
+  .hero-image-btn:hover { background: var(--forest); }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--forest-ghost);
+    border: 1px solid var(--forest-ghost);
+  }
+  .stat {
+    background: var(--sand);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--forest-faint);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .stat-value {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--forest);
+    font-variation-settings: "opsz" 60;
+  }
+  .stat-value .unit {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 11px;
+    color: var(--forest-faint);
+    margin-left: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* SECTION HEADERS */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--forest);
+    position: relative;
+  }
+  .section-head::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    bottom: -6px;
+    height: 1px;
+    background: var(--forest);
+  }
+  .section-title { display: flex; align-items: baseline; gap: 14px; }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--clay);
+    letter-spacing: 0.1em;
+  }
+  .section-name {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    color: var(--forest);
+    font-variation-settings: "SOFT" 60, "opsz" 60;
+  }
+  .section-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--forest-faint);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .section-meta.link { cursor: pointer; }
+  .section-meta.link:hover { color: var(--clay); }
+
+  /* ============ CARD GRID ============ */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--forest-ghost);
+    border-left: 1px solid var(--forest-ghost);
+  }
+
+  .card {
+    background: var(--sand);
+    border-right: 1px solid var(--forest-ghost);
+    border-bottom: 1px solid var(--forest-ghost);
+    cursor: pointer;
+    position: relative;
+    transition: background 0.18s;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover { background: var(--sand-light); }
+
+  .card-cover {
+    aspect-ratio: 16 / 9;
+    background: var(--sand-mid);
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--forest-ghost);
+  }
+  .card-cover img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .card-cover-placeholder {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--forest-faint);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='180' viewBox='0 0 320 180'><g fill='none' stroke='%231f2d1c' stroke-width='0.5' opacity='0.2'><path d='M0,130 Q60,118 130,125 T320,115'/><path d='M0,140 Q60,130 130,136 T320,128'/><path d='M0,150 Q60,143 130,148 T320,142'/><path d='M0,160 Q60,154 130,160 T320,155'/><path d='M0,100 Q70,86 140,95 T320,80'/><path d='M0,110 Q70,98 140,106 T320,93'/></g></svg>");
+    background-size: cover;
+  }
+  .card-cover-placeholder.tone-moss   { background-color: rgba(96, 125, 77, 0.12); color: var(--moss); }
+  .card-cover-placeholder.tone-water  { background-color: rgba(79, 115, 120, 0.12); color: var(--water); }
+  .card-cover-placeholder.tone-clay   { background-color: rgba(184, 90, 31, 0.10); color: var(--clay); }
+  .card-cover-placeholder.tone-olive  { background-color: rgba(135, 144, 78, 0.12); color: var(--olive); }
+  .card-cover-placeholder.tone-stone  { background-color: rgba(122, 116, 102, 0.12); color: var(--stone); }
+
+  .card-body { padding: 22px 22px 18px; display: flex; flex-direction: column; flex: 1; }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  .card-code { color: var(--forest-faint); text-transform: uppercase; }
+
+  .card-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--forest);
+  }
+  .card-status::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--forest-faint);
+  }
+  .card-status.status-draft::before { background: var(--forest-faint); }
+  .card-status.status-filed::before { background: var(--olive); }
+  .card-status.status-completed::before { background: var(--moss); }
+  .card-status.status-active::before { background: var(--clay); }
+
+  .card-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 1.04;
+    letter-spacing: -0.022em;
+    color: var(--forest);
+    margin-bottom: 6px;
+    font-variation-settings: "SOFT" 80, "opsz" 90;
+    text-transform: uppercase;
+  }
+  .card-region {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--clay);
+    margin-bottom: 14px;
+    font-variation-settings: "SOFT" 100;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-desc {
+    font-family: var(--serif);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--forest-soft);
+    flex: 1;
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--forest-faint);
+    letter-spacing: 0.06em;
+    border-top: 1px dashed var(--forest-ghost);
+    padding-top: 12px;
+  }
+  .card-meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .card-meta-label {
+    font-size: 8.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--forest-ghost);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .card-meta-value {
+    color: var(--forest-soft);
+    font-weight: 500;
+    font-size: 11px;
+  }
+
+  /* ADD CARD */
+  .card-add {
+    background: transparent;
+    border: 1.5px dashed var(--forest-ghost);
+    margin: -1px;
+    color: var(--forest-faint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+    padding: 60px 20px;
+    min-height: 320px;
+    transition: all 0.2s;
+  }
+  .card-add:hover {
+    background: var(--sand-light);
+    border-color: var(--clay);
+    color: var(--clay);
+  }
+  .card-add-text {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* EMPTY STATE */
+  .empty {
+    border: 1.5px dashed var(--forest-ghost);
+    padding: 60px 32px;
+    text-align: center;
+    color: var(--forest-faint);
+    background: var(--sand-light);
+  }
+  .empty-icon { color: var(--forest-ghost); margin-bottom: 14px; }
+  .empty-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--forest-soft);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .empty-text {
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--forest-faint);
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  /* BUTTONS */
+  .btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border: 1px solid var(--forest);
+    background: var(--sand);
+    color: var(--forest);
+    cursor: pointer;
+    transition: all 0.12s;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 2px;
+  }
+  .btn:hover { background: var(--forest); color: var(--bone); }
+  .btn-primary {
+    background: var(--moss);
+    border-color: var(--moss);
+    color: var(--bone);
+  }
+  .btn-primary:hover { background: var(--forest); border-color: var(--forest); }
+  .btn-accent {
+    background: var(--clay);
+    border-color: var(--clay);
+    color: var(--bone);
+  }
+  .btn-accent:hover { background: var(--rust); border-color: var(--rust); }
+  .btn-ghost {
+    border-color: var(--forest-ghost);
+    color: var(--forest-soft);
+    background: transparent;
+  }
+  .btn-ghost:hover { background: var(--sand-light); border-color: var(--forest); color: var(--forest); }
+  .btn-danger {
+    border-color: var(--rust);
+    color: var(--rust);
+    background: transparent;
+  }
+  .btn-danger:hover { background: var(--rust); color: var(--bone); }
+
+  /* ============ DETAIL VIEW ============ */
+  .detail-back {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--forest-soft);
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.15s;
+  }
+  .detail-back:hover { color: var(--clay); }
+
+  .detail-hero {
+    aspect-ratio: 21 / 9;
+    max-height: 380px;
+    background: var(--sand-mid);
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--forest-ghost);
+  }
+  .detail-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .detail-hero-placeholder {
+    position: absolute; inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--forest-faint);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='320' viewBox='0 0 800 320'><g fill='none' stroke='%231f2d1c' stroke-width='0.7' opacity='0.18'><path d='M0,230 Q160,210 320,220 T800,200'/><path d='M0,245 Q150,228 310,238 T800,222'/><path d='M0,260 Q140,246 300,254 T800,242'/><path d='M0,275 Q130,266 290,272 T800,262'/><path d='M0,290 Q120,284 280,290 T800,283'/><path d='M0,180 Q170,158 330,170 T800,150'/><path d='M0,195 Q160,178 320,188 T800,170'/><path d='M0,140 Q180,118 340,130 T800,110'/></g></svg>");
+    background-size: cover;
+  }
+
+  .detail-hero-add-btn {
+    position: absolute;
+    bottom: 14px; right: 14px;
+    background: rgba(31, 45, 28, 0.85);
+    color: var(--bone);
+    border: none;
+    padding: 8px 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .detail-hero-add-btn:hover { background: var(--forest); }
+
+  .detail-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: end;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--forest);
+    position: relative;
+  }
+  .detail-head::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    bottom: -6px;
+    height: 1px;
+    background: var(--forest);
+  }
+
+  .detail-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--forest-faint);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .detail-eyebrow .code { color: var(--clay); font-weight: 700; }
+  .detail-eyebrow .item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .detail-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+    color: var(--forest);
+    text-transform: uppercase;
+    font-variation-settings: "SOFT" 80, "opsz" 144;
+    margin-bottom: 14px;
+  }
+
+  .detail-region {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--clay);
+    font-variation-settings: "SOFT" 100, "opsz" 60;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .detail-actions {
+    display: flex;
+    gap: 8px;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .detail-body {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 48px;
+    margin-top: 28px;
+  }
+  @media (max-width: 900px) {
+    .detail-body { grid-template-columns: 1fr; }
+  }
+
+  .detail-desc {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--forest-soft);
+    font-variation-settings: "opsz" 14;
+  }
+  .detail-desc p { margin-bottom: 1em; }
+  .detail-desc p:last-child { margin-bottom: 0; }
+
+  .detail-side {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--forest-ghost);
+    border: 1px solid var(--forest-ghost);
+    align-self: start;
+  }
+  .detail-side-row {
+    background: var(--sand);
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+  }
+  .detail-side-label {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--forest-faint);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .detail-side-value {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--forest);
+    text-align: right;
+    letter-spacing: -0.005em;
+  }
+
+  .field-notes {
+    margin-top: 28px;
+    padding: 18px 20px;
+    border-left: 3px solid var(--olive);
+    background: var(--sand-light);
+  }
+  .field-notes-label {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--forest-faint);
+    margin-bottom: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .field-notes-body {
+    font-style: italic;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--forest-soft);
+  }
+
+  /* STAGES (TAPPE) */
+  .stages-section { margin-top: 56px; }
+
+  .stages { display: flex; flex-direction: column; }
+  .stage {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 24px;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--forest-ghost);
+    align-items: start;
+  }
+  .stage:first-child { border-top: 1px solid var(--forest-ghost); }
+
+  .stage-num {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 56px;
+    line-height: 0.85;
+    color: var(--forest-ghost);
+    letter-spacing: -0.04em;
+    font-variation-settings: "SOFT" 100, "opsz" 144;
+  }
+  .stage-num .day {
+    display: block;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--forest-faint);
+    margin-top: 6px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  .stage-content { display: flex; flex-direction: column; gap: 6px; }
+  .stage-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .stage-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 22px;
+    color: var(--forest);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    font-variation-settings: "SOFT" 60, "opsz" 60;
+  }
+  .stage-coords {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    color: var(--forest-faint);
+    margin-bottom: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stage-notes {
+    font-family: var(--serif);
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--forest-soft);
+    margin-top: 4px;
+  }
+  .stage-type {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    background: var(--sand-light);
+    color: var(--forest-soft);
+    border: 1px solid var(--forest-ghost);
+    align-self: start;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .stage-type.type-camp     { color: var(--moss);  border-color: var(--moss);  background: rgba(96, 125, 77, 0.08); }
+  .stage-type.type-viewpoint{ color: var(--water); border-color: var(--water); background: rgba(79, 115, 120, 0.08); }
+  .stage-type.type-town     { color: var(--clay);  border-color: var(--clay);  background: rgba(184, 90, 31, 0.07); }
+  .stage-type.type-trail    { color: var(--olive); border-color: var(--olive); background: rgba(135, 144, 78, 0.10); }
+  .stage-type.type-swim     { color: var(--water); border-color: var(--water); background: rgba(79, 115, 120, 0.08); }
+  .stage-type.type-food     { color: var(--clay);  border-color: var(--clay);  background: rgba(184, 90, 31, 0.07); }
+  .stage-type.type-activity { color: var(--olive); border-color: var(--olive); background: rgba(135, 144, 78, 0.10); }
+  .stage-type.type-shop     { color: var(--stone); border-color: var(--stone); background: rgba(122, 116, 102, 0.08); }
+
+  /* BEST POINTS */
+  .bestpoints-section { margin-top: 56px; }
+  .bestpoints {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--forest-ghost);
+    border-left: 1px solid var(--forest-ghost);
+  }
+  .bp {
+    background: var(--sand);
+    border-right: 1px solid var(--forest-ghost);
+    border-bottom: 1px solid var(--forest-ghost);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .bp-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .bp-type {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--forest-faint);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .bp[data-type="camp"]      .bp-type { color: var(--moss); }
+  .bp[data-type="viewpoint"] .bp-type { color: var(--water); }
+  .bp[data-type="food"]      .bp-type { color: var(--clay); }
+  .bp[data-type="activity"]  .bp-type { color: var(--olive); }
+  .bp[data-type="shop"]      .bp-type { color: var(--stone); }
+  .bp[data-type="trail"]     .bp-type { color: var(--olive); }
+  .bp[data-type="swim"]      .bp-type { color: var(--water); }
+  .bp[data-type="town"]      .bp-type { color: var(--clay); }
+  .bp-distance {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: var(--forest-faint);
+    letter-spacing: 0.06em;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .bp-name {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 19px;
+    color: var(--forest);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    font-variation-settings: "SOFT" 80;
+  }
+  .bp-notes {
+    font-family: var(--serif);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--forest-soft);
+  }
+
+  /* ============ MODAL ============ */
+  .modal-back {
+    position: fixed;
+    inset: 0;
+    background: rgba(31, 45, 28, 0.55);
+    z-index: 100;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+    backdrop-filter: blur(2px);
+  }
+  .modal-back.open { display: flex; }
+
+  .modal {
+    background: var(--sand);
+    border: 1.5px solid var(--forest);
+    width: 100%;
+    max-width: 720px;
+    box-shadow: 8px 8px 0 rgba(31, 45, 28, 0.18);
+  }
+  .modal-head {
+    padding: 18px 24px 16px;
+    border-bottom: 1px solid var(--forest);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    color: var(--forest);
+    text-transform: uppercase;
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+  }
+  .modal-title .num {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--clay);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+  .modal-close {
+    background: none;
+    border: 1px solid var(--forest);
+    width: 28px; height: 28px;
+    cursor: pointer;
+    color: var(--forest);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .modal-close:hover { background: var(--forest); color: var(--bone); }
+
+  .modal-body { padding: 22px 24px; max-height: 70vh; overflow-y: auto; }
+  .modal-foot {
+    padding: 14px 24px;
+    border-top: 1px solid var(--forest);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    background: var(--sand-light);
+  }
+
+  /* FORMS */
+  .field { margin-bottom: 18px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .field-row-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .field label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--forest-faint);
+    margin-bottom: 6px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .field input, .field textarea, .field select {
+    width: 100%;
+    background: var(--bone);
+    border: 1px solid var(--forest-ghost);
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--forest);
+    padding: 10px 12px;
+    border-radius: 0;
+    transition: border-color 0.15s, background 0.15s;
+    font-variation-settings: "opsz" 14;
+  }
+  .field textarea { font-size: 15px; line-height: 1.55; min-height: 90px; resize: vertical; font-family: var(--serif); }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    outline: none;
+    border-color: var(--moss);
+    background: var(--sand-light);
+  }
+  .field input::placeholder, .field textarea::placeholder {
+    color: var(--forest-ghost);
+    font-style: italic;
+  }
+  .field select {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%231f2d1c' stroke-width='1.2' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    appearance: none;
+    padding-right: 32px;
+  }
+  .field-hint {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--forest-faint);
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+
+  /* IMAGE URL FIELD with preview */
+  .image-url-field {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+  }
+  .image-url-field input { flex: 1; }
+  .image-preview {
+    width: 60px; height: 44px;
+    border: 1px solid var(--forest-ghost);
+    background: var(--sand-mid);
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+  }
+  .image-preview.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--forest-ghost);
+  }
+
+  /* SUB-LIST EDITOR (tappe, bestpoints) */
+  .sublist {
+    background: var(--sand-light);
+    border: 1px solid var(--forest-ghost);
+    padding: 12px;
+    margin-top: 8px;
+  }
+  .sublist-empty {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--forest-faint);
+    text-align: center;
+    padding: 18px 8px;
+  }
+  .sub-item {
+    background: var(--sand);
+    border: 1px solid var(--forest-ghost);
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .sub-item:last-child { margin-bottom: 0; }
+  .sub-item-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .sub-item-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--clay);
+    letter-spacing: 0.14em;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .sub-item-remove {
+    background: none;
+    border: 1px solid var(--forest-ghost);
+    color: var(--forest-faint);
+    width: 24px; height: 24px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .sub-item-remove:hover { background: var(--rust); border-color: var(--rust); color: var(--bone); }
+
+  .sub-add {
+    width: 100%;
+    background: transparent;
+    border: 1.5px dashed var(--forest-ghost);
+    padding: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--forest-faint);
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .sub-add:hover {
+    background: var(--sand);
+    border-color: var(--moss);
+    color: var(--moss);
+  }
+
+  /* TYPE PICKER */
+  .type-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .type-opt {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    background: transparent;
+    border: 1px solid var(--forest-ghost);
+    color: var(--forest-soft);
+    cursor: pointer;
+    transition: all 0.12s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .type-opt:hover { background: var(--sand-light); }
+  .type-opt.active { background: var(--forest); color: var(--bone); border-color: var(--forest); }
+
+  /* DASHBOARD SPLIT */
+  .dash-split {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+  }
+  @media (max-width: 900px) {
+    .dash-split { grid-template-columns: 1fr; gap: 48px; }
+    .hero { grid-template-columns: 1fr; }
+    .frame-inner { grid-template-columns: 1fr; gap: 12px; padding: 14px 20px; }
+    .nav { justify-content: flex-start; flex-wrap: wrap; }
+    .frame-meta { display: none; }
+    main { padding: 28px 20px 80px; }
+    .field-row, .field-row-3 { grid-template-columns: 1fr; }
+    .stage { grid-template-columns: 70px 1fr; }
+    .stage-type { grid-column: 2; margin-top: 6px; }
+    .detail-head { grid-template-columns: 1fr; }
+    .detail-actions { flex-direction: row; align-items: flex-start; }
+  }
+
+  .dash-section { display: flex; flex-direction: column; }
+  .dash-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--forest-ghost);
+  }
+  .dash-row {
+    padding: 16px 0 14px;
+    border-bottom: 1px solid var(--forest-ghost);
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px;
+    align-items: center;
+    transition: padding-left 0.15s, background 0.15s;
+  }
+  .dash-row:hover { padding-left: 8px; }
+  .dash-row:hover .dash-row-arrow { color: var(--clay); transform: translateX(3px); }
+  .dash-row-code {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--forest-faint);
+    letter-spacing: 0.1em;
+    width: 60px;
+  }
+  .dash-row-mid { display: flex; flex-direction: column; gap: 2px; }
+  .dash-row-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--forest);
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    font-variation-settings: "SOFT" 60;
+  }
+  .dash-row-region {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--clay);
+    font-variation-settings: "SOFT" 100;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dash-row-arrow {
+    color: var(--forest-ghost);
+    transition: color 0.15s, transform 0.15s;
+  }
+
+  /* FOOTER */
+  footer {
+    margin-top: 80px;
+    padding: 28px 0 20px;
+    border-top: 1px solid var(--forest);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--forest-faint);
+  }
+  footer .center {
+    font-family: var(--serif);
+    font-size: 13px;
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--forest-soft);
+    text-align: center;
+  }
+  footer .right { text-align: right; }
+  footer .left { display: inline-flex; align-items: center; gap: 8px; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--forest);
+    color: var(--bone);
+    padding: 12px 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    z-index: 200;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    border-left: 3px solid var(--clay);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* DECORATIVE STAMP */
+  .stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--moss);
+    border: 2px solid var(--moss);
+    padding: 4px 10px;
+    transform: rotate(-3deg);
+    font-weight: 700;
+    opacity: 0.88;
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track { background: var(--sand); }
+  ::-webkit-scrollbar-thumb { background: var(--forest-faint); border: 3px solid var(--sand); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--forest-soft); }
+
+  /* ============================================
+     LEAFLET MAP — stile naturalistico/topografico
+     ============================================ */
+  .map-section { margin-top: 56px; }
+  .map-wrap {
+    position: relative;
+    height: 460px;
+    border: 1px solid var(--forest);
+    background: var(--sand-mid);
+    overflow: hidden;
+  }
+  .map-wrap .leaflet-container {
+    background: #e6dfc7;
+    font-family: var(--mono);
+  }
+  .map-wrap .leaflet-control-attribution {
+    background: rgba(235, 226, 205, 0.85);
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: var(--forest-soft);
+    padding: 3px 8px;
+  }
+  .map-wrap .leaflet-control-attribution a { color: var(--clay); }
+  .map-wrap .leaflet-control-zoom a {
+    background: var(--sand);
+    color: var(--forest);
+    border: 1px solid var(--forest-ghost);
+    font-family: var(--serif);
+    font-weight: 500;
+    width: 32px; height: 32px;
+    line-height: 30px;
+  }
+  .map-wrap .leaflet-control-zoom a:hover { background: var(--forest); color: var(--bone); }
+
+  .map-tile-switch {
+    position: absolute;
+    top: 12px; right: 12px;
+    z-index: 500;
+    display: flex;
+    background: var(--sand);
+    border: 1px solid var(--forest);
+  }
+  .map-tile-btn {
+    background: transparent;
+    border: none;
+    padding: 7px 12px;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--forest-soft);
+    cursor: pointer;
+    border-right: 1px solid var(--forest-ghost);
+  }
+  .map-tile-btn:last-child { border-right: none; }
+  .map-tile-btn.active { background: var(--forest); color: var(--bone); }
+  .map-tile-btn:hover:not(.active) { background: var(--sand-light); color: var(--forest); }
+
+  .map-empty {
+    height: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--forest-faint);
+    background: var(--sand-light);
+    border: 1.5px dashed var(--forest-ghost);
+    text-align: center;
+    padding: 24px;
+  }
+  .map-empty-text {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15px;
+    max-width: 380px;
+    line-height: 1.5;
+  }
+  .map-empty-hint {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--forest-faint);
+    margin-top: 4px;
+  }
+
+  /* CUSTOM MARKERS */
+  .map-marker {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--forest);
+    color: var(--bone);
+    border: 2px solid var(--bone);
+    box-shadow: 0 2px 8px rgba(31, 45, 28, 0.4);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: -0.02em;
+    transform-origin: center;
+  }
+  .map-marker.tone-camp     { background: var(--moss); }
+  .map-marker.tone-viewpoint{ background: var(--water); }
+  .map-marker.tone-town     { background: var(--clay); }
+  .map-marker.tone-trail    { background: var(--olive); }
+  .map-marker.tone-swim     { background: var(--water); }
+  .map-marker.tone-food     { background: var(--clay); }
+  .map-marker.tone-activity { background: var(--olive); }
+  .map-marker.tone-shop     { background: var(--stone); }
+  .map-marker.is-point      { width: 44px; height: 44px; font-size: 16px; background: var(--clay); }
+
+  .leaflet-popup-content-wrapper {
+    background: var(--sand);
+    color: var(--forest);
+    border: 1px solid var(--forest);
+    border-radius: 0;
+    box-shadow: 4px 4px 0 rgba(31, 45, 28, 0.18);
+  }
+  .leaflet-popup-tip { background: var(--forest); }
+  .leaflet-popup-content {
+    margin: 14px 18px;
+    font-family: var(--serif);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--forest);
+  }
+  .leaflet-popup-content .pop-day {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--clay);
+    margin-bottom: 4px;
+  }
+  .leaflet-popup-content .pop-name {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--forest);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .leaflet-popup-content .pop-notes {
+    font-style: italic;
+    color: var(--forest-soft);
+    font-size: 13px;
+  }
+  .leaflet-popup-close-button { color: var(--forest) !important; }
+
+  /* ============================================
+     FILTERS / SEARCH BAR
+     ============================================ */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 14px 18px;
+    background: var(--sand-light);
+    border: 1px solid var(--forest-ghost);
+    flex-wrap: wrap;
+  }
+  .toolbar-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 240px;
+  }
+  .toolbar-search-icon { color: var(--forest-faint); }
+  .toolbar-search input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--forest);
+    padding: 6px 0;
+    outline: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s;
+  }
+  .toolbar-search input::placeholder {
+    color: var(--forest-faint);
+    font-style: italic;
+  }
+  .toolbar-search input:focus { border-bottom-color: var(--moss); }
+
+  .toolbar-filters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--forest-faint);
+    margin-right: 4px;
+  }
+  .filter-chip {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    background: transparent;
+    border: 1px solid var(--forest-ghost);
+    color: var(--forest-soft);
+    cursor: pointer;
+    transition: all 0.12s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .filter-chip:hover { background: var(--sand); }
+  .filter-chip.active { background: var(--forest); color: var(--bone); border-color: var(--forest); }
+  .filter-chip .count {
+    font-size: 9px;
+    opacity: 0.7;
+    margin-left: 4px;
+  }
+
+  .toolbar-clear {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--forest-faint);
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+  }
+  .toolbar-clear:hover { color: var(--rust); }
+
+  .results-count {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--forest-faint);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ============================================
+     IMAGE UPLOAD UI (tabs URL/File)
+     ============================================ */
+  .img-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--forest-ghost);
+  }
+  .img-tab {
+    background: transparent;
+    border: none;
+    padding: 10px 16px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--forest-faint);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .img-tab:hover { color: var(--forest); }
+  .img-tab.active {
+    color: var(--forest);
+    border-bottom-color: var(--clay);
+  }
+
+  .img-tab-content { display: none; }
+  .img-tab-content.active { display: block; }
+
+  .file-drop {
+    border: 1.5px dashed var(--forest-ghost);
+    padding: 28px 20px;
+    text-align: center;
+    background: var(--sand-light);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .file-drop:hover, .file-drop.dragging {
+    background: var(--sand);
+    border-color: var(--moss);
+    color: var(--moss);
+  }
+  .file-drop-text {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--forest-soft);
+  }
+  .file-drop-hint {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--forest-faint);
+  }
+  .file-drop input[type=file] {
+    position: absolute;
+    width: 1px; height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .file-preview-large {
+    margin-top: 14px;
+    aspect-ratio: 16 / 9;
+    background: var(--sand-mid);
+    background-size: cover;
+    background-position: center;
+    border: 1px solid var(--forest-ghost);
+    position: relative;
+  }
+  .file-preview-large.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--forest-ghost);
+  }
+  .file-preview-info {
+    position: absolute;
+    bottom: 8px; left: 8px;
+    background: rgba(31, 45, 28, 0.85);
+    color: var(--bone);
+    padding: 4px 8px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ============================================
+     SETTINGS / EXPORT-IMPORT MODAL
+     ============================================ */
+  .settings-section {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--forest-ghost);
+  }
+  .settings-section:last-child { border-bottom: none; }
+  .settings-section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--clay);
+    margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .settings-section-desc {
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--forest-soft);
+    line-height: 1.55;
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+  .settings-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .settings-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--forest-ghost);
+    border: 1px solid var(--forest-ghost);
+    margin-bottom: 14px;
+  }
+  .settings-stat {
+    background: var(--sand);
+    padding: 12px 14px;
+  }
+  .settings-stat-label {
+    font-family: var(--mono);
+    font-size: 8.5px;
+    letter-spacing: 0.18em;
+    color: var(--forest-faint);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .settings-stat-value {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--forest);
+    letter-spacing: -0.02em;
+  }
+
+  /* SETTINGS BUTTON in HEADER */
+  .frame-settings-btn {
+    background: none;
+    border: 1px solid var(--forest-ghost);
+    color: var(--forest-soft);
+    width: 32px; height: 32px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .frame-settings-btn:hover {
+    background: var(--forest);
+    color: var(--bone);
+    border-color: var(--forest);
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="frame">
+  <div class="frame-inner">
+    <div class="brand" onclick="goto('home')">
+      <i data-lucide="mountain-snow" class="brand-icon"></i>
+      <div class="brand-text">
+        <span class="brand-mark">Bivacco<span class="dot">·</span>70</span>
+        <span class="brand-sub">Quaderno di Campo</span>
+      </div>
+    </div>
+    <nav class="nav" id="nav">
+      <button class="nav-link" data-route="home"><i data-lucide="layout-grid" class="icon-xs"></i> Indice</button>
+      <button class="nav-link" data-route="itinerari"><i data-lucide="route" class="icon-xs"></i> Itinerari</button>
+      <button class="nav-link" data-route="punti"><i data-lucide="map-pin" class="icon-xs"></i> Punti</button>
+    </nav>
+    <div class="frame-meta">
+      <span class="frame-meta-item"><i data-lucide="compass" class="icon-xs"></i> <span>ROTTA · APERTA</span></span>
+      <span class="frame-meta-item" id="meta-date"></span>
+      <button class="frame-settings-btn" onclick="openSettingsModal()" title="Quaderno · Impostazioni">
+        <i data-lucide="notebook-tabs" class="icon-sm"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<div class="modal-back" id="modal-back">
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast"><i data-lucide="check" class="icon-sm"></i><span id="toast-msg">Salvato</span></div>
+
+<script>
+/* ===========================================================
+   STATE & STORAGE
+=========================================================== */
+const STORAGE_KEYS = {
+  itineraries: 'bivacco70:itineraries:v2',
+  points: 'bivacco70:points:v2',
+  meta: 'bivacco70:meta:v2'
+};
+
+const state = {
+  itineraries: [],
+  points: [],
+  route: { name: 'home', id: null },
+  loaded: false,
+  meta: { lastEdit: null, heroImage: '' },
+  filter: { itin: { search: '', status: 'all' }, pts: { search: '' } },
+  mapInstances: {}, // tiene traccia delle istanze Leaflet attive (per cleanup)
+  currentTile: 'topo' // 'topo' | 'street'
+};
+
+/* TYPES with Lucide icon names */
+const STAGE_TYPES = [
+  { id: 'camp',      label: 'Bivacco',  icon: 'tent-tree' },
+  { id: 'viewpoint', label: 'Panorama', icon: 'mountain' },
+  { id: 'town',      label: 'Borgo',    icon: 'landmark' },
+  { id: 'trail',     label: 'Sentiero', icon: 'footprints' },
+  { id: 'swim',      label: 'Acqua',    icon: 'waves' },
+  { id: 'food',      label: 'Cibo',     icon: 'utensils' },
+  { id: 'activity',  label: 'Attività', icon: 'compass' },
+  { id: 'shop',      label: 'Sosta',    icon: 'store' }
+];
+
+const BP_TYPES = [
+  { id: 'food',      label: 'Cibo',     icon: 'utensils' },
+  { id: 'viewpoint', label: 'Panorama', icon: 'mountain' },
+  { id: 'camp',      label: 'Bivacco',  icon: 'tent-tree' },
+  { id: 'activity',  label: 'Attività', icon: 'compass' },
+  { id: 'trail',     label: 'Sentiero', icon: 'footprints' },
+  { id: 'swim',      label: 'Acqua',    icon: 'waves' },
+  { id: 'shop',      label: 'Bottega',  icon: 'store' },
+  { id: 'town',      label: 'Borgo',    icon: 'landmark' }
+];
+
+const STATUS_LABELS = {
+  draft: 'In Bozza',
+  filed: 'Archiviato',
+  completed: 'Concluso',
+  active: 'In Corso'
+};
+
+/* PERSISTENCE — works in claude artifacts and as a standalone file */
+async function loadAll() {
+  try {
+    const itinR = await safeGet(STORAGE_KEYS.itineraries);
+    state.itineraries = itinR ? JSON.parse(itinR.value) : [];
+    const ptsR = await safeGet(STORAGE_KEYS.points);
+    state.points = ptsR ? JSON.parse(ptsR.value) : [];
+    const metaR = await safeGet(STORAGE_KEYS.meta);
+    if (metaR) state.meta = { ...state.meta, ...JSON.parse(metaR.value) };
+  } catch (e) {
+    console.error('Load error:', e);
+    state.itineraries = [];
+    state.points = [];
+  }
+  state.loaded = true;
+}
+
+async function safeGet(key) {
+  if (!window.storage) {
+    const raw = localStorage.getItem(key);
+    return raw ? { value: raw } : null;
+  }
+  try { return await window.storage.get(key); } catch { return null; }
+}
+async function safeSet(key, val) {
+  const data = typeof val === 'string' ? val : JSON.stringify(val);
+  if (!window.storage) { localStorage.setItem(key, data); return; }
+  try { await window.storage.set(key, data); } catch (e) { console.error('Save error:', e); }
+}
+
+async function persistItineraries() {
+  state.meta.lastEdit = new Date().toISOString();
+  await safeSet(STORAGE_KEYS.itineraries, state.itineraries);
+  await safeSet(STORAGE_KEYS.meta, state.meta);
+}
+async function persistPoints() {
+  state.meta.lastEdit = new Date().toISOString();
+  await safeSet(STORAGE_KEYS.points, state.points);
+  await safeSet(STORAGE_KEYS.meta, state.meta);
+}
+async function persistMeta() {
+  state.meta.lastEdit = new Date().toISOString();
+  await safeSet(STORAGE_KEYS.meta, state.meta);
+}
+
+/* ===========================================================
+   UTILITIES
+=========================================================== */
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+function nextCode(prefix, list) {
+  const nums = list.map(x => { const m = (x.code || '').match(/(\d+)$/); return m ? parseInt(m[1], 10) : 0; });
+  const next = (nums.length ? Math.max(...nums) : 0) + 1;
+  return `${prefix}-${String(next).padStart(2, '0')}`;
+}
+
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  try {
+    return new Date(iso).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+  } catch { return '—'; }
+}
+
+function nlToBr(s) { return escapeHtml(s).replace(/\n/g, '<br>'); }
+function nlToParas(s) { if (!s) return ''; return s.split(/\n\n+/).map(p => `<p>${nlToBr(p)}</p>`).join(''); }
+
+function showToast(msg) {
+  document.getElementById('toast-msg').textContent = msg;
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove('show'), 2000);
+  refreshIcons();
+}
+
+function totalKm() {
+  return state.itineraries.reduce((acc, it) => {
+    const m = (it.distance || '').match(/[\d.,]+/);
+    return acc + (m ? parseFloat(m[0].replace(',', '.')) || 0 : 0);
+  }, 0);
+}
+
+function iconForType(arr, id) {
+  const t = arr.find(x => x.id === id);
+  return t ? t.icon : 'circle';
+}
+function labelFor(arr, id) { const x = arr.find(t => t.id === id); return x ? x.label : id; }
+
+function toneForType(typeId) {
+  const map = { camp: 'moss', viewpoint: 'water', town: 'clay', trail: 'olive', swim: 'water', food: 'clay', activity: 'olive', shop: 'stone' };
+  return map[typeId] || 'moss';
+}
+
+/* render lucide icons after each render call */
+function refreshIcons() {
+  requestAnimationFrame(() => {
+    if (window.lucide && typeof window.lucide.createIcons === 'function') {
+      window.lucide.createIcons();
+    }
+  });
+}
+
+/* ===========================================================
+   COORDINATE PARSER — gestisce vari formati
+   "46°41'N · 12°05'E"  /  "46°41'24\"N 12°05'00\"E"  /  "46.6824, 12.0833"
+=========================================================== */
+function parseCoords(str) {
+  if (!str || typeof str !== 'string') return null;
+  const s = str.trim();
+
+  // Decimal: "46.6824, 12.0833" (anche con spazio o punto e virgola)
+  const dec = s.match(/^\s*(-?\d+(?:\.\d+)?)\s*[,;\s]+\s*(-?\d+(?:\.\d+)?)\s*$/);
+  if (dec) {
+    const lat = parseFloat(dec[1]), lng = parseFloat(dec[2]);
+    if (Math.abs(lat) <= 90 && Math.abs(lng) <= 180) return [lat, lng];
+  }
+
+  // DMS: "46°41'24"N · 12°05'00"E" / "46°41'N 12°05'E" / con vari simboli
+  // Usa unicode escapes safe per stringhe HTML
+  const re = /(\d+(?:\.\d+)?)\s*[\u00B0]\s*(?:(\d+(?:\.\d+)?)\s*[\u2032'\u0027]?\s*)?(?:(\d+(?:\.\d+)?)\s*[\u2033"\u0022]?\s*)?([NS])\s*[\s\u00B7,;]+\s*(\d+(?:\.\d+)?)\s*[\u00B0]\s*(?:(\d+(?:\.\d+)?)\s*[\u2032'\u0027]?\s*)?(?:(\d+(?:\.\d+)?)\s*[\u2033"\u0022]?\s*)?([EW])/i;
+  const m = s.match(re);
+  if (!m) return null;
+
+  const latDeg = parseFloat(m[1]), latMin = parseFloat(m[2] || 0), latSec = parseFloat(m[3] || 0);
+  const lngDeg = parseFloat(m[5]), lngMin = parseFloat(m[6] || 0), lngSec = parseFloat(m[7] || 0);
+  const lat = (latDeg + latMin/60 + latSec/3600) * (m[4].toUpperCase() === 'S' ? -1 : 1);
+  const lng = (lngDeg + lngMin/60 + lngSec/3600) * (m[8].toUpperCase() === 'W' ? -1 : 1);
+
+  if (isNaN(lat) || isNaN(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180) return null;
+  return [lat, lng];
+}
+
+/* ===========================================================
+   IMAGE UPLOAD — file → compressed data URL
+=========================================================== */
+function compressImage(file, maxDim = 1600, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    if (!file.type.startsWith('image/')) { reject(new Error('Non è un\'immagine')); return; }
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Errore lettura file'));
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Immagine non valida'));
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          const ratio = Math.min(maxDim / width, maxDim / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        // PNG troppo grande: forziamo JPEG salvo per immagini con alpha
+        const isPNG = file.type === 'image/png';
+        const out = canvas.toDataURL(isPNG ? 'image/jpeg' : 'image/jpeg', quality);
+        resolve({
+          dataUrl: out,
+          originalSize: file.size,
+          compressedSize: out.length,
+          width, height
+        });
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function fmtBytes(n) {
+  if (n < 1024) return n + ' B';
+  if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+  return (n / 1024 / 1024).toFixed(2) + ' MB';
+}
+
+/* ===========================================================
+   EXPORT / IMPORT
+=========================================================== */
+function exportData() {
+  const payload = {
+    version: 2,
+    exportedAt: new Date().toISOString(),
+    app: 'BIVACCO·70',
+    itineraries: state.itineraries,
+    points: state.points,
+    meta: state.meta
+  };
+  const json = JSON.stringify(payload, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const today = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `bivacco70-export-${today}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  showToast('Quaderno esportato');
+}
+
+function triggerImport(mode) {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json,application/json';
+  input.onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      if (!data || !Array.isArray(data.itineraries) || !Array.isArray(data.points)) {
+        showToast('File non valido');
+        return;
+      }
+      if (mode === 'replace') {
+        state.itineraries = data.itineraries;
+        state.points = data.points;
+        if (data.meta) state.meta = { ...state.meta, ...data.meta };
+      } else { // merge
+        const existingItinIds = new Set(state.itineraries.map(x => x.id));
+        const existingPtIds = new Set(state.points.map(x => x.id));
+        data.itineraries.forEach(it => { if (!existingItinIds.has(it.id)) state.itineraries.unshift(it); });
+        data.points.forEach(p => { if (!existingPtIds.has(p.id)) state.points.unshift(p); });
+      }
+      await persistItineraries();
+      await persistPoints();
+      closeModal();
+      showToast(`Importato: ${data.itineraries.length} itinerari, ${data.points.length} punti`);
+      render();
+    } catch (err) {
+      console.error(err);
+      showToast('Errore lettura file');
+    }
+  };
+  input.click();
+}
+
+/* ===========================================================
+   MAP RENDERING (Leaflet)
+=========================================================== */
+const TILE_LAYERS = {
+  topo: {
+    url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    options: {
+      maxZoom: 17,
+      attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)'
+    }
+  },
+  street: {
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    options: {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }
+  }
+};
+
+function destroyMap(containerId) {
+  const inst = state.mapInstances[containerId];
+  if (inst) {
+    try { inst.remove(); } catch (e) {}
+    delete state.mapInstances[containerId];
+  }
+}
+
+function renderMap(containerId, markers, opts = {}) {
+  if (typeof L === 'undefined') return; // Leaflet non caricato
+  const el = document.getElementById(containerId);
+  if (!el) return;
+
+  destroyMap(containerId);
+
+  const validMarkers = markers.filter(m => m.coords);
+  if (validMarkers.length === 0) {
+    el.innerHTML = `
+      <div class="map-empty">
+        <i data-lucide="map-off" class="icon-xl"></i>
+        <div class="map-empty-text">${opts.emptyText || 'Nessuna coordinata disponibile per disegnare la mappa.'}</div>
+        <div class="map-empty-hint">Aggiungi coordinate alle tappe per visualizzarle qui</div>
+      </div>
+    `;
+    refreshIcons();
+    return;
+  }
+
+  // costruisci mappa
+  const map = L.map(containerId, {
+    zoomControl: true,
+    attributionControl: true,
+    scrollWheelZoom: false  // più gentile, l'utente clicca per attivare
+  });
+
+  // doubleclick per attivare scroll zoom
+  map.on('click', () => map.scrollWheelZoom.enable());
+  map.on('mouseout', () => map.scrollWheelZoom.disable());
+
+  // layers
+  const tileTopo = L.tileLayer(TILE_LAYERS.topo.url, TILE_LAYERS.topo.options);
+  const tileStreet = L.tileLayer(TILE_LAYERS.street.url, TILE_LAYERS.street.options);
+  const layers = { topo: tileTopo, street: tileStreet };
+  layers[state.currentTile].addTo(map);
+
+  state.mapInstances[containerId] = map;
+  state.mapInstances[containerId]._layers = layers;
+  state.mapInstances[containerId]._activeTile = state.currentTile;
+
+  // markers
+  const latLngs = [];
+  validMarkers.forEach((m, i) => {
+    const tone = m.type ? toneForType(m.type) : 'moss';
+    const isPoint = !!opts.isPoint;
+    const labelChar = isPoint ? (opts.label || '★') : String(i + 1).padStart(2, '0');
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="map-marker tone-${m.type || 'moss'} ${isPoint ? 'is-point' : ''}">${labelChar}</div>`,
+      iconSize: [isPoint ? 44 : 36, isPoint ? 44 : 36],
+      iconAnchor: [isPoint ? 22 : 18, isPoint ? 22 : 18]
+    });
+    const marker = L.marker(m.coords, { icon }).addTo(map);
+    if (m.popup) marker.bindPopup(m.popup);
+    latLngs.push(m.coords);
+  });
+
+  // polyline (solo per itinerari, non per punti singoli)
+  if (validMarkers.length > 1 && opts.connectStops) {
+    L.polyline(latLngs, {
+      color: '#1f2d1c',
+      weight: 2,
+      opacity: 0.65,
+      dashArray: '6, 6'
+    }).addTo(map);
+  }
+
+  // fit bounds
+  if (latLngs.length === 1) {
+    map.setView(latLngs[0], 11);
+  } else {
+    map.fitBounds(latLngs, { padding: [40, 40], maxZoom: 12 });
+  }
+}
+
+function switchTile(containerId, tileName) {
+  const map = state.mapInstances[containerId];
+  if (!map) return;
+  const current = map._activeTile;
+  if (current === tileName) return;
+  map.removeLayer(map._layers[current]);
+  map._layers[tileName].addTo(map);
+  map._activeTile = tileName;
+  state.currentTile = tileName;
+  // update active button state
+  document.querySelectorAll(`[data-map-tile="${containerId}"]`).forEach(b => {
+    b.classList.toggle('active', b.dataset.tile === tileName);
+  });
+}
+
+/* ===========================================================
+   ROUTING
+=========================================================== */
+function goto(name, id = null) {
+  state.route = { name, id };
+  const hash = id ? `#${name}/${id}` : `#${name}`;
+  if (location.hash !== hash) location.hash = hash;
+  render();
+}
+function parseHash() {
+  const h = (location.hash || '').replace(/^#/, '');
+  if (!h) return { name: 'home', id: null };
+  const [name, id] = h.split('/');
+  return { name: name || 'home', id: id || null };
+}
+window.addEventListener('hashchange', () => { state.route = parseHash(); render(); });
+
+/* ===========================================================
+   SEED DATA — preservo i tuoi 10 progetti
+=========================================================== */
+function seedDataIfEmpty() {
+  if (state.itineraries.length > 0 || state.points.length > 0) return false;
+
+  state.itineraries = [
+    {
+      id: uid(), code: 'PRJ-01', title: 'Progetto Finlandia', region: 'Finlandia', status: 'completed',
+      distance: '1670 km', duration: '5 giorni', season: 'Capodanno', terrain: 'Neve',
+      description: 'Capodanno al freddo: villaggio di Babbo Natale, canyon ghiacciati e treno notturno verso Helsinki.',
+      coverImage: '', dateAdded: new Date(Date.now() - 86400000 * 90).toISOString(),
+      stops: [
+        { id: uid(), day: 1, name: 'Volo & Villaggio Babbo Natale', coords: '66°32\'N · 25°50\'E', type: 'activity', notes: 'Volo BRG-RVN e incontro con Babbo Natale.' },
+        { id: uid(), day: 2, name: 'Parco Riisitunturi', coords: '66°10\'N · 28°00\'E', type: 'trail', notes: 'Giornata intera nel parco, pranzo compreso.' },
+        { id: uid(), day: 3, name: 'Korouoma Canyon', coords: '66°20\'N · 27°20\'E', type: 'viewpoint', notes: 'Cascata congelata + BBQ. Cena di Capodanno la sera.' },
+        { id: uid(), day: 4, name: 'Treno per Helsinki', coords: '60°10\'N · 24°56\'E', type: 'town', notes: 'Notte in cabina con letti in treno verso Helsinki.' }
+      ]
+    },
+    {
+      id: uid(), code: 'PRJ-02', title: 'Road Trip Francia Breve', region: 'Francia', status: 'active',
+      distance: '1760 km', duration: '5 giorni', season: 'Ponte 2 Giugno', terrain: 'Asfalto',
+      description: 'Ponte veloce verso la Francia. Gole del Verdon, Camargue e Costa Azzurra in tenda da tetto.',
+      coverImage: '', dateAdded: new Date(Date.now() - 86400000 * 30).toISOString(),
+      stops: [
+        { id: uid(), day: 1, name: 'Borgo Valsugana → Monaco', coords: '43°44\'N · 7°25\'E', type: 'camp', notes: 'Prima notte in tenda da tetto in Riviera.' },
+        { id: uid(), day: 2, name: 'Monaco → Gorges du Verdon', coords: '43°45\'N · 6°22\'E', type: 'viewpoint', notes: 'Point Sublime, Lac de Sainte-Croix.' },
+        { id: uid(), day: 3, name: 'Gorges du Verdon → Camargue', coords: '43°34\'N · 4°34\'E', type: 'activity', notes: 'Kayak o Sentier Martel. Bivacco nelle paludi della Camargue.' },
+        { id: uid(), day: 4, name: 'Camargue → Ventimiglia', coords: '43°47\'N · 7°36\'E', type: 'town', notes: 'Parc Ornithologique (fenicotteri). Ultima notte in tenda.' }
+      ]
+    },
+    {
+      id: uid(), code: 'PRJ-03', title: 'Inghilterra & Cinema', region: 'UK / Europa', status: 'draft',
+      distance: '3572 km', duration: '15 giorni', season: 'Estate', terrain: 'Misto',
+      description: 'Odissea di Nolan in IMAX 70mm a Londra, Stonehenge e i parchi nazionali inglesi.',
+      coverImage: '', dateAdded: new Date(Date.now() - 86400000 * 25).toISOString(),
+      stops: [
+        { id: uid(), day: 1, name: 'Borgo → Stoccarda', coords: '48°46\'N · 9°10\'E', type: 'town', notes: 'Viaggio con notte nella Foresta Nera.' },
+        { id: uid(), day: 2, name: 'Lussemburgo → Calais', coords: '50°57\'N · 1°51\'E', type: 'viewpoint', notes: 'Passaggio veloce in Lussemburgo verso la Manica.' },
+        { id: uid(), day: 4, name: 'Calais → Londra', coords: '51°30\'N · 0°07\'W', type: 'activity', notes: 'Traghetto/Treno. Tè da Pooh e arrivo a Londra.' },
+        { id: uid(), day: 5, name: 'Londra (IMAX)', coords: '51°30\'N · 0°07\'W', type: 'town', notes: 'Film Odissea di Nolan IMAX 70mm e discoteca Abba Voyage.' },
+        { id: uid(), day: 7, name: 'Stonehenge → Dartmoor', coords: '50°34\'N · 3°54\'W', type: 'viewpoint', notes: 'Verso la foresta oscura degli Ent.' }
+      ]
+    },
+    {
+      id: uid(), code: 'PRJ-04', title: 'Progetto Norvegia', region: 'Norvegia', status: 'draft',
+      distance: '3971 km', duration: '15 giorni', season: 'Estate', terrain: 'Montagna / Fiordi',
+      description: 'La grande risalita del Nord. Da Borgo fino a Trondheim passando per la Strada Sull\'Atlantico.',
+      coverImage: '', dateAdded: new Date(Date.now() - 86400000 * 20).toISOString(),
+      stops: [
+        { id: uid(), day: 4, name: 'Kiel → Oslo', coords: '59°54\'N · 10°45\'E', type: 'activity', notes: 'Traghetto notturno in cabina (20h).' },
+        { id: uid(), day: 5, name: 'Oslo', coords: '59°54\'N · 10°45\'E', type: 'town', notes: 'Giornata dedicata alla capitale.' },
+        { id: uid(), day: 7, name: 'Lillehammer → Geiranger', coords: '62°06\'N · 7°12\'E', type: 'viewpoint', notes: 'Ingresso nel cuore dei fiordi.' },
+        { id: uid(), day: 8, name: 'Geiranger → Averoy', coords: '63°02\'N · 7°35\'E', type: 'trail', notes: 'La famigerata Strada Sull\'Atlantico.' }
+      ]
+    },
+    {
+      id: uid(), code: 'PRJ-05', title: 'Polonia · Bisonti & Foreste', region: 'Polonia', status: 'draft',
+      distance: '3345 km', duration: '8 giorni', season: 'Autunno', terrain: 'Pianura · Foresta',
+      description: 'A caccia di bisonti nella foresta più selvaggia d\'Europa (Białowieża) e visita a Cracovia.',
+      coverImage: '', dateAdded: new Date(Date.now() - 86400000 * 18).toISOString(),
+      stops: [
+        { id: uid(), day: 1, name: 'Borgo → Salisburgo', coords: '47°48\'N · 13°03\'E', type: 'town', notes: 'Tappa di avvicinamento in Austria.' },
+        { id: uid(), day: 2, name: 'Salisburgo → Brno', coords: '49°11\'N · 16°36\'E', type: 'town', notes: 'Ingresso in Czechia, notte a Brno.' },
+        { id: uid(), day: 4, name: 'Katowice → Białowieża', coords: '52°41\'N · 23°51\'E', type: 'camp', notes: 'Viaggio lungo verso la foresta. Accampamento.' },
+        { id: uid(), day: 5, name: 'Foresta di Białowieża', coords: '52°44\'N · 23°54\'E', type: 'trail', notes: 'Giornata a piedi a caccia (fotografica) di Bisonti.' },
+        { id: uid(), day: 7, name: 'Cracovia', coords: '50°03\'N · 19°56\'E', type: 'town', notes: 'Mercati, storia e cultura polacca.' }
+      ]
+    },
+    {
+      id: uid(), code: 'PRJ-06', title: 'Progetto Sardegna', region: 'Sardegna', status: 'draft',
+      distance: '1785 km', duration: '15 giorni', season: 'Estate', terrain: 'Costiero',
+      description: 'Traghetto da Livorno per Olbia e tour dell\'isola tra mare cristallino e interno selvaggio.',
+      coverImage: '', dateAdded: new Date(Date.now() - 86400000 * 15).toISOString(),
+      stops: [
+        { id: uid(), day: 1, name: 'Borgo → Livorno', coords: '43°33\'N · 10°19\'E', type: 'town', notes: 'Discesa verso il porto.' },
+        { id: uid(), day: 2, name: 'Livorno → Olbia', coords: '40°55\'N · 9°30\'E', type: 'activity', notes: 'Traghetto notturno in cabina.' },
+        { id: uid(), day: 12, name: 'Olbia → Livorno', coords: '43°33\'N · 10°19\'E', type: 'activity', notes: 'Traghetto di rientro.' }
+      ]
+    },
+    {
+      id: uid(), code: 'PRJ-07', title: 'Progetto Scozia', region: 'Scozia', status: 'filed',
+      distance: '6920 km', duration: '15 giorni', season: 'Estate', terrain: 'Brughiera · Asfalto',
+      description: 'Castelli, natura, magia. Da Borgo a Kilchurn e ritorno tramite traghetto da Amsterdam.',
+      coverImage: '', dateAdded: new Date(Date.now() - 86400000 * 10).toISOString(),
+      stops: [
+        { id: uid(), day: 2, name: 'Stoccarda → Colonia', coords: '50°56\'N · 6°57\'E', type: 'town', notes: 'Risalita lungo il Reno, tratte panoramiche.' },
+        { id: uid(), day: 4, name: 'Amsterdam → Newcastle', coords: '54°58\'N · 1°36\'W', type: 'activity', notes: 'Traghetto notturno DFDS nel Mare del Nord.' },
+        { id: uid(), day: 15, name: 'Stoccarda → Borgo', coords: '46°03\'N · 11°27\'E', type: 'town', notes: 'Rientro dopo 15 giorni epici tra lochs e brughiere.' }
+      ]
+    },
+    {
+      id: uid(), code: 'PRJ-08', title: 'Spagna · Eclissi Solare', region: 'Spagna', status: 'active',
+      distance: '3580 km', duration: '15 giorni', season: 'Agosto 2026', terrain: 'Deserto · Entroterra',
+      description: 'L\'obiettivo finale: assistere all\'Eclissi Solare Totale nel cuore della Spagna.',
+      coverImage: '', dateAdded: new Date(Date.now() - 86400000 * 7).toISOString(),
+      stops: [
+        { id: uid(), day: 1, name: 'Borgo → Tolone', coords: '43°07\'N · 5°55\'E', type: 'camp', notes: 'Notte lungo la Costa Azzurra. Bagno e pesce.' },
+        { id: uid(), day: 3, name: 'Andorra → Désert de Monegros', coords: '41°37\'N · 0°10\'W', type: 'viewpoint', notes: 'Avvicinamento alla zona di totalità.' },
+        { id: uid(), day: 5, name: 'Punto Eclissi (Río Lobos)', coords: '41°45\'N · 2°59\'W', type: 'activity', notes: 'ECLISSI SOLARE TOTALE. Spot perfetto.' }
+      ]
+    },
+    {
+      id: uid(), code: 'PRJ-09', title: 'Spagna · Eclissi via Traghetto', region: 'Spagna', status: 'draft',
+      distance: '2520 km', duration: '14 giorni', season: 'Agosto 2026', terrain: 'Misto',
+      description: 'Variante di percorso per l\'Eclissi: traghetto da Genova a Barcellona.',
+      coverImage: '', dateAdded: new Date(Date.now() - 86400000 * 5).toISOString(),
+      stops: [
+        { id: uid(), day: 1, name: 'Borgo → Genova', coords: '44°24\'N · 8°56\'E', type: 'town', notes: 'Imbarco sul Ferry.' },
+        { id: uid(), day: 2, name: 'Genova → Barcellona', coords: '41°23\'N · 2°10\'E', type: 'activity', notes: 'Traghetto e sbarco in Spagna.' },
+        { id: uid(), day: 4, name: 'Barcellona → Monegros', coords: '41°37\'N · 0°10\'W', type: 'camp', notes: 'Puntando verso il deserto e l\'Eclissi.' }
+      ]
+    },
+    {
+      id: uid(), code: 'PRJ-10', title: 'Fuga Corsica · Wild', region: 'Corsica', status: 'draft',
+      distance: '3295 km', duration: '7 giorni', season: 'Estate', terrain: 'Montagna · Mare',
+      description: 'Attraversamento dell\'interno montuoso della Corsica: Col de Bavella, Bonifacio, Palombaggia.',
+      coverImage: '', dateAdded: new Date(Date.now() - 86400000 * 3).toISOString(),
+      stops: [
+        { id: uid(), day: 1, name: 'Borgo → Livorno → Bastia', coords: '42°41\'N · 9°27\'E', type: 'activity', notes: 'Ferry GNV. Passeggiata al Vieux Port.' },
+        { id: uid(), day: 3, name: 'Saint-Florent → Île-Rousse', coords: '42°37\'N · 8°56\'E', type: 'town', notes: 'Cittadella genovese sul mare, vibe rilassata.' },
+        { id: uid(), day: 5, name: 'Col de Bavella', coords: '41°47\'N · 9°13\'E', type: 'camp', notes: 'Piscine naturali, acqua cristallina, notte in quota sotto le stelle.' },
+        { id: uid(), day: 6, name: 'Bavella → Bonifacio', coords: '41°23\'N · 9°09\'E', type: 'viewpoint', notes: 'Città sospesa sulla scogliera. Grotte marine.' }
+      ]
+    }
+  ];
+
+  state.points = [
+    {
+      id: uid(), code: 'PR-01', title: 'Lago di Como · Riva Est', region: 'Lombardia', coords: '45°59\'N · 9°15\'E',
+      description: 'Base ideale per esplorare la sponda meno turistica del lago. Bellagio è bella ma piena, da qui si vedono le tre punte e la luce del tramonto è pulita.',
+      coverImage: '', dateAdded: new Date(Date.now() - 86400000 * 5).toISOString(),
+      bestPoints: [
+        { id: uid(), name: 'Trattoria del Glicine', type: 'food', distance: '0.8 km', notes: 'Cena sul giardino, missoltini stagionali. Prenotare.' },
+        { id: uid(), name: 'Belvedere di Perledo', type: 'viewpoint', distance: '4.2 km', notes: 'Salita ripida ma asfaltata. Vista a 270° sul lago.' },
+        { id: uid(), name: 'Camping La Riva', type: 'camp', distance: '1.5 km', notes: 'Piazzole sull\'acqua, accessibile con tetto montato. Doccia calda.' },
+        { id: uid(), name: 'Sentiero del Viandante', type: 'trail', distance: '0 km', notes: 'Tappa Lierna-Varenna, 3h, ombra abbondante.' }
+      ]
+    }
+  ];
+  return true;
+}
+
+/* ===========================================================
+   RENDER ROOT
+=========================================================== */
+async function render() {
+  const app = document.getElementById('app');
+  if (!state.loaded) {
+    app.innerHTML = `<div style="padding:80px 0;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--forest-faint);">CARICAMENTO…</div>`;
+    return;
+  }
+  document.querySelectorAll('#nav .nav-link').forEach(b => {
+    const active = b.dataset.route === state.route.name
+      || (state.route.name === 'itinerary' && b.dataset.route === 'itinerari')
+      || (state.route.name === 'point' && b.dataset.route === 'punti');
+    b.classList.toggle('active', active);
+    b.onclick = () => goto(b.dataset.route);
+  });
+
+  switch (state.route.name) {
+    case 'home': renderHome(app); break;
+    case 'itinerari': renderItinerariList(app); break;
+    case 'itinerary': renderItineraryDetail(app, state.route.id); break;
+    case 'punti': renderPuntiList(app); break;
+    case 'point': renderPointDetail(app, state.route.id); break;
+    default: goto('home');
+  }
+  document.getElementById('meta-date').innerHTML = `<i data-lucide="calendar-days" class="icon-xs"></i> ${new Date().toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' })}`;
+  refreshIcons();
+}
+
+/* ===========================================================
+   VIEW: HOME
+=========================================================== */
+function renderHome(root) {
+  const recentItin = [...state.itineraries].sort((a,b)=>new Date(b.dateAdded)-new Date(a.dateAdded)).slice(0,5);
+  const recentPts = [...state.points].sort((a,b)=>new Date(b.dateAdded)-new Date(a.dateAdded)).slice(0,5);
+  const km = totalKm();
+  const stops = state.itineraries.reduce((a,it)=>a+(it.stops?.length||0),0);
+  const lastEdit = state.meta.lastEdit ? fmtDate(state.meta.lastEdit) : '—';
+
+  const heroImage = state.meta.heroImage || '';
+
+  root.innerHTML = `
+    <div class="contour-bg"></div>
+    <section class="hero">
+      <div>
+        <div class="hero-eyebrow"><i data-lucide="leaf" class="icon-xs"></i> Edizione 2026 · In esercizio</div>
+        <h1 class="hero-title">Un quaderno per<br>chi viaggia <em>lontano,<br>verso il selvatico.</em></h1>
+        <p class="hero-desc">Itinerari in tenda da tetto, punti di riferimento e i loro <em>best points</em>. Strade lente, mappe pieghevoli, notti sotto un cielo che non si conosce. Tutto annotato.</p>
+      </div>
+      <div class="hero-side">
+        <div class="hero-image-wrap">
+          ${heroImage ? `
+            <img src="${escapeAttr(heroImage)}" alt="Hero" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="hero-image-placeholder" style="display:none;">
+              <i data-lucide="image-off" class="icon-lg"></i>
+              <span class="ph-label">Immagine non disponibile</span>
+            </div>
+          ` : `
+            <div class="hero-image-placeholder">
+              <i data-lucide="mountain-snow" class="icon-xxl"></i>
+              <span class="ph-label">Hero · Aggiungi un'immagine</span>
+            </div>
+          `}
+          <button class="hero-image-btn" onclick="openHeroImageModal()">
+            <i data-lucide="image" class="icon-xs"></i>
+            <span>${heroImage ? 'Cambia' : 'Aggiungi'}</span>
+          </button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-label"><i data-lucide="route" class="icon-xs"></i> Itinerari</div>
+            <div class="stat-value">${state.itineraries.length}</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label"><i data-lucide="map-pin" class="icon-xs"></i> Tappe</div>
+            <div class="stat-value">${stops}</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label"><i data-lucide="ruler" class="icon-xs"></i> Distanza</div>
+            <div class="stat-value">${km > 0 ? Math.round(km).toLocaleString('it-IT') : 0}<span class="unit">km</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="dash-split">
+      <div class="dash-section">
+        <div class="section-head">
+          <div class="section-title">
+            <span class="section-num">01 ·</span>
+            <span class="section-name">Itinerari Recenti</span>
+          </div>
+          <span class="section-meta link" onclick="goto('itinerari')">Vedi Tutti <i data-lucide="arrow-right" class="icon-xs"></i></span>
+        </div>
+        ${recentItin.length === 0
+          ? renderEmpty('Nessun itinerario registrato.', 'Nuovo Itinerario', "openItineraryModal()", 'route')
+          : `<div class="dash-list">${recentItin.map(it => dashRow(it, 'itinerary')).join('')}</div>
+             <div style="margin-top: 20px;"><button class="btn btn-primary" onclick="openItineraryModal()"><i data-lucide="plus" class="icon-sm"></i> Nuovo Itinerario</button></div>`}
+      </div>
+
+      <div class="dash-section">
+        <div class="section-head">
+          <div class="section-title">
+            <span class="section-num">02 ·</span>
+            <span class="section-name">Punti di Riferimento</span>
+          </div>
+          <span class="section-meta link" onclick="goto('punti')">Vedi Tutti <i data-lucide="arrow-right" class="icon-xs"></i></span>
+        </div>
+        ${recentPts.length === 0
+          ? renderEmpty('Nessun punto archiviato.', 'Nuovo Punto', "openPointModal()", 'map-pin')
+          : `<div class="dash-list">${recentPts.map(p => dashRow(p, 'point')).join('')}</div>
+             <div style="margin-top: 20px;"><button class="btn btn-primary" onclick="openPointModal()"><i data-lucide="plus" class="icon-sm"></i> Nuovo Punto</button></div>`}
+      </div>
+    </div>
+
+    ${renderFooter(lastEdit)}
+  `;
+}
+
+function dashRow(item, kind) {
+  return `
+    <div class="dash-row" onclick="goto('${kind}', '${item.id}')">
+      <div class="dash-row-code">${escapeHtml(item.code)}</div>
+      <div class="dash-row-mid">
+        <div class="dash-row-title">${escapeHtml(item.title)}</div>
+        <div class="dash-row-region"><i data-lucide="map-pin" class="icon-xs"></i> ${escapeHtml(item.region || '—')}</div>
+      </div>
+      <i data-lucide="arrow-right" class="dash-row-arrow icon-md"></i>
+    </div>
+  `;
+}
+
+function renderEmpty(title, btnText, action, iconName) {
+  return `
+    <div class="empty">
+      <i data-lucide="${iconName || 'compass'}" class="empty-icon icon-xl"></i>
+      <div class="empty-title">${title}</div>
+      <div class="empty-text">Inizia a riempire il taccuino.</div>
+      <button class="btn btn-primary" onclick="${action}"><i data-lucide="plus" class="icon-sm"></i> ${btnText}</button>
+    </div>
+  `;
+}
+
+/* ===========================================================
+   VIEW: ITINERARI LIST
+=========================================================== */
+function renderItinerariList(root) {
+  const all = state.itineraries;
+  const f = state.filter.itin;
+  const search = (f.search || '').toLowerCase().trim();
+  let list = [...all];
+  if (search) {
+    list = list.filter(it =>
+      (it.title || '').toLowerCase().includes(search) ||
+      (it.region || '').toLowerCase().includes(search) ||
+      (it.description || '').toLowerCase().includes(search) ||
+      (it.code || '').toLowerCase().includes(search) ||
+      (it.season || '').toLowerCase().includes(search) ||
+      (it.terrain || '').toLowerCase().includes(search)
+    );
+  }
+  if (f.status && f.status !== 'all') list = list.filter(it => it.status === f.status);
+  list.sort((a,b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+
+  const counts = {
+    all: all.length,
+    draft: all.filter(x => x.status === 'draft').length,
+    active: all.filter(x => x.status === 'active').length,
+    completed: all.filter(x => x.status === 'completed').length,
+    filed: all.filter(x => x.status === 'filed').length
+  };
+
+  const lastEdit = state.meta.lastEdit ? fmtDate(state.meta.lastEdit) : '—';
+  root.innerHTML = `
+    <div class="contour-bg"></div>
+    <div class="section-head">
+      <div class="section-title">
+        <span class="section-num">01 ·</span>
+        <span class="section-name">Itinerari · Registro Completo</span>
+      </div>
+      <span class="section-meta">${all.length} ${all.length === 1 ? 'voce totale' : 'voci totali'}</span>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-search">
+        <i data-lucide="search" class="toolbar-search-icon icon-md"></i>
+        <input type="text" id="itin-search" placeholder="Cerca per titolo, regione, terreno, stagione…" value="${escapeAttr(f.search || '')}">
+      </div>
+      <div class="toolbar-filters">
+        <span class="filter-label">Stato</span>
+        <button class="filter-chip ${f.status==='all'?'active':''}" onclick="setItinFilter('status','all')">Tutti<span class="count">${counts.all}</span></button>
+        <button class="filter-chip ${f.status==='active'?'active':''}" onclick="setItinFilter('status','active')">In Corso<span class="count">${counts.active}</span></button>
+        <button class="filter-chip ${f.status==='draft'?'active':''}" onclick="setItinFilter('status','draft')">Bozza<span class="count">${counts.draft}</span></button>
+        <button class="filter-chip ${f.status==='completed'?'active':''}" onclick="setItinFilter('status','completed')">Concluso<span class="count">${counts.completed}</span></button>
+        <button class="filter-chip ${f.status==='filed'?'active':''}" onclick="setItinFilter('status','filed')">Archivio<span class="count">${counts.filed}</span></button>
+      </div>
+      ${(search || f.status !== 'all') ? `<button class="toolbar-clear" onclick="clearItinFilter()"><i data-lucide="x" class="icon-xs"></i> Pulisci</button>` : ''}
+    </div>
+
+    ${(search || f.status !== 'all') ? `<div class="results-count"><i data-lucide="filter" class="icon-xs"></i> ${list.length} ${list.length === 1 ? 'risultato' : 'risultati'}${search ? ` per "${escapeHtml(search)}"` : ''}</div>` : ''}
+
+    ${list.length === 0 && (search || f.status !== 'all')
+      ? `<div class="empty"><i data-lucide="search-x" class="empty-icon icon-xl"></i><div class="empty-title">Nessun risultato</div><div class="empty-text">Prova a cambiare i filtri o cancella la ricerca.</div><button class="btn btn-ghost" onclick="clearItinFilter()">Pulisci Filtri</button></div>`
+      : `<div class="grid">
+          ${list.map(it => itineraryCard(it)).join('')}
+          <div class="card card-add" onclick="openItineraryModal()">
+            <i data-lucide="plus" class="icon-xl"></i>
+            <div class="card-add-text">Nuovo Itinerario</div>
+          </div>
+        </div>`
+    }
+    ${renderFooter(lastEdit)}
+  `;
+
+  // Search input live
+  const si = document.getElementById('itin-search');
+  if (si) {
+    si.addEventListener('input', (e) => {
+      state.filter.itin.search = e.target.value;
+      renderItinerariList(root);
+    });
+    // mantieni il focus dopo re-render
+    if (search) { si.focus(); si.setSelectionRange(si.value.length, si.value.length); }
+  }
+}
+
+function setItinFilter(key, val) {
+  state.filter.itin[key] = val;
+  renderItinerariList(document.getElementById('app'));
+}
+function clearItinFilter() {
+  state.filter.itin = { search: '', status: 'all' };
+  renderItinerariList(document.getElementById('app'));
+}
+
+function itineraryCard(it) {
+  const stops = it.stops?.length || 0;
+  const firstStopType = it.stops?.[0]?.type || 'camp';
+  const tone = toneForType(firstStopType);
+  return `
+    <div class="card" onclick="goto('itinerary', '${it.id}')">
+      <div class="card-cover">
+        ${it.coverImage
+          ? `<img src="${escapeAttr(it.coverImage)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+             <div class="card-cover-placeholder tone-${tone}" style="display:none;"><i data-lucide="image-off" class="icon-xl"></i></div>`
+          : `<div class="card-cover-placeholder tone-${tone}"><i data-lucide="${iconForType(STAGE_TYPES, firstStopType)}" class="icon-xl"></i></div>`
+        }
+      </div>
+      <div class="card-body">
+        <div class="card-top">
+          <span class="card-code">${escapeHtml(it.code)}</span>
+          <span class="card-status status-${it.status}">${STATUS_LABELS[it.status] || ''}</span>
+        </div>
+        <div class="card-title">${escapeHtml(it.title)}</div>
+        <div class="card-region"><i data-lucide="map-pin" class="icon-xs"></i> ${escapeHtml(it.region || '—')}</div>
+        <div class="card-desc">${escapeHtml(it.description || 'Nessuna descrizione.')}</div>
+        <div class="card-meta">
+          <div class="card-meta-item"><span class="card-meta-label"><i data-lucide="ruler" class="icon-xs"></i> Dist</span><span class="card-meta-value">${escapeHtml(it.distance || '—')}</span></div>
+          <div class="card-meta-item"><span class="card-meta-label"><i data-lucide="clock" class="icon-xs"></i> Durata</span><span class="card-meta-value">${escapeHtml(it.duration || '—')}</span></div>
+          <div class="card-meta-item"><span class="card-meta-label"><i data-lucide="milestone" class="icon-xs"></i> Tappe</span><span class="card-meta-value">${stops}</span></div>
+          <div class="card-meta-item"><span class="card-meta-label"><i data-lucide="sun" class="icon-xs"></i> Stagione</span><span class="card-meta-value">${escapeHtml(it.season || '—')}</span></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ===========================================================
+   VIEW: ITINERARY DETAIL
+=========================================================== */
+function renderItineraryDetail(root, id) {
+  const it = state.itineraries.find(x => x.id === id);
+  if (!it) { root.innerHTML = '<p style="padding:40px;font-family:var(--serif);">Voce non trovata.</p>'; return; }
+  const stops = (it.stops || []).slice().sort((a,b)=>(a.day||0)-(b.day||0));
+  const lastEdit = state.meta.lastEdit ? fmtDate(state.meta.lastEdit) : '—';
+
+  root.innerHTML = `
+    <button class="detail-back" onclick="goto('itinerari')"><i data-lucide="arrow-left" class="icon-sm"></i> Tutti gli Itinerari</button>
+
+    <div class="detail-hero">
+      ${it.coverImage
+        ? `<img src="${escapeAttr(it.coverImage)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+           <div class="detail-hero-placeholder" style="display:none;"><i data-lucide="image-off" class="icon-xxl"></i></div>`
+        : `<div class="detail-hero-placeholder"><i data-lucide="mountain-snow" class="icon-xxl"></i></div>`
+      }
+      <button class="detail-hero-add-btn" onclick="openItineraryImageModal('${it.id}')">
+        <i data-lucide="image" class="icon-xs"></i>
+        <span>${it.coverImage ? 'Cambia' : 'Aggiungi'} Immagine</span>
+      </button>
+    </div>
+
+    <div class="detail-head">
+      <div>
+        <div class="detail-eyebrow">
+          <span class="item"><i data-lucide="hash" class="icon-xs"></i> <span class="code">${escapeHtml(it.code)}</span></span>
+          <span class="item"><i data-lucide="calendar-days" class="icon-xs"></i> Reg. ${fmtDate(it.dateAdded)}</span>
+          <span class="item"><i data-lucide="activity" class="icon-xs"></i> ${STATUS_LABELS[it.status] || ''}</span>
+        </div>
+        <div class="detail-title">${escapeHtml(it.title)}</div>
+        <div class="detail-region"><i data-lucide="map-pin" class="icon-md"></i> ${escapeHtml(it.region || '')}</div>
+      </div>
+      <div class="detail-actions">
+        ${it.status === 'completed' ? `<span class="stamp"><i data-lucide="check" class="icon-xs"></i> Concluso</span>` : ''}
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button class="btn btn-ghost" onclick="openItineraryModal('${it.id}')"><i data-lucide="pencil" class="icon-sm"></i> Modifica</button>
+          <button class="btn btn-danger" onclick="confirmDelete('itinerary','${it.id}')"><i data-lucide="trash-2" class="icon-sm"></i> Elimina</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <div>
+        <div class="detail-desc">${nlToParas(it.description) || '<p><em>Nessuna descrizione.</em></p>'}</div>
+        ${it.notes ? `
+          <div class="field-notes">
+            <div class="field-notes-label"><i data-lucide="notebook-pen" class="icon-xs"></i> Note di Campo</div>
+            <div class="field-notes-body">${nlToBr(it.notes)}</div>
+          </div>` : ''}
+      </div>
+      <div class="detail-side">
+        <div class="detail-side-row"><span class="detail-side-label"><i data-lucide="hash" class="icon-xs"></i> Codice</span><span class="detail-side-value">${escapeHtml(it.code)}</span></div>
+        <div class="detail-side-row"><span class="detail-side-label"><i data-lucide="ruler" class="icon-xs"></i> Distanza</span><span class="detail-side-value">${escapeHtml(it.distance || '—')}</span></div>
+        <div class="detail-side-row"><span class="detail-side-label"><i data-lucide="clock" class="icon-xs"></i> Durata</span><span class="detail-side-value">${escapeHtml(it.duration || '—')}</span></div>
+        <div class="detail-side-row"><span class="detail-side-label"><i data-lucide="sun" class="icon-xs"></i> Stagione</span><span class="detail-side-value">${escapeHtml(it.season || '—')}</span></div>
+        <div class="detail-side-row"><span class="detail-side-label"><i data-lucide="mountain" class="icon-xs"></i> Terreno</span><span class="detail-side-value">${escapeHtml(it.terrain || '—')}</span></div>
+        <div class="detail-side-row"><span class="detail-side-label"><i data-lucide="milestone" class="icon-xs"></i> Tappe</span><span class="detail-side-value">${stops.length}</span></div>
+        <div class="detail-side-row"><span class="detail-side-label"><i data-lucide="activity" class="icon-xs"></i> Stato</span><span class="detail-side-value">${STATUS_LABELS[it.status] || '—'}</span></div>
+      </div>
+    </div>
+
+    <div class="stages-section">
+      <div class="section-head">
+        <div class="section-title">
+          <span class="section-num"><i data-lucide="route" class="icon-sm"></i></span>
+          <span class="section-name">Tappe del Viaggio</span>
+        </div>
+        <span class="section-meta">${stops.length} fermate registrate</span>
+      </div>
+      ${stops.length === 0 ? renderEmpty('Nessuna tappa', 'Modifica per aggiungere', `openItineraryModal('${it.id}')`, 'milestone') : `
+        <div class="stages">
+          ${stops.map((s, i) => `
+            <div class="stage">
+              <div class="stage-num">${String(i+1).padStart(2,'0')}<span class="day">G ${s.day || (i+1)}</span></div>
+              <div class="stage-content">
+                <div class="stage-title-row">
+                  <span class="stage-title">${escapeHtml(s.name || '—')}</span>
+                </div>
+                ${s.coords ? `<div class="stage-coords"><i data-lucide="map-pin" class="icon-xs"></i> ${escapeHtml(s.coords)}</div>` : ''}
+                ${s.notes ? `<div class="stage-notes">${nlToBr(s.notes)}</div>` : ''}
+              </div>
+              ${s.type ? `<div class="stage-type type-${s.type}"><i data-lucide="${iconForType(STAGE_TYPES, s.type)}" class="icon-xs"></i> ${labelFor(STAGE_TYPES, s.type)}</div>` : '<div></div>'}
+            </div>
+          `).join('')}
+        </div>
+      `}
+    </div>
+
+    <div class="map-section">
+      <div class="section-head">
+        <div class="section-title">
+          <span class="section-num"><i data-lucide="map" class="icon-sm"></i></span>
+          <span class="section-name">Mappa Itinerario</span>
+        </div>
+        <span class="section-meta"><i data-lucide="info" class="icon-xs"></i> Clicca sulla mappa per attivare lo zoom</span>
+      </div>
+      <div class="map-wrap" id="map-itin-wrap">
+        <div class="map-tile-switch">
+          <button class="map-tile-btn ${state.currentTile==='topo'?'active':''}" data-map-tile="map-itin" data-tile="topo" onclick="switchTile('map-itin','topo')"><i data-lucide="mountain" class="icon-xs"></i> Topo</button>
+          <button class="map-tile-btn ${state.currentTile==='street'?'active':''}" data-map-tile="map-itin" data-tile="street" onclick="switchTile('map-itin','street')"><i data-lucide="map" class="icon-xs"></i> Strada</button>
+        </div>
+        <div id="map-itin" style="height: 100%; width: 100%;"></div>
+      </div>
+    </div>
+
+    ${renderFooter(lastEdit)}
+  `;
+
+  // Render mappa dopo che il DOM è in piedi
+  setTimeout(() => {
+    const markers = stops.map((s, i) => {
+      const coords = parseCoords(s.coords);
+      if (!coords) return null;
+      return {
+        coords,
+        type: s.type,
+        popup: `<div class="pop-day">Giorno ${s.day || (i+1)} · Tappa ${String(i+1).padStart(2,'0')}</div><div class="pop-name">${escapeHtml(s.name || '')}</div>${s.notes ? `<div class="pop-notes">${escapeHtml(s.notes)}</div>` : ''}`
+      };
+    }).filter(Boolean);
+
+    if (markers.length === 0) {
+      // sostituisce con un placeholder
+      const wrap = document.getElementById('map-itin-wrap');
+      if (wrap) wrap.innerHTML = `
+        <div class="map-empty">
+          <i data-lucide="map-off" class="icon-xl"></i>
+          <div class="map-empty-text">Nessuna delle tappe ha coordinate parseabili.</div>
+          <div class="map-empty-hint">Aggiungile in formato 46°41'N · 12°05'E o 46.6824, 12.0833</div>
+        </div>
+      `;
+      refreshIcons();
+      return;
+    }
+    renderMap('map-itin', markers, { connectStops: true });
+  }, 50);
+}
+
+/* ===========================================================
+   VIEW: PUNTI LIST + DETAIL
+=========================================================== */
+function renderPuntiList(root) {
+  const all = state.points;
+  const f = state.filter.pts;
+  const search = (f.search || '').toLowerCase().trim();
+  let list = [...all];
+  if (search) {
+    list = list.filter(p =>
+      (p.title || '').toLowerCase().includes(search) ||
+      (p.region || '').toLowerCase().includes(search) ||
+      (p.description || '').toLowerCase().includes(search) ||
+      (p.code || '').toLowerCase().includes(search)
+    );
+  }
+  list.sort((a,b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+  const lastEdit = state.meta.lastEdit ? fmtDate(state.meta.lastEdit) : '—';
+
+  root.innerHTML = `
+    <div class="contour-bg"></div>
+    <div class="section-head">
+      <div class="section-title">
+        <span class="section-num">02 ·</span>
+        <span class="section-name">Punti di Riferimento</span>
+      </div>
+      <span class="section-meta">${all.length} ${all.length === 1 ? 'voce totale' : 'voci totali'}</span>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-search">
+        <i data-lucide="search" class="toolbar-search-icon icon-md"></i>
+        <input type="text" id="pts-search" placeholder="Cerca per nome, regione, descrizione…" value="${escapeAttr(f.search || '')}">
+      </div>
+      ${search ? `<button class="toolbar-clear" onclick="clearPtsFilter()"><i data-lucide="x" class="icon-xs"></i> Pulisci</button>` : ''}
+    </div>
+
+    ${search ? `<div class="results-count"><i data-lucide="filter" class="icon-xs"></i> ${list.length} ${list.length === 1 ? 'risultato' : 'risultati'} per "${escapeHtml(search)}"</div>` : ''}
+
+    ${list.length === 0 && search
+      ? `<div class="empty"><i data-lucide="search-x" class="empty-icon icon-xl"></i><div class="empty-title">Nessun risultato</div><div class="empty-text">Prova a cambiare la ricerca.</div><button class="btn btn-ghost" onclick="clearPtsFilter()">Pulisci</button></div>`
+      : `<div class="grid">
+          ${list.map(p => pointCard(p)).join('')}
+          <div class="card card-add" onclick="openPointModal()">
+            <i data-lucide="plus" class="icon-xl"></i>
+            <div class="card-add-text">Nuovo Punto</div>
+          </div>
+        </div>`
+    }
+    ${renderFooter(lastEdit)}
+  `;
+
+  const si = document.getElementById('pts-search');
+  if (si) {
+    si.addEventListener('input', (e) => {
+      state.filter.pts.search = e.target.value;
+      renderPuntiList(root);
+    });
+    if (search) { si.focus(); si.setSelectionRange(si.value.length, si.value.length); }
+  }
+}
+
+function clearPtsFilter() {
+  state.filter.pts = { search: '' };
+  renderPuntiList(document.getElementById('app'));
+}
+
+function pointCard(p) {
+  const bp = p.bestPoints?.length || 0;
+  return `
+    <div class="card" onclick="goto('point', '${p.id}')">
+      <div class="card-cover">
+        ${p.coverImage
+          ? `<img src="${escapeAttr(p.coverImage)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+             <div class="card-cover-placeholder tone-water" style="display:none;"><i data-lucide="image-off" class="icon-xl"></i></div>`
+          : `<div class="card-cover-placeholder tone-water"><i data-lucide="map-pin" class="icon-xl"></i></div>`
+        }
+      </div>
+      <div class="card-body">
+        <div class="card-top">
+          <span class="card-code">${escapeHtml(p.code)}</span>
+          <span class="card-status status-filed">Archiviato</span>
+        </div>
+        <div class="card-title">${escapeHtml(p.title)}</div>
+        <div class="card-region"><i data-lucide="map-pin" class="icon-xs"></i> ${escapeHtml(p.region || '—')}</div>
+        <div class="card-desc">${escapeHtml(p.description || '')}</div>
+        <div class="card-meta">
+          ${p.coords ? `<div class="card-meta-item"><span class="card-meta-label"><i data-lucide="navigation" class="icon-xs"></i> Coord</span><span class="card-meta-value" style="font-family:var(--mono);font-size:10px;">${escapeHtml(p.coords)}</span></div>` : ''}
+          <div class="card-meta-item"><span class="card-meta-label"><i data-lucide="star" class="icon-xs"></i> Best Points</span><span class="card-meta-value">${bp}</span></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderPointDetail(root, id) {
+  const p = state.points.find(x => x.id === id);
+  if (!p) { root.innerHTML = '<p style="padding:40px;font-family:var(--serif);">Voce non trovata.</p>'; return; }
+  const bps = p.bestPoints || [];
+  const lastEdit = state.meta.lastEdit ? fmtDate(state.meta.lastEdit) : '—';
+
+  root.innerHTML = `
+    <button class="detail-back" onclick="goto('punti')"><i data-lucide="arrow-left" class="icon-sm"></i> Tutti i Punti</button>
+
+    <div class="detail-hero">
+      ${p.coverImage
+        ? `<img src="${escapeAttr(p.coverImage)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+           <div class="detail-hero-placeholder" style="display:none;"><i data-lucide="image-off" class="icon-xxl"></i></div>`
+        : `<div class="detail-hero-placeholder"><i data-lucide="map-pin" class="icon-xxl"></i></div>`
+      }
+      <button class="detail-hero-add-btn" onclick="openPointImageModal('${p.id}')">
+        <i data-lucide="image" class="icon-xs"></i>
+        <span>${p.coverImage ? 'Cambia' : 'Aggiungi'} Immagine</span>
+      </button>
+    </div>
+
+    <div class="detail-head">
+      <div>
+        <div class="detail-eyebrow">
+          <span class="item"><i data-lucide="hash" class="icon-xs"></i> <span class="code">${escapeHtml(p.code)}</span></span>
+          <span class="item"><i data-lucide="calendar-days" class="icon-xs"></i> Reg. ${fmtDate(p.dateAdded)}</span>
+          ${p.coords ? `<span class="item"><i data-lucide="navigation" class="icon-xs"></i> ${escapeHtml(p.coords)}</span>` : ''}
+        </div>
+        <div class="detail-title">${escapeHtml(p.title)}</div>
+        <div class="detail-region"><i data-lucide="map-pin" class="icon-md"></i> ${escapeHtml(p.region || '')}</div>
+      </div>
+      <div class="detail-actions">
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost" onclick="openPointModal('${p.id}')"><i data-lucide="pencil" class="icon-sm"></i> Modifica</button>
+          <button class="btn btn-danger" onclick="confirmDelete('point','${p.id}')"><i data-lucide="trash-2" class="icon-sm"></i> Elimina</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <div class="detail-desc">${nlToParas(p.description) || '<p><em>Nessuna descrizione.</em></p>'}</div>
+      <div class="detail-side">
+        <div class="detail-side-row"><span class="detail-side-label"><i data-lucide="hash" class="icon-xs"></i> Codice</span><span class="detail-side-value">${escapeHtml(p.code)}</span></div>
+        ${p.coords ? `<div class="detail-side-row"><span class="detail-side-label"><i data-lucide="navigation" class="icon-xs"></i> Coord</span><span class="detail-side-value" style="font-family:var(--mono);font-size:13px;">${escapeHtml(p.coords)}</span></div>` : ''}
+        <div class="detail-side-row"><span class="detail-side-label"><i data-lucide="star" class="icon-xs"></i> Punti</span><span class="detail-side-value">${bps.length}</span></div>
+      </div>
+    </div>
+
+    <div class="bestpoints-section">
+      <div class="section-head">
+        <div class="section-title">
+          <span class="section-num"><i data-lucide="star" class="icon-sm"></i></span>
+          <span class="section-name">Best Points · Cose Notevoli Vicino</span>
+        </div>
+        <span class="section-meta">${bps.length} catalogati</span>
+      </div>
+      ${bps.length === 0 ? renderEmpty('Nessun best point', 'Modifica per aggiungere', `openPointModal('${p.id}')`, 'star') : `
+        <div class="bestpoints">
+          ${bps.map(b => `
+            <div class="bp" data-type="${b.type}">
+              <div class="bp-top">
+                <span class="bp-type"><i data-lucide="${iconForType(BP_TYPES, b.type)}" class="icon-xs"></i> ${labelFor(BP_TYPES, b.type)}</span>
+                ${b.distance ? `<span class="bp-distance"><i data-lucide="ruler" class="icon-xs"></i> ${escapeHtml(b.distance)}</span>` : ''}
+              </div>
+              <div class="bp-name">${escapeHtml(b.name || '—')}</div>
+              ${b.notes ? `<div class="bp-notes">${nlToBr(b.notes)}</div>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      `}
+    </div>
+
+    <div class="map-section">
+      <div class="section-head">
+        <div class="section-title">
+          <span class="section-num"><i data-lucide="map" class="icon-sm"></i></span>
+          <span class="section-name">Posizione</span>
+        </div>
+        <span class="section-meta"><i data-lucide="info" class="icon-xs"></i> Clicca sulla mappa per attivare lo zoom</span>
+      </div>
+      <div class="map-wrap" id="map-pt-wrap">
+        <div class="map-tile-switch">
+          <button class="map-tile-btn ${state.currentTile==='topo'?'active':''}" data-map-tile="map-pt" data-tile="topo" onclick="switchTile('map-pt','topo')"><i data-lucide="mountain" class="icon-xs"></i> Topo</button>
+          <button class="map-tile-btn ${state.currentTile==='street'?'active':''}" data-map-tile="map-pt" data-tile="street" onclick="switchTile('map-pt','street')"><i data-lucide="map" class="icon-xs"></i> Strada</button>
+        </div>
+        <div id="map-pt" style="height: 100%; width: 100%;"></div>
+      </div>
+    </div>
+
+    ${renderFooter(lastEdit)}
+  `;
+
+  // Render mappa dopo che il DOM è in piedi
+  setTimeout(() => {
+    const coords = parseCoords(p.coords);
+    if (!coords) {
+      const wrap = document.getElementById('map-pt-wrap');
+      if (wrap) wrap.innerHTML = `
+        <div class="map-empty">
+          <i data-lucide="map-off" class="icon-xl"></i>
+          <div class="map-empty-text">Nessuna coordinata definita per questo punto.</div>
+          <div class="map-empty-hint">Aggiungi le coordinate nella scheda di modifica</div>
+        </div>
+      `;
+      refreshIcons();
+      return;
+    }
+    renderMap('map-pt', [{
+      coords,
+      type: 'town',
+      popup: `<div class="pop-day">${escapeHtml(p.code)}</div><div class="pop-name">${escapeHtml(p.title)}</div>${p.region ? `<div class="pop-notes">${escapeHtml(p.region)}</div>` : ''}`
+    }], { isPoint: true });
+  }, 50);
+}
+
+/* ===========================================================
+   FOOTER
+=========================================================== */
+function renderFooter(lastEdit) {
+  return `
+    <footer>
+      <div class="left"><i data-lucide="mountain-snow" class="icon-sm"></i> BIVACCO·70 · v2.0</div>
+      <div class="center">«Mai sotto un cielo che non si conosce.»</div>
+      <div class="right">Ult. edit ${escapeHtml(lastEdit)}</div>
+    </footer>
+  `;
+}
+
+/* ===========================================================
+   MODAL FRAMEWORK
+=========================================================== */
+function openModal(html) {
+  const back = document.getElementById('modal-back');
+  document.getElementById('modal').innerHTML = html;
+  back.classList.add('open');
+  back.onclick = (e) => { if (e.target === back) closeModal(); };
+  document.body.style.overflow = 'hidden';
+  refreshIcons();
+}
+function closeModal() {
+  document.getElementById('modal-back').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+/* ===========================================================
+   HERO IMAGE MODAL (settings-like)
+=========================================================== */
+function openHeroImageModal() {
+  const current = state.meta.heroImage || '';
+  openModal(`
+    <div class="modal-head">
+      <div class="modal-title"><span class="num">IMG/HOME</span><span>Immagine Hero</span></div>
+      <button class="modal-close" onclick="closeModal()"><i data-lucide="x" class="icon-sm"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="img-tabs">
+        <button class="img-tab active" data-tab="url" onclick="switchImgTab(this,'url')"><i data-lucide="link" class="icon-xs"></i> Da URL</button>
+        <button class="img-tab" data-tab="file" onclick="switchImgTab(this,'file')"><i data-lucide="upload" class="icon-xs"></i> Carica File</button>
+      </div>
+
+      <div class="img-tab-content active" data-tab="url">
+        <div class="field">
+          <label><i data-lucide="link" class="icon-xs"></i> URL Immagine</label>
+          <div class="image-url-field">
+            <input type="url" id="hero-url" value="${escapeAttr(current)}" placeholder="https://images.unsplash.com/...">
+            <div class="image-preview ${current ? '' : 'empty'}" id="hero-preview" style="${current ? `background-image:url('${escapeAttr(current)}');` : ''}">
+              ${current ? '' : '<i data-lucide="image" class="icon-sm"></i>'}
+            </div>
+          </div>
+          <div class="field-hint">Incolla un URL da Unsplash, Pexels, Imgur, Google Drive condiviso o un tuo link diretto.</div>
+        </div>
+      </div>
+
+      <div class="img-tab-content" data-tab="file">
+        <label class="file-drop" id="hero-drop">
+          <i data-lucide="image-up" class="icon-xl"></i>
+          <div class="file-drop-text">Trascina un'immagine qui, o clicca per selezionare</div>
+          <div class="file-drop-hint">JPG · PNG · WEBP · max 10MB · sarà compressa automaticamente</div>
+          <input type="file" accept="image/*" id="hero-file">
+        </label>
+        <div class="file-preview-large empty" id="hero-file-preview">
+          <i data-lucide="image" class="icon-lg"></i>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <span style="font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--forest-faint);text-transform:uppercase;">Cover Home</span>
+      <div style="display:flex;gap:8px;">
+        ${current ? `<button class="btn btn-danger" onclick="clearHeroImage()"><i data-lucide="trash-2" class="icon-sm"></i> Rimuovi</button>` : ''}
+        <button class="btn btn-ghost" onclick="closeModal()">Annulla</button>
+        <button class="btn btn-primary" onclick="saveHeroImage()"><i data-lucide="check" class="icon-sm"></i> Salva</button>
+      </div>
+    </div>
+  `);
+  bindImageModalHandlers('hero', 'meta');
+}
+
+async function saveHeroImage() {
+  // Decide quale tab è attivo: se file, prendi data url; altrimenti URL
+  const activeTab = document.querySelector('.img-tab.active')?.dataset.tab || 'url';
+  let value = '';
+  if (activeTab === 'file') {
+    value = window._pendingImageData || state.meta.heroImage || '';
+  } else {
+    value = document.getElementById('hero-url').value.trim();
+  }
+  state.meta.heroImage = value;
+  window._pendingImageData = null;
+  await persistMeta();
+  closeModal();
+  showToast('Immagine salvata');
+  render();
+}
+async function clearHeroImage() {
+  state.meta.heroImage = '';
+  await persistMeta();
+  closeModal();
+  showToast('Immagine rimossa');
+  render();
+}
+
+function switchImgTab(btn, tab) {
+  document.querySelectorAll('.img-tab').forEach(b => b.classList.toggle('active', b === btn));
+  document.querySelectorAll('.img-tab-content').forEach(c => c.classList.toggle('active', c.dataset.tab === tab));
+  refreshIcons();
+}
+
+function bindImageModalHandlers(prefix, kind) {
+  // URL tab live preview
+  const urlInput = document.getElementById(`${prefix}-url`);
+  const urlPreview = document.getElementById(`${prefix}-preview`);
+  if (urlInput) {
+    urlInput.addEventListener('input', (e) => {
+      const v = e.target.value.trim();
+      if (v) { urlPreview.style.backgroundImage = `url('${v}')`; urlPreview.classList.remove('empty'); urlPreview.innerHTML = ''; }
+      else { urlPreview.style.backgroundImage = ''; urlPreview.classList.add('empty'); urlPreview.innerHTML = '<i data-lucide="image" class="icon-sm"></i>'; refreshIcons(); }
+    });
+  }
+
+  // File tab
+  const drop = document.getElementById(`${prefix}-drop`);
+  const fileInput = document.getElementById(`${prefix}-file`);
+  const filePreview = document.getElementById(`${prefix}-file-preview`);
+  if (!drop || !fileInput) return;
+
+  const handleFile = async (file) => {
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      showToast('File troppo grande (max 10MB)');
+      return;
+    }
+    try {
+      filePreview.classList.remove('empty');
+      filePreview.innerHTML = `<div class="file-preview-info"><i data-lucide="loader-2" class="icon-xs"></i> Compressione…</div>`;
+      refreshIcons();
+      const result = await compressImage(file, 1600, 0.82);
+      window._pendingImageData = result.dataUrl;
+      filePreview.style.backgroundImage = `url('${result.dataUrl}')`;
+      filePreview.innerHTML = `<div class="file-preview-info">${result.width}×${result.height} · ${fmtBytes(result.compressedSize)} (da ${fmtBytes(result.originalSize)})</div>`;
+    } catch (err) {
+      console.error(err);
+      showToast(err.message || 'Errore caricamento');
+      filePreview.classList.add('empty');
+      filePreview.innerHTML = '<i data-lucide="image" class="icon-lg"></i>';
+      refreshIcons();
+    }
+  };
+
+  fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+  drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('dragging'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('dragging'));
+  drop.addEventListener('drop', (e) => {
+    e.preventDefault();
+    drop.classList.remove('dragging');
+    if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+}
+
+/* ===========================================================
+   ITINERARY / POINT IMAGE QUICK MODAL
+=========================================================== */
+function openItineraryImageModal(id) { openCoverImageModal('itinerary', id); }
+function openPointImageModal(id) { openCoverImageModal('point', id); }
+
+function openCoverImageModal(kind, id) {
+  const item = kind === 'itinerary' ? state.itineraries.find(x => x.id === id) : state.points.find(x => x.id === id);
+  if (!item) return;
+  const current = item.coverImage || '';
+  openModal(`
+    <div class="modal-head">
+      <div class="modal-title"><span class="num">IMG/${escapeHtml(item.code)}</span><span>Immagine di Copertina</span></div>
+      <button class="modal-close" onclick="closeModal()"><i data-lucide="x" class="icon-sm"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="font-family:var(--serif);font-size:14px;color:var(--forest-soft);margin-bottom:14px;font-style:italic;">${escapeHtml(item.title)}</div>
+
+      <div class="img-tabs">
+        <button class="img-tab active" data-tab="url" onclick="switchImgTab(this,'url')"><i data-lucide="link" class="icon-xs"></i> Da URL</button>
+        <button class="img-tab" data-tab="file" onclick="switchImgTab(this,'file')"><i data-lucide="upload" class="icon-xs"></i> Carica File</button>
+      </div>
+
+      <div class="img-tab-content active" data-tab="url">
+        <div class="field">
+          <label><i data-lucide="link" class="icon-xs"></i> URL Immagine</label>
+          <div class="image-url-field">
+            <input type="url" id="cover-url" value="${escapeAttr(current)}" placeholder="https://images.unsplash.com/...">
+            <div class="image-preview ${current ? '' : 'empty'}" id="cover-preview" style="${current ? `background-image:url('${escapeAttr(current)}');` : ''}">
+              ${current ? '' : '<i data-lucide="image" class="icon-sm"></i>'}
+            </div>
+          </div>
+          <div class="field-hint">Su unsplash.com cerca il posto, clicca destro sull'immagine, "Copia indirizzo immagine".</div>
+        </div>
+      </div>
+
+      <div class="img-tab-content" data-tab="file">
+        <label class="file-drop" id="cover-drop">
+          <i data-lucide="image-up" class="icon-xl"></i>
+          <div class="file-drop-text">Trascina un'immagine qui, o clicca per selezionare</div>
+          <div class="file-drop-hint">JPG · PNG · WEBP · max 10MB · sarà compressa automaticamente</div>
+          <input type="file" accept="image/*" id="cover-file">
+        </label>
+        <div class="file-preview-large empty" id="cover-file-preview">
+          <i data-lucide="image" class="icon-lg"></i>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <span style="font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--forest-faint);text-transform:uppercase;">${escapeHtml(item.code)}</span>
+      <div style="display:flex;gap:8px;">
+        ${current ? `<button class="btn btn-danger" onclick="clearCoverImage('${kind}','${id}')"><i data-lucide="trash-2" class="icon-sm"></i> Rimuovi</button>` : ''}
+        <button class="btn btn-ghost" onclick="closeModal()">Annulla</button>
+        <button class="btn btn-primary" onclick="saveCoverImage('${kind}','${id}')"><i data-lucide="check" class="icon-sm"></i> Salva</button>
+      </div>
+    </div>
+  `);
+  bindImageModalHandlers('cover', kind);
+}
+
+async function saveCoverImage(kind, id) {
+  const activeTab = document.querySelector('.img-tab.active')?.dataset.tab || 'url';
+  let url = '';
+  if (activeTab === 'file') {
+    url = window._pendingImageData || '';
+  } else {
+    url = document.getElementById('cover-url').value.trim();
+  }
+  window._pendingImageData = null;
+
+  if (kind === 'itinerary') {
+    const it = state.itineraries.find(x => x.id === id); if (!it) return;
+    it.coverImage = url;
+    await persistItineraries();
+  } else {
+    const p = state.points.find(x => x.id === id); if (!p) return;
+    p.coverImage = url;
+    await persistPoints();
+  }
+  closeModal();
+  showToast('Immagine salvata');
+  render();
+}
+async function clearCoverImage(kind, id) {
+  if (kind === 'itinerary') {
+    const it = state.itineraries.find(x => x.id === id); if (!it) return;
+    it.coverImage = '';
+    await persistItineraries();
+  } else {
+    const p = state.points.find(x => x.id === id); if (!p) return;
+    p.coverImage = '';
+    await persistPoints();
+  }
+  closeModal();
+  showToast('Immagine rimossa');
+  render();
+}
+
+/* ===========================================================
+   ITINERARY MODAL (full edit)
+=========================================================== */
+function openItineraryModal(id = null) {
+  const editing = id ? state.itineraries.find(x => x.id === id) : null;
+  const draft = editing ? JSON.parse(JSON.stringify(editing)) : {
+    id: uid(), code: nextCode('PRJ', state.itineraries),
+    title: '', region: '', description: '',
+    distance: '', duration: '', season: '', terrain: '',
+    status: 'draft', stops: [], notes: '', coverImage: '',
+    dateAdded: new Date().toISOString()
+  };
+  window._draft = draft;
+
+  openModal(`
+    <div class="modal-head">
+      <div class="modal-title">
+        <span class="num">${editing ? 'EDIT' : 'NEW'} · ${escapeHtml(draft.code)}</span>
+        <span>${editing ? 'Modifica Itinerario' : 'Nuovo Itinerario'}</span>
+      </div>
+      <button class="modal-close" onclick="closeModal()"><i data-lucide="x" class="icon-sm"></i></button>
+    </div>
+    <form id="itin-form" onsubmit="event.preventDefault(); saveItinerary();" class="modal-body">
+      <div class="field">
+        <label><i data-lucide="type" class="icon-xs"></i> Titolo / Nome del Viaggio</label>
+        <input type="text" id="f-title" value="${escapeAttr(draft.title)}" placeholder="Es. Dolomiti Orientali" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label><i data-lucide="map-pin" class="icon-xs"></i> Regione / Area</label>
+          <input type="text" id="f-region" value="${escapeAttr(draft.region)}" placeholder="Veneto · Trentino">
+        </div>
+        <div class="field">
+          <label><i data-lucide="sun" class="icon-xs"></i> Stagione</label>
+          <input type="text" id="f-season" value="${escapeAttr(draft.season)}" placeholder="Giu — Set">
+        </div>
+      </div>
+      <div class="field-row field-row-3">
+        <div class="field">
+          <label><i data-lucide="ruler" class="icon-xs"></i> Distanza</label>
+          <input type="text" id="f-distance" value="${escapeAttr(draft.distance)}" placeholder="847 km">
+        </div>
+        <div class="field">
+          <label><i data-lucide="clock" class="icon-xs"></i> Durata</label>
+          <input type="text" id="f-duration" value="${escapeAttr(draft.duration)}" placeholder="9 giorni">
+        </div>
+        <div class="field">
+          <label><i data-lucide="mountain" class="icon-xs"></i> Terreno</label>
+          <input type="text" id="f-terrain" value="${escapeAttr(draft.terrain)}" placeholder="Alpino, Costiero…">
+        </div>
+      </div>
+      <div class="field">
+        <label><i data-lucide="activity" class="icon-xs"></i> Stato</label>
+        <select id="f-status">
+          <option value="draft" ${draft.status==='draft'?'selected':''}>In Bozza</option>
+          <option value="filed" ${draft.status==='filed'?'selected':''}>Archiviato</option>
+          <option value="active" ${draft.status==='active'?'selected':''}>In Corso</option>
+          <option value="completed" ${draft.status==='completed'?'selected':''}>Concluso</option>
+        </select>
+      </div>
+      <div class="field">
+        <label><i data-lucide="image" class="icon-xs"></i> Immagine di Copertina (URL)</label>
+        <input type="url" id="f-cover" value="${escapeAttr(draft.coverImage)}" placeholder="https://images.unsplash.com/...">
+        <div class="field-hint">Opzionale. Lascia vuoto per usare un placeholder con icona.</div>
+      </div>
+      <div class="field">
+        <label><i data-lucide="align-left" class="icon-xs"></i> Descrizione</label>
+        <textarea id="f-description" placeholder="Cosa rende speciale questo viaggio? Strade, soste, atmosfere…">${escapeHtml(draft.description)}</textarea>
+      </div>
+      <div class="field">
+        <label><i data-lucide="notebook-pen" class="icon-xs"></i> Note di Campo</label>
+        <textarea id="f-notes" placeholder="Promemoria pratici, equipaggiamento, attenzioni…">${escapeHtml(draft.notes)}</textarea>
+      </div>
+      <div class="field">
+        <label><i data-lucide="milestone" class="icon-xs"></i> Tappe del Viaggio</label>
+        <div class="sublist" id="stages-edit">${renderStagesEditor(draft.stops)}</div>
+        <button type="button" class="sub-add" onclick="addStage()"><i data-lucide="plus" class="icon-sm"></i> Aggiungi Tappa</button>
+      </div>
+    </form>
+    <div class="modal-foot">
+      <span style="font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--forest-faint);text-transform:uppercase;">${escapeHtml(draft.code)} · ${editing ? 'Modifica' : 'Nuova voce'}</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost" onclick="closeModal()">Annulla</button>
+        <button class="btn btn-primary" onclick="saveItinerary()"><i data-lucide="check" class="icon-sm"></i> Salva</button>
+      </div>
+    </div>
+  `);
+}
+
+function renderStagesEditor(stops) {
+  if (!stops || stops.length === 0) return '<div class="sublist-empty">Nessuna tappa. Aggiungi la prima fermata.</div>';
+  return stops.map((s, i) => stageEditorItem(s, i)).join('');
+}
+
+function stageEditorItem(s, i) {
+  return `
+    <div class="sub-item" data-stage-id="${s.id}">
+      <div class="sub-item-head">
+        <span class="sub-item-num">Tappa ${String(i+1).padStart(2,'0')}</span>
+        <button type="button" class="sub-item-remove" onclick="removeStage('${s.id}')"><i data-lucide="x" class="icon-xs"></i></button>
+      </div>
+      <div class="field-row">
+        <div class="field" style="margin-bottom:12px;">
+          <label>Nome</label>
+          <input type="text" data-k="name" value="${escapeAttr(s.name||'')}" placeholder="Es. Lago di Braies">
+        </div>
+        <div class="field" style="margin-bottom:12px;">
+          <label>Coordinate</label>
+          <input type="text" data-k="coords" value="${escapeAttr(s.coords||'')}" placeholder="46°41'N · 12°05'E">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field" style="margin-bottom:12px;">
+          <label>Giorno</label>
+          <input type="number" min="1" data-k="day" value="${s.day||i+1}">
+        </div>
+        <div class="field" style="margin-bottom:12px;">
+          <label>Tipo</label>
+          <div class="type-picker" data-k="type">
+            ${STAGE_TYPES.map(t => `<button type="button" class="type-opt ${s.type===t.id?'active':''}" data-val="${t.id}" onclick="pickType(this)"><i data-lucide="${t.icon}" class="icon-xs"></i> ${t.label}</button>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Note</label>
+        <textarea data-k="notes" placeholder="Cosa fare, vedere, ricordare…">${escapeHtml(s.notes||'')}</textarea>
+      </div>
+    </div>
+  `;
+}
+
+function pickType(btn) {
+  const picker = btn.closest('.type-picker');
+  picker.querySelectorAll('.type-opt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function addStage() {
+  collectStages();
+  window._draft.stops.push({ id: uid(), name: '', coords: '', day: (window._draft.stops.length || 0) + 1, type: 'town', notes: '' });
+  document.getElementById('stages-edit').innerHTML = renderStagesEditor(window._draft.stops);
+  refreshIcons();
+}
+function removeStage(sid) {
+  collectStages();
+  window._draft.stops = window._draft.stops.filter(s => s.id !== sid);
+  document.getElementById('stages-edit').innerHTML = renderStagesEditor(window._draft.stops);
+  refreshIcons();
+}
+function collectStages() {
+  document.querySelectorAll('#stages-edit .sub-item').forEach(el => {
+    const sid = el.dataset.stageId;
+    const stop = window._draft.stops.find(s => s.id === sid);
+    if (!stop) return;
+    el.querySelectorAll('input,textarea').forEach(input => {
+      const k = input.dataset.k;
+      if (!k) return;
+      if (k === 'day') stop[k] = parseInt(input.value, 10) || 1;
+      else stop[k] = input.value;
+    });
+    const active = el.querySelector('.type-picker .type-opt.active');
+    if (active) stop.type = active.dataset.val;
+  });
+}
+
+async function saveItinerary() {
+  const d = window._draft;
+  d.title = document.getElementById('f-title').value.trim();
+  if (!d.title) { showToast('Manca il titolo'); return; }
+  d.region = document.getElementById('f-region').value.trim();
+  d.season = document.getElementById('f-season').value.trim();
+  d.distance = document.getElementById('f-distance').value.trim();
+  d.duration = document.getElementById('f-duration').value.trim();
+  d.terrain = document.getElementById('f-terrain').value.trim();
+  d.status = document.getElementById('f-status').value;
+  d.coverImage = document.getElementById('f-cover').value.trim();
+  d.description = document.getElementById('f-description').value.trim();
+  d.notes = document.getElementById('f-notes').value.trim();
+  collectStages();
+
+  const idx = state.itineraries.findIndex(x => x.id === d.id);
+  if (idx >= 0) state.itineraries[idx] = d;
+  else state.itineraries.unshift(d);
+
+  await persistItineraries();
+  closeModal();
+  showToast('Itinerario salvato');
+  goto('itinerary', d.id);
+}
+
+/* ===========================================================
+   POINT MODAL (full edit)
+=========================================================== */
+function openPointModal(id = null) {
+  const editing = id ? state.points.find(x => x.id === id) : null;
+  const draft = editing ? JSON.parse(JSON.stringify(editing)) : {
+    id: uid(), code: nextCode('PR', state.points),
+    title: '', region: '', coords: '', description: '',
+    coverImage: '', bestPoints: [], dateAdded: new Date().toISOString()
+  };
+  window._draft = draft;
+
+  openModal(`
+    <div class="modal-head">
+      <div class="modal-title">
+        <span class="num">${editing ? 'EDIT' : 'NEW'} · ${escapeHtml(draft.code)}</span>
+        <span>${editing ? 'Modifica Punto' : 'Nuovo Punto'}</span>
+      </div>
+      <button class="modal-close" onclick="closeModal()"><i data-lucide="x" class="icon-sm"></i></button>
+    </div>
+    <form id="pt-form" onsubmit="event.preventDefault(); savePoint();" class="modal-body">
+      <div class="field">
+        <label><i data-lucide="type" class="icon-xs"></i> Nome del Punto</label>
+        <input type="text" id="p-title" value="${escapeAttr(draft.title)}" placeholder="Es. Lago di Como · Riva Est" required>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label><i data-lucide="map-pin" class="icon-xs"></i> Regione / Area</label>
+          <input type="text" id="p-region" value="${escapeAttr(draft.region)}" placeholder="Lombardia">
+        </div>
+        <div class="field">
+          <label><i data-lucide="navigation" class="icon-xs"></i> Coordinate</label>
+          <input type="text" id="p-coords" value="${escapeAttr(draft.coords)}" placeholder="45°59'N · 9°15'E">
+        </div>
+      </div>
+      <div class="field">
+        <label><i data-lucide="image" class="icon-xs"></i> Immagine di Copertina (URL)</label>
+        <input type="url" id="p-cover" value="${escapeAttr(draft.coverImage)}" placeholder="https://images.unsplash.com/...">
+        <div class="field-hint">Opzionale.</div>
+      </div>
+      <div class="field">
+        <label><i data-lucide="align-left" class="icon-xs"></i> Descrizione</label>
+        <textarea id="p-description" placeholder="Perché questo posto vale la sosta…">${escapeHtml(draft.description)}</textarea>
+      </div>
+      <div class="field">
+        <label><i data-lucide="star" class="icon-xs"></i> Best Points</label>
+        <div class="sublist" id="bp-edit">${renderBPEditor(draft.bestPoints)}</div>
+        <button type="button" class="sub-add" onclick="addBP()"><i data-lucide="plus" class="icon-sm"></i> Aggiungi Best Point</button>
+      </div>
+    </form>
+    <div class="modal-foot">
+      <span style="font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--forest-faint);text-transform:uppercase;">${escapeHtml(draft.code)} · ${editing ? 'Modifica' : 'Nuova voce'}</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost" onclick="closeModal()">Annulla</button>
+        <button class="btn btn-primary" onclick="savePoint()"><i data-lucide="check" class="icon-sm"></i> Salva</button>
+      </div>
+    </div>
+  `);
+}
+
+function renderBPEditor(bps) {
+  if (!bps || bps.length === 0) return '<div class="sublist-empty">Nessun best point. Aggiungi cibo, viste, sentieri, posti dove dormire.</div>';
+  return bps.map((b, i) => bpEditorItem(b, i)).join('');
+}
+
+function bpEditorItem(b, i) {
+  return `
+    <div class="sub-item" data-bp-id="${b.id}">
+      <div class="sub-item-head">
+        <span class="sub-item-num">BP ${String(i+1).padStart(2,'0')}</span>
+        <button type="button" class="sub-item-remove" onclick="removeBP('${b.id}')"><i data-lucide="x" class="icon-xs"></i></button>
+      </div>
+      <div class="field-row">
+        <div class="field" style="margin-bottom:12px;">
+          <label>Nome</label>
+          <input type="text" data-k="name" value="${escapeAttr(b.name||'')}" placeholder="Es. Trattoria del Glicine">
+        </div>
+        <div class="field" style="margin-bottom:12px;">
+          <label>Distanza</label>
+          <input type="text" data-k="distance" value="${escapeAttr(b.distance||'')}" placeholder="0.8 km">
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Tipo</label>
+        <div class="type-picker" data-k="type">
+          ${BP_TYPES.map(t => `<button type="button" class="type-opt ${b.type===t.id?'active':''}" data-val="${t.id}" onclick="pickType(this)"><i data-lucide="${t.icon}" class="icon-xs"></i> ${t.label}</button>`).join('')}
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Note</label>
+        <textarea data-k="notes" placeholder="Cosa ordinare, quando andare, dettagli pratici…">${escapeHtml(b.notes||'')}</textarea>
+      </div>
+    </div>
+  `;
+}
+
+function addBP() {
+  collectBPs();
+  window._draft.bestPoints.push({ id: uid(), name: '', distance: '', type: 'food', notes: '' });
+  document.getElementById('bp-edit').innerHTML = renderBPEditor(window._draft.bestPoints);
+  refreshIcons();
+}
+function removeBP(bid) {
+  collectBPs();
+  window._draft.bestPoints = window._draft.bestPoints.filter(b => b.id !== bid);
+  document.getElementById('bp-edit').innerHTML = renderBPEditor(window._draft.bestPoints);
+  refreshIcons();
+}
+function collectBPs() {
+  document.querySelectorAll('#bp-edit .sub-item').forEach(el => {
+    const bid = el.dataset.bpId;
+    const bp = window._draft.bestPoints.find(b => b.id === bid);
+    if (!bp) return;
+    el.querySelectorAll('input,textarea').forEach(input => {
+      const k = input.dataset.k;
+      if (!k) return;
+      bp[k] = input.value;
+    });
+    const active = el.querySelector('.type-picker .type-opt.active');
+    if (active) bp.type = active.dataset.val;
+  });
+}
+
+async function savePoint() {
+  const d = window._draft;
+  d.title = document.getElementById('p-title').value.trim();
+  if (!d.title) { showToast('Manca il nome'); return; }
+  d.region = document.getElementById('p-region').value.trim();
+  d.coords = document.getElementById('p-coords').value.trim();
+  d.coverImage = document.getElementById('p-cover').value.trim();
+  d.description = document.getElementById('p-description').value.trim();
+  collectBPs();
+
+  const idx = state.points.findIndex(x => x.id === d.id);
+  if (idx >= 0) state.points[idx] = d;
+  else state.points.unshift(d);
+
+  await persistPoints();
+  closeModal();
+  showToast('Punto salvato');
+  goto('point', d.id);
+}
+
+/* ===========================================================
+   SETTINGS MODAL — Export / Import / Stats
+=========================================================== */
+function openSettingsModal() {
+  const totalImages = state.itineraries.filter(x => x.coverImage).length + state.points.filter(x => x.coverImage).length + (state.meta.heroImage ? 1 : 0);
+  const totalStops = state.itineraries.reduce((a,it)=>a+(it.stops?.length||0), 0);
+  const totalBPs = state.points.reduce((a,p)=>a+(p.bestPoints?.length||0), 0);
+
+  openModal(`
+    <div class="modal-head">
+      <div class="modal-title"><span class="num">QUADERNO</span><span>Impostazioni & Backup</span></div>
+      <button class="modal-close" onclick="closeModal()"><i data-lucide="x" class="icon-sm"></i></button>
+    </div>
+    <div class="modal-body">
+
+      <div class="settings-section">
+        <div class="settings-section-title"><i data-lucide="bar-chart-3" class="icon-xs"></i> Stato del Quaderno</div>
+        <div class="settings-stats">
+          <div class="settings-stat">
+            <div class="settings-stat-label">Itinerari</div>
+            <div class="settings-stat-value">${state.itineraries.length}</div>
+          </div>
+          <div class="settings-stat">
+            <div class="settings-stat-label">Punti</div>
+            <div class="settings-stat-value">${state.points.length}</div>
+          </div>
+          <div class="settings-stat">
+            <div class="settings-stat-label">Tappe</div>
+            <div class="settings-stat-value">${totalStops}</div>
+          </div>
+          <div class="settings-stat">
+            <div class="settings-stat-label">Best Points</div>
+            <div class="settings-stat-value">${totalBPs}</div>
+          </div>
+          <div class="settings-stat">
+            <div class="settings-stat-label">Immagini</div>
+            <div class="settings-stat-value">${totalImages}</div>
+          </div>
+          <div class="settings-stat">
+            <div class="settings-stat-label">Ult. Modifica</div>
+            <div class="settings-stat-value" style="font-size:14px;">${state.meta.lastEdit ? fmtDate(state.meta.lastEdit) : '—'}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title"><i data-lucide="download" class="icon-xs"></i> Esporta Backup</div>
+        <div class="settings-section-desc">Scarica un file JSON con tutti i tuoi dati: itinerari, punti, immagini caricate. Tienilo al sicuro — è il tuo backup completo.</div>
+        <div class="settings-actions">
+          <button class="btn btn-primary" onclick="exportData()"><i data-lucide="download" class="icon-sm"></i> Scarica .json</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title"><i data-lucide="upload" class="icon-xs"></i> Importa Dati</div>
+        <div class="settings-section-desc"><strong>Sostituisci</strong>: cancella tutto e ricrea il quaderno dal file. <strong>Unisci</strong>: aggiunge le voci nuove ai tuoi dati attuali (le voci con stesso ID sono ignorate).</div>
+        <div class="settings-actions">
+          <button class="btn btn-ghost" onclick="triggerImport('merge')"><i data-lucide="git-merge" class="icon-sm"></i> Unisci con esistenti</button>
+          <button class="btn btn-accent" onclick="confirmImportReplace()"><i data-lucide="refresh-cw" class="icon-sm"></i> Sostituisci tutto</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title"><i data-lucide="trash" class="icon-xs"></i> Reset</div>
+        <div class="settings-section-desc">Elimina tutti i dati e ricarica i seed di partenza. <strong>Irreversibile</strong> — fai prima un backup.</div>
+        <div class="settings-actions">
+          <button class="btn btn-danger" onclick="confirmReset()"><i data-lucide="alert-triangle" class="icon-sm"></i> Reset Completo</button>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-foot">
+      <span style="font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--forest-faint);text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;"><i data-lucide="hard-drive" class="icon-xs"></i> ${window.storage ? 'Storage cloud' : 'localStorage browser'}</span>
+      <button class="btn btn-ghost" onclick="closeModal()">Chiudi</button>
+    </div>
+  `);
+}
+
+function confirmImportReplace() {
+  openModal(`
+    <div class="modal-head">
+      <div class="modal-title"><span class="num">CONFIRM</span><span>Sostituire Tutti i Dati?</span></div>
+      <button class="modal-close" onclick="openSettingsModal()"><i data-lucide="x" class="icon-sm"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-family:var(--serif);font-size:17px;line-height:1.55;color:var(--forest-soft);">
+        Stai per <strong style="color:var(--forest);">cancellare tutti i dati attuali</strong> (${state.itineraries.length} itinerari, ${state.points.length} punti) e sostituirli con quelli del file. Questa azione non può essere annullata.
+      </p>
+      <p style="font-family:var(--serif);font-size:14px;font-style:italic;color:var(--forest-faint);margin-top:12px;">Hai già fatto un backup?</p>
+    </div>
+    <div class="modal-foot">
+      <span style="font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--rust);text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;"><i data-lucide="triangle-alert" class="icon-xs"></i> Irreversibile</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost" onclick="openSettingsModal()">Annulla</button>
+        <button class="btn btn-accent" onclick="triggerImport('replace')"><i data-lucide="upload" class="icon-sm"></i> Procedi</button>
+      </div>
+    </div>
+  `);
+}
+
+function confirmReset() {
+  openModal(`
+    <div class="modal-head">
+      <div class="modal-title"><span class="num">RESET</span><span>Cancellare Tutto il Quaderno?</span></div>
+      <button class="modal-close" onclick="openSettingsModal()"><i data-lucide="x" class="icon-sm"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-family:var(--serif);font-size:17px;line-height:1.55;color:var(--forest-soft);">
+        Tutti gli itinerari, tutti i punti, tutte le immagini caricate verranno eliminati. Il quaderno tornerà ai dati di esempio iniziali.
+      </p>
+      <p style="font-family:var(--serif);font-size:14px;font-style:italic;color:var(--rust);margin-top:12px;">Questa azione è <strong>irreversibile</strong>. Non posso recuperare i dati cancellati.</p>
+    </div>
+    <div class="modal-foot">
+      <span style="font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--rust);text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;"><i data-lucide="triangle-alert" class="icon-xs"></i> Punto di non ritorno</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost" onclick="openSettingsModal()">Annulla</button>
+        <button class="btn btn-danger" onclick="doReset()"><i data-lucide="trash-2" class="icon-sm"></i> Reset</button>
+      </div>
+    </div>
+  `);
+}
+
+async function doReset() {
+  state.itineraries = [];
+  state.points = [];
+  state.meta = { lastEdit: null, heroImage: '' };
+  seedDataIfEmpty();
+  await persistItineraries();
+  await persistPoints();
+  await persistMeta();
+  closeModal();
+  showToast('Quaderno resettato');
+  goto('home');
+}
+
+
+function confirmDelete(kind, id) {
+  const item = kind === 'itinerary' ? state.itineraries.find(x => x.id === id) : state.points.find(x => x.id === id);
+  if (!item) return;
+  openModal(`
+    <div class="modal-head">
+      <div class="modal-title"><span class="num">DELETE · ${escapeHtml(item.code)}</span><span>Conferma Eliminazione</span></div>
+      <button class="modal-close" onclick="closeModal()"><i data-lucide="x" class="icon-sm"></i></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-family:var(--serif);font-size:17px;line-height:1.55;color:var(--forest-soft);">Stai per eliminare <strong style="color:var(--forest);">${escapeHtml(item.title)}</strong>. Questa azione non può essere annullata.</p>
+    </div>
+    <div class="modal-foot">
+      <span style="font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--rust);text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;"><i data-lucide="triangle-alert" class="icon-xs"></i> Irreversibile</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost" onclick="closeModal()">Annulla</button>
+        <button class="btn btn-danger" onclick="doDelete('${kind}','${id}')"><i data-lucide="trash-2" class="icon-sm"></i> Elimina</button>
+      </div>
+    </div>
+  `);
+}
+async function doDelete(kind, id) {
+  if (kind === 'itinerary') {
+    state.itineraries = state.itineraries.filter(x => x.id !== id);
+    await persistItineraries();
+    closeModal(); showToast('Itinerario eliminato'); goto('itinerari');
+  } else {
+    state.points = state.points.filter(x => x.id !== id);
+    await persistPoints();
+    closeModal(); showToast('Punto eliminato'); goto('punti');
+  }
+}
+
+/* ===========================================================
+   BOOT
+=========================================================== */
+async function boot() {
+  await loadAll();
+  const seeded = seedDataIfEmpty();
+  if (seeded) { await persistItineraries(); await persistPoints(); }
+  state.route = parseHash();
+  await render();
+}
+boot();
+
+// expose to window
+Object.assign(window, {
+  goto, openItineraryModal, openPointModal, closeModal,
+  saveItinerary, savePoint, addStage, removeStage, addBP, removeBP, pickType,
+  confirmDelete, doDelete,
+  openHeroImageModal, saveHeroImage, clearHeroImage,
+  openItineraryImageModal, openPointImageModal, saveCoverImage, clearCoverImage,
+  // new in v3
+  switchImgTab,
+  setItinFilter, clearItinFilter, clearPtsFilter,
+  switchTile,
+  openSettingsModal, exportData, triggerImport, confirmImportReplace, confirmReset, doReset
+});
+</script>
+</body>
+</html>
