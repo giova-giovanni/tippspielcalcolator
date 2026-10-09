@@ -65,7 +65,10 @@
   function catShort(c) { return t('catS.' + c); }
   function wdShort(i) { return t('wd.' + i); }
   function wdLong(i) { return t('wdl.' + i); }
-  function statusName(s) { return t('status.' + (s || 'pending')); }
+  /** translation with a fallback for values the engine may add later */
+  function tOr(key, fb) { var s = t(key); return s === key ? String(fb) : s; }
+  function statusName(s) { return tOr('status.' + (s || 'pending'), s); }
+  function modelName(n) { return tOr('model.' + (n || 'heuristic'), n); }
   function pick(obj, base) { // obj.note_de / obj.note_it
     if (!obj) return '';
     return obj[base + '_' + lang] || obj[base + '_de'] || '';
@@ -91,7 +94,10 @@
   function fmtPct(p, d) {
     if (!isNum(p)) return '–';
     if (d === undefined) d = (p > 0 && p < 0.01) ? 1 : 0;
-    return nf({ style: 'percent', minimumFractionDigits: d, maximumFractionDigits: d }).format(p);
+    var f = nf({ style: 'percent', minimumFractionDigits: d, maximumFractionDigits: d });
+    var tiny = Math.pow(10, -(d + 2));
+    if (p > 0 && p < tiny / 2) return '< ' + f.format(tiny);
+    return f.format(p);
   }
   function pad(n) { return (n < 10 ? '0' : '') + n; }
 
@@ -122,6 +128,7 @@
   }
   function fmtDM(iso) { return fmtDate(iso, { day: '2-digit', month: '2-digit' }); }
   function fmtDMY(iso) { return fmtDate(iso, { day: '2-digit', month: '2-digit', year: 'numeric' }); }
+  function fmtDMy(iso) { return fmtDate(iso, { day: '2-digit', month: '2-digit', year: '2-digit' }); }
   function fmtLong(iso) { return fmtDate(iso, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }
   function fmtWdDM(iso) { return wdShort(weekdayOf(iso)) + ' ' + fmtDM(iso); }
 
@@ -537,25 +544,47 @@
     });
     return passPrompt;
   }
-  function decryptWithPrompt(env) {
-    var stored = store.get('passphrase');
-    var tryPass = function (pass, err) {
-      var p = pass ? Promise.resolve(pass) : askPassphrase(err);
-      return p.then(function (pw) {
-        if (!pw) return null;
-        return decryptEnvelope(env, pw).then(function (obj) {
-          store.set('passphrase', pw);
-          return obj;
-        }, function (e) {
-          if (e && e.name === 'OperationError') {
-            if (store.get('passphrase') === pw) store.set('passphrase', null);
-            return tryPass(null, t('pass.wrong'));
-          }
-          throw e;
+  /* All JSON files share one passphrase: verify it once (one prompt, even with many parallel loads),
+   * then decrypt every file with it. */
+  var passReady = null; // Promise<{pw, env, obj} | null>
+  function resetPass() { passReady = null; }
+  function verifiedPass(env) {
+    if (!passReady) {
+      var loop = function (pw, err) {
+        var p = pw ? Promise.resolve(pw) : askPassphrase(err);
+        return p.then(function (pass) {
+          if (!pass) return null;
+          return decryptEnvelope(env, pass).then(function (obj) {
+            store.set('passphrase', pass);
+            return { pw: pass, env: env, obj: obj };
+          }, function (e) {
+            if (e && e.name === 'OperationError') {
+              if (store.get('passphrase') === pass) store.set('passphrase', null);
+              return loop(null, t('pass.wrong'));
+            }
+            throw e;
+          });
         });
+      };
+      var pr = loop(store.get('passphrase'), null);
+      passReady = pr;
+      pr.then(function (r) { if (!r && passReady === pr) passReady = null; }, function () { if (passReady === pr) passReady = null; });
+    }
+    return passReady;
+  }
+  function decryptWithPrompt(env) {
+    return verifiedPass(env).then(function (r) {
+      if (!r) return null;
+      if (r.env === env) return r.obj;
+      return decryptEnvelope(env, r.pw).catch(function (e) {
+        if (e && e.name === 'OperationError') { // file encrypted with another passphrase -> ask again
+          resetPass();
+          store.set('passphrase', null);
+          return decryptWithPrompt(env);
+        }
+        throw e;
       });
-    };
-    return tryPass(stored, null);
+    });
   }
 
   // ------------------------------------------------------------------ data loading
@@ -698,12 +727,49 @@
     });
     return H;
   }
-  function tipOf(ctx, player, date) { // {v,h,b, points, pending}
+  function tipOf(ctx, player, date) { // {v,h,b, opts:{cat:[canonical]}, points, pending}
     var pf = fold(player);
     var p = ctx.pending.filter(function (x) { return x.kind === 'tip' && x.date === date && fold(x.player) === pf; })[0];
-    if (p) return { v: p.v, h: p.h, b: p.b, points: null, pending: true };
+    var opts = {};
+    if (p) {
+      CATS.forEach(function (c) { opts[c] = canonOpts(ctx, c, p[SHORT[c]]); });
+      return { v: p.v, h: p.h, b: p.b, opts: opts, points: null, pending: true };
+    }
     var r = ((ctx.tips && ctx.tips.rows) || []).filter(function (x) { return x.date === date && fold(x.player) === pf; })[0];
-    return r ? { v: r.v, h: r.h, b: r.b, points: r.points, pending: false } : null;
+    if (!r) return null;
+    // the engine scores the canonical options (*_norm: aliases/typos merged), not the raw cell
+    CATS.forEach(function (c) { var s = SHORT[c]; opts[c] = splitOpts(r[s + '_norm']).length ? splitOpts(r[s + '_norm']) : splitOpts(r[s]); });
+    return { v: r.v, h: r.h, b: r.b, opts: opts, points: r.points, pending: false };
+  }
+  /** Per-category hits of a tip against a menu ({cat:[options]}), consistent with engine/rules.py score_tip. */
+  function tipHits(ctx, tip, menu) {
+    var sc = (ctx.meta && ctx.meta.scoring) || {};
+    var hits = {};
+    CATS.forEach(function (c) {
+      var opts = menu[c] || [];
+      if (sc.alt_options_count === false) opts = opts.slice(0, 1);
+      var tipOpts = (tip.opts && tip.opts[c]) || splitOpts(tip[SHORT[c]]);
+      hits[c] = tipOpts.some(function (o) { return opts.some(function (x) { return fold(x) === fold(o); }); });
+    });
+    // rule 9.6 (generic "Fisch" outside Lent) needs the engine's fish list: trust its points when only that explains them
+    var tipH = (tip.opts && tip.opts.hauptspeise) || splitOpts(tip.h);
+    if (!hits.hauptspeise && isNum(tip.points) && tipH.some(function (o) { return fold(o) === 'fisch'; })) {
+      var score = function (hh) {
+        if (hh.vorspeise && hh.hauptspeise && hh.beilage) return isNum(sc.full_menu_total) ? sc.full_menu_total : 3;
+        return (hh.vorspeise ? (isNum(sc.vorspeise) ? sc.vorspeise : 1) : 0) + (hh.hauptspeise ? (isNum(sc.hauptspeise) ? sc.hauptspeise : 0.5) : 0) +
+          (hh.beilage ? (isNum(sc.beilage) ? sc.beilage : 0.5) : 0);
+      };
+      var withH = { vorspeise: hits.vorspeise, hauptspeise: true, beilage: hits.beilage };
+      if (Math.abs(score(hits) - tip.points) > 1e-9 && Math.abs(score(withH) - tip.points) < 1e-9) hits.hauptspeise = true;
+    }
+    return hits;
+  }
+  /** Known spelling of a player name (the engine keys players case-sensitively). */
+  function canonPlayer(ctx, name) {
+    var n = clean(name), k = fold(n);
+    var known = ((ctx.meta && ctx.meta.players) || []).concat(ctx.me ? [ctx.me] : []);
+    for (var i = 0; i < known.length; i++) if (fold(known[i]) === k) return known[i];
+    return n;
   }
   function menuOf(ctx, date) { // {status, opts:{cat:[..]}, raw:{v,h,b}, pending}
     var p = ctx.pending.filter(function (x) { return x.kind === 'menu' && x.date === date; })[0];
@@ -766,6 +832,7 @@
         var col = themeColors();
         Chart.defaults.font.family = 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
         Chart.defaults.font.size = 12;
+        Chart.defaults.locale = locale();
         Chart.defaults.color = col.text2;
         Chart.defaults.borderColor = col.grid;
         charts.push(new Chart(canvas, build(col)));
@@ -805,6 +872,7 @@
   function renderTabbar() {
     var nav = document.getElementById('tabbar');
     var cur = currentRoute().id;
+    nav.setAttribute('aria-label', t('ui.nav'));
     nav.replaceChildren.apply(nav, ROUTES.map(function (r) {
       return h('a', { href: '#/' + r.id, class: 'tab' + (r.id === cur ? ' active' : ''), 'aria-current': r.id === cur ? 'page' : null },
         icon(r.id), h('span', { class: 'tab-label' }, t('tab.' + r.id)));
@@ -870,7 +938,8 @@
     var extra = r && r.status === 'error'
       ? h('p', { class: 'small mono' }, String((r.error && r.error.message) || r.error))
       : null;
-    return emptyState(t(titleKey), t(textKey), [extra, h('button', { class: 'btn', type: 'button', onclick: reloadData }, t('ui.retry'))]);
+    return emptyState(r && r.status === 'error' ? t('ui.error') : t(titleKey), r && r.status === 'error' ? null : t(textKey),
+      [extra, h('button', { class: 'btn', type: 'button', onclick: reloadData }, t('ui.retry'))]);
   }
   function pendingBanner(ctx) {
     var n = ctx.pending.length;
@@ -926,32 +995,63 @@
       var d = T.data || {};
       var meta = ctx.meta || {};
       var todayR = romeTodayISO();
-      var target = isISO(d.date) ? d.date : todayR;
+      var hasTarget = isISO(d.date);
+      var target = hasTarget ? d.date : todayR;
       var rec = d.recommendation || {};
       var alts = d.alternatives || {};
       var out = h('div', { class: 'stack' });
+      var deadlineHM = meta.deadline || '12:00';
+      var gen = Date.parse(d.generated_at || '');
+
+      // ---- season over: no target day, no countdown
+      if (d.season_over && (!hasTarget || !rec.vorspeise)) {
+        out.appendChild(h('section', { class: 'hero over season' },
+          h('div', { class: 'hero-date' },
+            h('div', { class: 'hero-kicker' }, t('today.seasonKicker')),
+            h('div', { class: 'hero-day' }, t('today.seasonOver')))));
+        out.appendChild(h('div', { class: 'btn-row' },
+          h('a', { class: 'btn primary', href: '#/rangliste' }, icon('rangliste'), t('tab.rangliste')),
+          h('a', { class: 'btn', href: '#/backtest' }, icon('backtest'), t('tab.backtest'))));
+        out.appendChild(h('p', { class: 'muted tiny center' }, t('ui.generated', { when: isNum(gen) ? new Date(gen).toLocaleString(locale(), { timeZone: TZ, day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '–' })));
+        return out;
+      }
 
       // ---- staleness / context notices
       var notes = h('div', { class: 'stack-sm' });
       if (d.season_over) notes.appendChild(notice('info', t('today.seasonOver')));
-      if (target < todayR) notes.appendChild(notice('danger', t('stale.past', { date: fmtLong(target) })));
-      else if (target > todayR || d.is_today === false) notes.appendChild(notice('info', t('today.notToday', { date: fmtLong(target) })));
-      var gen = Date.parse(d.generated_at || '');
+      var dlToday = deadlineFor(todayR, deadlineHM);
+      if (target < todayR) {
+        notes.appendChild(notice('danger', t('stale.past', { date: fmtLong(target) })));
+      } else if (target > todayR) {
+        var why = weekdayOf(todayR) >= 5 ? 'weekend'
+          : (ctx.r4.free.has(todayR) ? 'free'
+            : (Date.now() >= dlToday ? 'deadline'
+              : ((menuOf(ctx, todayR) || {}).status === 'served' ? 'menu' : null)));
+        notes.appendChild(notice('info', why ? t('today.next.' + why, { date: fmtLong(target) }) : t('today.notToday', { date: fmtLong(target) })));
+      } else if (Date.now() >= dlToday) {
+        notes.appendChild(notice('info', t('today.overWait')));
+      }
       if (isNum(gen)) {
+        // the daily job runs on working-day mornings: data is stale when it predates the latest working day
         var ageH = (Date.now() - gen) / 36e5;
-        if (ageH > 26) notes.appendChild(notice('warn', t('stale.generated', { ago: ageH > 48 ? t('ago.days', { n: Math.floor(ageH / 24) }) : t('ago.hours', { n: Math.floor(ageH) }) })));
+        var lastWd = todayR, guard = 0;
+        while (!ctx.r4.isWorkday(lastWd) && guard++ < 14) lastWd = addDays(lastWd, -1);
+        var staleGen = romeTodayISO(gen) < lastWd && (lastWd < todayR || zonedParts(Date.now()).h >= 9);
+        if (staleGen && ageH > 3) notes.appendChild(notice('warn', t('stale.generated', { ago: ageH > 48 ? t('ago.days', { n: Math.floor(ageH / 24) }) : t('ago.hours', { n: Math.floor(ageH) }) })));
       }
       var pb = pendingBanner(ctx);
       if (pb) notes.appendChild(pb);
       if (notes.childNodes.length) out.appendChild(notes);
 
-      // ---- hero: date + countdown
-      var dl = deadlineFor(target, meta.deadline || '12:00');
+      // ---- hero: target day + countdown to its deadline (12:00 Europe/Rome)
+      var isTodayTarget = target === todayR;
+      var dlJson = Date.parse(d.deadline || '');
+      var dl = hasTarget && isNum(dlJson) ? dlJson : deadlineFor(target, deadlineHM);
       var cdVal = h('div', { class: 'cd-value', id: 'countdown', 'aria-live': 'off' }, '––:––:––');
       var cdLabel = h('div', { class: 'cd-label' });
-      var hero = h('section', { class: 'hero' },
+      var hero = h('section', { class: 'hero' + (isTodayTarget ? '' : ' ahead') },
         h('div', { class: 'hero-date' },
-          h('div', { class: 'hero-kicker' }, target === todayR ? t('today.kicker') : t('today.kickerFor')),
+          h('div', { class: 'hero-kicker' }, isTodayTarget ? t('today.kicker') : t('today.kickerFor')),
           h('div', { class: 'hero-day' }, fmtLong(target))),
         h('div', { class: 'cd' }, cdVal, cdLabel));
       var tick = function () {
@@ -960,7 +1060,7 @@
           cdVal.textContent = t('cd.over');
           hero.classList.add('over');
           hero.classList.remove('urgent');
-          cdLabel.textContent = t('cd.overSub', { time: meta.deadline || '12:00' });
+          cdLabel.textContent = t('cd.overSub', { time: deadlineHM });
           return false;
         }
         var s = Math.floor(left / 1000);
@@ -969,8 +1069,8 @@
         var mm = Math.floor(s / 60); s -= mm * 60;
         cdVal.textContent = (days ? t('cd.days', { n: days }) + ' ' : '') + pad(hh) + ':' + pad(mm) + ':' + pad(s);
         hero.classList.toggle('urgent', left < 30 * 60 * 1000);
-        cdLabel.textContent = target === todayR ? t('cd.until', { time: meta.deadline || '12:00' })
-          : t('cd.untilDay', { day: wdLong(weekdayOf(target)), time: meta.deadline || '12:00' });
+        cdLabel.textContent = isTodayTarget ? t('cd.until', { time: deadlineHM })
+          : t('cd.untilDay', { day: target === addDays(todayR, 1) ? t('cd.tomorrow') : fmtDate(target, { weekday: 'long' }), time: deadlineHM });
         return true;
       };
       if (tick()) {
@@ -998,18 +1098,19 @@
           var r = rec[c] || {};
           return h('div', { class: 'rec-row' },
             catBadge(c),
-            h('div', { class: 'rec-main' }, h('div', { class: 'rec-cat' }, catName(c)), h('div', { class: 'rec-dish' }, r.dish || '–')),
-            h('div', { class: 'rec-p' }, h('span', { class: 'big-num' }, fmtPct(r.p)), h('span', { class: 'muted tiny' }, t('today.prob'))));
+            h('div', { class: 'rec-cat' }, catName(c)),
+            h('div', { class: 'rec-p', title: t('today.prob') }, h('span', { class: 'big-num' }, fmtPct(r.p)), h('span', { class: 'muted tiny' }, t('today.prob'))),
+            h('div', { class: 'rec-dish', lang: 'de' }, r.dish || '–'));
         });
         var copy = rec.copy_text || CATS.map(function (c) { return (rec[c] || {}).dish || '–'; }).join(' / ');
         recCard = h('section', { class: 'card rec' },
           h('div', { class: 'rec-head' }, h('h2', { class: 'card-title' }, t('today.rec')),
-            chip(t('strategy.' + (rec.strategy || 'week_planner')), 'accent')),
+            chip(tOr('strategy.' + (rec.strategy || 'week_planner'), rec.strategy), 'accent')),
           h('div', { class: 'rec-rows' }, rows),
           h('div', { class: 'rec-stats' },
             h('div', null, h('span', { class: 'k' }, t('today.ev')), h('span', { class: 'v' }, fmtNum(rec.ev, 2))),
             h('div', null, h('span', { class: 'k' }, t('today.pfull')), h('span', { class: 'v' }, fmtPct(rec.p_full, rec.p_full < 0.1 ? 1 : 0))),
-            h('div', null, h('span', { class: 'k' }, t('today.model')), h('span', { class: 'v sm' }, t('model.' + (d.model || 'heuristic'))))),
+            h('div', null, h('span', { class: 'k' }, t('today.model')), h('span', { class: 'v sm' }, modelName(d.model)))),
           rec.valid === false ? notice('warn', t('today.invalid')) : null,
           issues.length ? notice('danger', t('today.recBlocked'), h('ul', { class: 'plain' }, issues.map(function (x) { return h('li', null, x); }))) : null,
           h('div', { class: 'btn-row' },
@@ -1045,9 +1146,16 @@
         var maxP = Math.max.apply(null, list.map(function (a) { return a.p || 0; })) || 1;
         var ol = h('ol', { class: 'alt-list' });
         list.forEach(function (a, i) {
-          var reasons = (a.reasons || []).map(function (r) { return typeof r === 'string' ? r : (r[lang] || r.de || ''); }).filter(Boolean);
-          clientBlock(c, a.dish).forEach(function (txt) { if (reasons.indexOf(txt) < 0) reasons.push(txt); });
-          var blocked = !!a.blocked || reasons.length > 0;
+          // engine reasons: R4 ones ("Regel 4: …") vs. model explanations
+          var txt = function (r) { return typeof r === 'string' ? r : (r[lang] || r.de || ''); };
+          var isR4 = function (r) { return (r && r.kind === 'r4') || /^\s*(Regel|Regola|R)\s*4\b/i.test(typeof r === 'string' ? r : (r.de || r.it || '')); };
+          var whyList = (a.reasons || []).filter(function (r) { return r && !isR4(r); }).map(txt).filter(Boolean);
+          var r4Engine = (a.reasons || []).filter(isR4).map(txt).filter(Boolean)
+            .map(function (x) { return x.replace(/^\s*(Regel|Regola)\s*4:\s*/i, ''); });
+          var r4Client = clientBlock(c, a.dish).map(function (x) { return a.dish + ': ' + x; });
+          // client recomputation (tips.json + pending entries) is at least as fresh as the engine's
+          var r4Texts = r4Client.length ? r4Client : (a.blocked ? r4Engine : []);
+          var blocked = r4Client.length > 0 || !!a.blocked;
           var isRec = rec[c] && fold(rec[c].dish) === fold(a.dish);
           var pairTxt = null;
           if (c === 'hauptspeise' && pairs[a.dish]) {
@@ -1061,13 +1169,16 @@
           if (isNum(a.n_total)) metaBits.push(t('alt.total', { n: a.n_total }));
           ol.appendChild(h('li', { class: 'alt' + (blocked ? ' blocked' : '') + (i >= 5 ? ' extra' : '') + (isRec ? ' is-rec' : '') },
             h('div', { class: 'alt-top' },
-              h('span', { class: 'alt-dish' }, a.dish, isRec ? chip(t('alt.rec'), 'accent tiny-chip') : null),
+              h('span', { class: 'alt-dish', lang: 'de' }, a.dish, isRec ? chip(t('alt.rec'), 'accent tiny-chip') : null),
               h('span', { class: 'alt-p' }, fmtPct(a.p))),
             bar((a.p || 0) / maxP, blocked ? 'striped' : null),
+            blocked ? h('div', { class: 'alt-block small' }, chip(t('alt.blocked'), 'danger'),
+              h('span', null, r4Texts.join(' · ') || t('alt.blockedGeneric'))) : null,
             metaBits.length ? h('div', { class: 'alt-meta muted small' }, metaBits.join(' · ')) : null,
-            blocked ? h('div', { class: 'alt-block small' }, chip(t('alt.blocked'), 'danger'), ' ', reasons.join(' · ') || t('alt.blockedGeneric')) : null,
+            whyList.length ? h('ul', { class: 'alt-why small', 'aria-label': t('alt.why') }, whyList.map(function (w) { return h('li', null, w); })) : null,
             pairTxt));
         });
+        if (d.p_new && isNum(d.p_new[c])) ol.appendChild(h('li', { class: 'alt-new muted small' }, t('alt.pNew', { p: fmtPct(d.p_new[c]) })));
         var block = h('div', { class: 'alt-cat collapsed' }, h('h3', { class: 'sub-title' }, catBadge(c), ' ', catName(c)), ol);
         if (list.length > 5) {
           var more = h('button', { type: 'button', class: 'link-btn' }, t('alt.more', { n: list.length - 5 }));
@@ -1131,33 +1242,48 @@
   }
 
   // ================================================================== VIEW: Woche
+  var weekState = { offset: 0 };
   function viewWoche() {
-    return Promise.all([load('week'), loadCtx()]).then(function (rs) {
-      var W = rs[0], ctx = rs[1];
+    return Promise.all([load('week'), loadCtx(), load('today')]).then(function (rs) {
+      var W = rs[0], ctx = rs[1], TD = okData(rs[2]) || {};
       if (ctx.locked || W.status === 'locked') return lockedState();
       var todayR = romeTodayISO();
       var w = okData(W);
-      var curMon = weekdayOf(todayR) >= 5 ? addDays(mondayOf(todayR), 7) : mondayOf(todayR);
+      var thisMon = mondayOf(todayR);
+      var defMon = weekdayOf(todayR) >= 5 ? addDays(thisMon, 7) : thisMon;
+      // week.json may already point at next week (e.g. Friday after the deadline)
+      var jsonOk = !!(w && isISO(w.week_start) && w.week_start >= thisMon && w.week_start <= addDays(thisMon, 7));
+      if (jsonOk) defMon = w.week_start;
+      var off = weekState.offset || 0;
+      var weekStart = addDays(defMon, 7 * off);
       var out = h('div', { class: 'stack' });
       var notes = h('div', { class: 'stack-sm' });
-      var weekStart = curMon;
-      if (w && isISO(w.week_start)) {
-        if (w.week_start === curMon || w.week_start === mondayOf(todayR)) weekStart = w.week_start;
-        else notes.appendChild(notice('warn', t('week.stale', { date: fmtDMY(w.week_start) })));
-      } else {
-        notes.appendChild(notice('info', t('week.noJson')));
+      var useJson = !!(w && w.week_start === weekStart);
+      if (!off) {
+        if (TD.season_over) notes.appendChild(notice('info', t('today.seasonOver')));
+        else if (w && isISO(w.week_start) && !jsonOk) notes.appendChild(notice('warn', t('week.stale', { date: fmtDMY(w.week_start) })));
+        else if (!w) notes.appendChild(notice('info', t('week.noJson')));
+      } else if (!useJson) {
+        notes.appendChild(notice('info', t('week.otherWeek')));
       }
       var pb = pendingBanner(ctx);
       if (pb) notes.appendChild(pb);
       if (notes.childNodes.length) out.appendChild(notes);
-      var useJson = w && w.week_start === weekStart;
       var jsonDays = {};
       if (useJson) (w.days || []).forEach(function (x) { jsonDays[x.date] = x; });
       var days = [0, 1, 2, 3, 4].map(function (i) { return addDays(weekStart, i); });
       var wk = isoWeek(weekStart);
-      out.appendChild(h('div', { class: 'page-head' },
-        h('h1', null, t('week.title', { n: wk[1] })),
-        h('p', { class: 'muted' }, fmtDM(days[0]) + ' – ' + fmtDMY(days[4]))));
+      var go = function (n) { weekState.offset = n; rerender(); };
+      out.appendChild(h('div', { class: 'page-head week-head' },
+        h('div', null,
+          h('h1', null, t('week.title', { n: wk[1] })),
+          h('p', { class: 'muted' }, fmtDM(days[0]) + ' – ' + fmtDMY(days[4]))),
+        h('div', { class: 'week-nav', role: 'group', 'aria-label': t('week.nav') },
+          h('button', { type: 'button', class: 'btn small', 'aria-label': t('week.prev'), title: t('week.prev'), onclick: function () { go(off - 1); } }, '‹'),
+          off ? h('button', { type: 'button', class: 'btn small', onclick: function () { go(0); } }, t('week.current')) : null,
+          h('button', { type: 'button', class: 'btn small', 'aria-label': t('week.next'), title: t('week.next'), onclick: function () { go(off + 1); } }, '›'))));
+      var planBy = {};
+      (TD.week_plan || []).forEach(function (x) { if (x && x.date) planBy[x.date] = x; });
 
       var sum = 0, nPts = 0;
       var list = h('div', { class: 'days' });
@@ -1179,10 +1305,10 @@
         if (status === 'free') {
           el.appendChild(h('p', { class: 'muted small' }, t('week.freeDay')));
         } else if (menu && CATS.some(function (c) { return (menu[c] || []).length; })) {
+          var hits = tip ? tipHits(ctx, tip, menu) : {};
           el.appendChild(h('div', { class: 'menu-lines' }, CATS.map(function (c) {
             var opts = menu[c] || [];
-            var tipOpts = tip ? splitOpts(tip[SHORT[c]]) : [];
-            var hit = tipOpts.some(function (o) { return opts.some(function (x) { return fold(x) === fold(o); }); });
+            var hit = !!hits[c];
             return h('div', { class: 'menu-line' }, catBadge(c), h('span', { class: 'menu-dish' }, opts.length ? opts.join(' / ') : '–'),
               tip && opts.length ? h('span', { class: 'hit ' + (hit ? 'yes' : 'no'), title: hit ? t('week.hit') : t('week.miss') }, hit ? '✓' : '·') : null);
           })));
@@ -1195,6 +1321,13 @@
             })));
         } else {
           el.appendChild(h('p', { class: 'muted small' }, t('week.noMenu')));
+        }
+        var plan = planBy[dd];
+        if (status !== 'free' && !tip && plan && dd >= todayR && !(menu && CATS.some(function (c) { return (menu[c] || []).length; }))) {
+          el.appendChild(h('div', { class: 'mytip plan' },
+            h('span', { class: 'k' }, t('week.plan')),
+            h('span', { class: 'tipline', lang: 'de' }, CATS.map(function (c) { return plan[c] || '–'; }).join(' / ')),
+            isNum(plan.ev) ? h('span', { class: 'pts muted', title: t('today.ev') }, t('col.ev') + ' ' + fmtNum(plan.ev, 2)) : null));
         }
         if (status !== 'free') {
           el.appendChild(h('div', { class: 'mytip' },
@@ -1349,7 +1482,7 @@
         freqNodes.push(h('p', { class: 'muted' }, t('ui.noData')));
       }
       var freqRows = (st.showAllFreq ? freq : freq.slice(0, 10)).map(function (x) {
-        return [x.dish, String(x.n), fmtPct(x.n / (totalN || 1), 1), fmtDM(x.f.first_served) + (x.f.first_served ? '.' + x.f.first_served.slice(2, 4) : ''), fmtDM(x.f.last_served) + (x.f.last_served ? '.' + x.f.last_served.slice(2, 4) : '')];
+        return [x.dish, String(x.n), fmtPct(x.n / (totalN || 1), 1), fmtDMy(x.f.first_served), fmtDMy(x.f.last_served)];
       });
       freqNodes.push(table([{ label: t('col.dish') }, { label: 'n', num: true }, { label: t('col.share'), num: true }, { label: t('col.first'), num: true }, { label: t('col.last'), num: true }], freqRows, { cls: 'compact' }));
       if (freq.length > 10) {
@@ -1505,7 +1638,7 @@
       var names = Object.keys(series);
       var me = meta.me || '';
       var out = h('div', { class: 'stack' });
-      out.appendChild(h('div', { class: 'page-head' }, h('h1', null, t('rank.title')), h('p', { class: 'muted' }, t('rank.sub', { model: t('model.' + (lb.model_name || 'heuristic')) }))));
+      out.appendChild(h('div', { class: 'page-head' }, h('h1', null, t('rank.title')), h('p', { class: 'muted' }, t('rank.sub', { model: modelName(lb.model_name) }))));
       out.appendChild(h('div', { class: 'controls card' }, segmented(years.map(function (x) { return { value: x, label: x }; }), y, function (v) { rankState.year = v; rerender(); }, t('ui.year'))));
 
       var dates = Y.dates || [];
@@ -1610,7 +1743,7 @@
         summary ? h('p', { class: 'lead' }, summary) : null,
         h('div', { class: 'chips wrap' },
           bestM ? chip(t('bt.best', { m: label(bestM) }), 'accent') : null,
-          b.split ? Object.keys(b.split).map(function (k) { return chip(t('bt.split.' + k) + ': ' + String(b.split[k]).replace('..', ' – '), 'muted-chip'); }) : null)
+          b.split ? Object.keys(b.split).map(function (k) { return chip(tOr('bt.split.' + k, k) + ': ' + String(b.split[k]).replace('..', ' – '), 'muted-chip'); }) : null)
       ]));
       if (years.length) {
         out.appendChild(h('div', { class: 'controls card' }, segmented(years.map(function (x) { return { value: x, label: x }; }), y, function (v) { btState.year = v; rerender(); }, t('ui.year'))));
@@ -1649,6 +1782,17 @@
             };
           }), { cls: 'compact' })
         ], { sub: t('bt.compareSub') }));
+      }
+      // bootstrap comparison: best model vs. each player
+      var cmp = (b.comparison || {})[y] || {};
+      var cmpNames = Object.keys(cmp).sort(function (a, c2) { return (cmp[c2].diff || 0) - (cmp[a].diff || 0); });
+      if (cmpNames.length) {
+        var sgn = function (x) { return isNum(x) ? (x > 0 ? '+' : '') + fmtPts(x) : '–'; };
+        out.appendChild(card(t('bt.sig', { y: y }), table([{ label: t('col.player') }, { label: t('bt.lead'), num: true }, { label: t('bt.ci'), num: true }, { label: t('bt.pAhead'), num: true }],
+          cmpNames.map(function (n) {
+            var c3 = cmp[n] || {}, ci = c3.ci95 || [];
+            return { cls: n === meta.me ? 'me-row' : null, cells: [n, sgn(c3.diff), isNum(ci[0]) && isNum(ci[1]) ? fmtPts(ci[0]) + ' … ' + fmtPts(ci[1]) : '–', fmtPct(c3.p_model_ahead)] };
+          }), { cls: 'compact' }), { sub: t('bt.sigSub', { m: bestM ? label(bestM) : modelName(b.best_model) }) }));
       }
       // R4 vs no R4
       var r4rows = models.filter(function (m) { return (m.years || {})[y] && (m.no_r4 || {})[y]; }).map(function (m) {
@@ -1854,7 +1998,7 @@
         tokState.className = 'chip ' + (fToken.value.trim() ? 'ok' : 'danger');
         tokState.textContent = fToken.value.trim() ? t('set.tokenSaved') : t('set.tokenMissing');
         setStatus.replaceChildren(notice('ok', t('set.saved')));
-        if (oldPass !== (fPass.value || '')) dataCache = {};
+        if (oldPass !== (fPass.value || '')) { dataCache = {}; resetPass(); }
         return true;
       };
       var delToken = function () {
@@ -1972,6 +2116,8 @@
           e.preventDefault();
           var d = mDate.value;
           if (!isISO(d)) { mStatus.replaceChildren(notice('danger', t('in.badDate'))); return; }
+          // the engine models Mon–Fri only: a weekend row in menus.csv would break the pipeline run
+          if (weekdayOf(d) >= 5) { mStatus.replaceChildren(notice('danger', t('in.weekendBlocked'))); return; }
           var free = mFree.checked;
           var vals = CATS.map(function (c) { return clean(mIn[c].value); });
           if (!free && !vals.some(Boolean)) { mStatus.replaceChildren(notice('danger', t('in.needDish'))); return; }
@@ -2020,10 +2166,11 @@
             var list = (ctx.dishes || {})[c] || [];
             if (v && list.length && !list.some(function (x) { return fold(x) === fold(v); })) info.push(t('in.unknownDish', { cat: catName(c), dish: v }));
           });
-          tWarn.replaceChildren(
+          tWarn.replaceChildren();
+          appendKids(tWarn, [
             msgs.length ? notice('danger', t('in.r4Title'), h('ul', { class: 'plain' }, msgs.map(function (m) { return h('li', null, m); }))) : null,
             !msgs.length && CATS.some(function (c) { return clean(tIn[c].value); }) ? notice('ok', t('in.r4Ok')) : null,
-            info.length ? notice('info', h('span', null, info.map(function (x, i) { return [i ? h('br') : null, x]; }))) : null);
+            info.length ? notice('info', h('span', null, info.map(function (x, i) { return [i ? h('br') : null, x]; }))) : null]);
         } else {
           tWarn.replaceChildren();
         }
@@ -2036,8 +2183,9 @@
       var tipForm = h('form', {
         class: 'card form', id: 'form-tip', novalidate: true, onsubmit: function (e) {
           e.preventDefault();
-          var d = tDate.value, player = clean(tPlayer.value);
+          var d = tDate.value, player = canonPlayer(ctx, tPlayer.value);
           if (!isISO(d)) { tStatus.replaceChildren(notice('danger', t('in.badDate'))); return; }
+          if (weekdayOf(d) >= 5) { tStatus.replaceChildren(notice('danger', t('in.weekendBlocked'))); return; }
           if (!player) { tStatus.replaceChildren(notice('danger', t('in.needPlayer'))); return; }
           var vals = CATS.map(function (c) { return clean(tIn[c].value); });
           if (!vals.some(Boolean)) { tStatus.replaceChildren(notice('danger', t('in.needDish'))); return; }
@@ -2114,7 +2262,8 @@
   window.TSP = {
     parseCSV: parseCSV, serializeCSV: serializeCSV, upsertCsv: upsertCsv, menuValues: menuValues, tipValues: tipValues,
     utf8ToB64: utf8ToB64, b64ToUtf8: b64ToUtf8, R4: R4, romeTodayISO: romeTodayISO, romeToUtc: romeToUtc,
-    deadlineFor: deadlineFor, commitRow: commitRow, fold: fold, isoWeek: isoWeek, decryptEnvelope: decryptEnvelope
+    deadlineFor: deadlineFor, commitRow: commitRow, fold: fold, isoWeek: isoWeek, decryptEnvelope: decryptEnvelope,
+    tipHits: tipHits, canonPlayer: canonPlayer
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

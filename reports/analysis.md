@@ -1,6 +1,6 @@
 # Analyse Tippspiel Essen Wies
 
-_Automatisch erzeugt von `engine/analyze.py` am 2026-10-09 12:05 UTC (Stichtag 2026-10-09). Datenstand: 432 servierte Menüs (2024: 34, 2025: 221, 2026: 177), letztes Menü 2026-10-08._
+_Automatisch erzeugt von `engine/analyze.py` am 2026-10-09 17:01 UTC (Stichtag 2026-10-09). Datenstand: 432 servierte Menüs (2024: 34, 2025: 221, 2026: 177), letztes Menü 2026-10-08._
 
 ## Riassunto (IT)
 
@@ -8,19 +8,19 @@ _Automatisch erzeugt von `engine/analyze.py` am 2026-10-09 12:05 UTC (Stichtag 2
 - **Primo più frequenti**: Arrabbiata (30), Nudel mit Käsesoße (29), Hirten (28); i primi 5 coprono 32 % dei giorni.
 - **Secondo più frequenti**: Hühnerbrust (31), Champignonschnitzel (28), Truthahngeschnetzeltes (26); i primi 5 coprono 31 % dei giorni.
 - **Contorno più frequenti**: Reis (97), Pommes (56), Spatzlen (44); i primi 5 coprono 65 % dei giorni.
-- **Ripetizioni**: la cucina evita le ripetizioni. Primo e secondo: mai due volte nella stessa settimana (0 e 0 coppie contro 37 e 37 attese per caso, p < 0,001); quasi nessuna ripetizione entro 5 (primo) / 3 (secondo) giorni lavorativi; intervallo mediano 18 / 19 giorni lavorativi. Il contorno si ripete molto di più (17 coppie nella stessa settimana). → Non tippare primo/secondo serviti negli ultimi giorni o già serviti questa settimana.
+- **Ripetizioni**: la cucina evita le ripetizioni. Primo e secondo: mai due volte nella stessa settimana (0 e 0 coppie contro 37 e 37 attese per caso, p < 0,001); quasi nessuna ripetizione entro 5 (primo) / 3 (secondo) giorni lavorativi; intervallo mediano 18 / 19 giorni lavorativi. Il contorno si ripete molto di più (17 coppie nella stessa settimana, 97 attese per caso). → Non tippare primo/secondo serviti negli ultimi giorni o già serviti questa settimana.
 - **Giorno della settimana**: Schweinskotelett (secondo) il mercoledì 13/17 (atteso 21 %, p < 0,001); Reis (contorno) il lunedì 39/97 (atteso 19 %, p < 0,001); Arrabbiata (primo) il lunedì 17/30 (atteso 19 %, p < 0,001); Champignonschnitzel (secondo) il lunedì 15/28 (atteso 19 %, p < 0,001). 4 effetti restano significativi anche con correzione di Bonferroni: il giorno della settimana conta.
 - **Ipotesi confermate**: pesce (tutti) il venerdì 11/13; pesce fuori Quaresima il venerdì 3/3; Plent (polenta) il venerdì 9/19. Non confermate: Scombri, Leberkas.
 - **Contorno ↔ secondo**: conoscendo il secondo, il contorno più tipico è giusto nel 48 % dei casi (leave-one-out) contro 23 % tippando sempre Reis (es. Champignonschnitzel → Reis 75 %, Wienerschnitzel → Kartoffelsalat 82 %, Leberkas → Röstkartoffeln 63 %, Chilli con carne → Reis 100 %). Primo e secondo invece sono quasi indipendenti (MI 1,73 bit vs 1,68 per caso, p = 0,070).
 - **Quaresima / pesce**: pesce in Quaresima nel 16 % dei giorni contro 1 % fuori (10 vs 3 giorni). Nessuna differenza significativa estate/inverno.
-- **Trend 2026**: nuovi primi 10, nuovi secondi 13; spariti primi 27, secondi 7 (quasi tutti piatti rari). Pesatura per recenza (emivita migliore in giorni, log-loss): primo 365, secondo 180, contorno 180.
-- **Giocatori 2026**: miglior media Johannes con 0,28 punti/giorno. Tipp su piatti serviti negli ultimi 5 giorni lavorativi: primo centrato solo nel 2,9 % (n=68) contro 8,9 % per gli altri tipp; il momento migliore per tippare un primo è 21–40 giorni lavorativi dopo l'ultima volta (10,9 %).
+- **Trend 2026**: nuovi primi 10, nuovi secondi 13; spariti primi 27, secondi 7 (quasi tutti piatti rari, ≤ 3 volte). Pesatura per recenza (emivita migliore in giorni, log-loss): primo 365, secondo 180, contorno 180.
+- **Giocatori 2026**: miglior media Johannes con 0,28 punti/giorno. Tipp (tutti i giocatori e anni) su piatti serviti negli ultimi 5 giorni lavorativi: primo centrato nel 2,9 % (n=68) contro 8,9 % per gli altri tipp; il momento migliore per tippare un primo è 21–40 giorni lavorativi dopo l'ultima volta (10,9 %).
 
 ## Kernaussagen
 
-- **Keine Wiederholung in derselben Woche**: Vorspeise nie zweimal in derselben Kalenderwoche (0 Paare, Zufall 37,1, p < 0,001), Hauptspeise nie zweimal in derselben Kalenderwoche (0 Paare, Zufall 36,9). Beilage dagegen 17 Paare (Zufall 97,1), v. a. Reis.
+- **Keine Wiederholung in derselben Woche**: Vorspeise nie zweimal in derselben Kalenderwoche (0 Paare, Zufall 37,1, p < 0,001), Hauptspeise nie zweimal in derselben Kalenderwoche (0 Paare, Zufall 36,9, p < 0,001). Beilage dagegen 17 Paare (Zufall 97,1), v. a. Reis.
 - **Mindestabstand**: Vorspeise frühestens wieder nach 3 Arbeitstagen, Hauptspeise nach 2; innerhalb von 5 bzw. 3 AT praktisch nie (< 25 % der Zufallsrate). Median-Abstand 17,5 (V), 19,0 (H), 8,0 (B) Arbeitstage.
-- **Wochenrhythmus**: Bei Abständen von 10, 15, … 30 AT (gleicher Wochentag) ist dieselbe Speise häufiger als bei anderen Abständen – V 5,0 % vs 4,1 % (p = 0,037), H 5,5 % vs 3,9 % (p < 0,001). Spitze Vorspeise L=30: 7,1 % vs 4,5 % (p = 0,017); Spitze Hauptspeise L=20: 8,2 % vs 4,4 % (p < 0,001).
+- **Wochenrhythmus**: Bei Abständen von 10, 15, … 30 AT (gleicher Wochentag) ist dieselbe Speise häufiger als bei anderen Abständen – V 5,0 % vs 4,1 % (p = 0,037), H 5,5 % vs 3,9 % (p < 0,001). Spitze Vorspeise L=30: 7,1 % vs 4,5 % (p = 0,017). Spitze Hauptspeise L=20: 8,2 % vs 4,4 % (p < 0,001).
 - **Wochentag**: Schweinskotelett (Hauptspeise) am Mittwoch 13/17 (76 %, erwartet 21 %, Lift 3,7, p < 0,001, Bonferroni-signifikant).
 - **Wochentag**: Reis (Beilage) am Montag 39/97 (40 %, erwartet 19 %, Lift 2,1, p < 0,001, Bonferroni-signifikant).
 - **Wochentag**: Arrabbiata (Vorspeise) am Montag 17/30 (57 %, erwartet 19 %, Lift 2,9, p < 0,001, Bonferroni-signifikant).
@@ -36,7 +36,7 @@ _Automatisch erzeugt von `engine/analyze.py` am 2026-10-09 12:05 UTC (Stichtag 2
 - **Fisch & Fastenzeit**: Fisch an 16 % der Fastentage (10) vs 1 % sonst (3; p < 0,001). Sommer/Winter: keine signifikanten Unterschiede.
 - Aktualitätsgewichtung: beste Halbwertszeit (Log-Loss, Tage) – Vorspeise 365, Hauptspeise 180, Beilage 180.
 - **Tipp-Timing (alle Spieler)**: Tipps auf Gerichte, die vor 1–5 AT serviert wurden, treffen bei V nur 2,9 % (sonst 8,9 %), bei H 4,0 % (sonst 8,4 %). Beste Abstandsklasse: Vorspeise 21–40 AT (10,9 %, n=284), Hauptspeise 11–20 AT (9,6 %, n=510), Beilage 3–5 AT (27,5 %, n=437).
-- **Spieler 2026**: beste Quote Johannes mit 0,276 Punkten/Tag; alle Spieler liegen eng beieinander (Johannes 0,276, Andreas 0,260, Johannes Paul III 0,252, Noah 0,240).
+- **Spieler 2026**: beste Quote Johannes mit 0,276 Punkten/Tag; alle Spieler liegen eng beieinander: Johannes 0,276 (165 T.), Andreas 0,260 (171 T.), Johannes Paul III 0,252 (163 T.), Noah 0,240 (173 T.).
 
 ## 1. Häufigkeiten
 
@@ -821,7 +821,7 @@ Top-5-Anteil = Anteil der Tipps auf die 5 bis dahin häufigsten Gerichte; Vielfa
 | 2024 | Andreas | 0,191 | 2 | 26 % | 3,46 | 7 % |
 | 2024 | Noah | 0,103 | 3 | 30 % | 3,25 | 10 % |
 
-Korrelation mit Punkten/Tag über 7 Spieler-Jahre mit ≥ 100 Tagen (sehr kleine Stichprobe, nur Hinweis): Top-5-Anteil r=0,34, Vielfalt r=-0,23, kürzlich r=-0,23, V-Trefferquote r=0,16. Die Vorspeise zählt doppelt so viel wie H oder B – wer bei der Vorspeise besser trifft, gewinnt.
+Korrelation mit Punkten/Tag über 7 Spieler-Jahre mit ≥ 100 Tagen (sehr kleine Stichprobe, nur Hinweis): Top-5-Anteil r=0,34, Vielfalt r=-0,23, kürzlich r=-0,23, V-Trefferquote r=0,16. Die Vorspeise zählt doppelt so viel wie H oder B (1 vs 0,5 Punkte); über die Spieler-Jahre erklärt die V-Trefferquote die Rangfolge aber nur schwach.
 
 ### Notizen je Spieler
 

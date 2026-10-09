@@ -155,39 +155,94 @@ class Normalizer:
 
 
 # ---------------------------------------------------------------- reporting
+VARIANT_CONNECTORS = ("mit", "und", "in", "im", "auf", "an", "vom", "nach")
+HINT_ORDER = {"Tippfehler?": 0, "Variante?": 1, "ähnlich?": 2}
+
+
 def alias_candidates(names_by_category: dict[str, Counter], normalizer: Normalizer,
-                     threshold: float = 85.0) -> dict[str, list[dict]]:
-    """Fuzzy *proposals* (never applied automatically)."""
+                     threshold: float = 88.0) -> dict[str, list[dict]]:
+    """Fuzzy *proposals* (never applied automatically).
+
+    A pair (A, B) of names of the same category is proposed when, on lower-cased names,
+    ``max(ratio, token_sort_ratio) >= threshold`` (no partial matching: "Gnocchi mit Lachs" vs
+    "Omelett mit Schinken und Käse" is not a candidate) **or** when B is A plus a component
+    ("Tomatenrisotto" -> "Tomatenrisotto mit Mozzarella").  Pairs that the normalizer already
+    maps to the same canonical name and pairs listed in ``keep_separate`` are skipped.
+    ``hint``: "Tippfehler?" (Levenshtein distance <= 2), "Variante?" (one name contains the
+    other) or "ähnlich?".
+    """
     try:
         from rapidfuzz import fuzz
-    except ImportError:  # pragma: no cover
+        from rapidfuzz.distance import Levenshtein
+        ratio, token_sort, lev = fuzz.ratio, fuzz.token_sort_ratio, Levenshtein.distance
+    except ImportError:  # pragma: no cover - rapidfuzz is in requirements.txt
         from difflib import SequenceMatcher
 
-        class fuzz:  # type: ignore
-            @staticmethod
-            def WRatio(a, b):
-                return 100 * SequenceMatcher(None, a, b).ratio()
+        def ratio(a, b):
+            return 100 * SequenceMatcher(None, a, b).ratio()
+
+        def token_sort(a, b):
+            return ratio(" ".join(sorted(a.split())), " ".join(sorted(b.split())))
+
+        def lev(a, b):
+            prev = list(range(len(b) + 1))
+            for i, ca in enumerate(a, 1):
+                cur = [i]
+                for j, cb in enumerate(b, 1):
+                    cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
+                prev = cur
+            return prev[-1]
+
+    def with_component(short: str, long: str) -> bool:
+        """``long`` = ``short`` + " mit/und/… <something>" (word boundary)."""
+        if not long.startswith(short + " "):
+            return False
+        rest = long[len(short) + 1:].split()
+        return len(rest) >= 2 and rest[0] in VARIANT_CONNECTORS
 
     keep_sep = {frozenset((fold(x["a"]), fold(x["b"]))) for x in normalizer.aliases.get("keep_separate", [])}
     out: dict[str, list[dict]] = {}
     for cat, ctr in names_by_category.items():
-        names = sorted(ctr)
+        names = sorted(n for n, k in ctr.items() if k > 0 and clean(n))
+        canon = {}
+        for n in names:
+            try:
+                opts = normalizer.options(n, cat)
+            except KeyError:  # unknown category: compare the names as they are
+                opts = []
+            canon[n] = fold(opts[0]) if len(opts) == 1 else fold(n)
+        # compare lower-cased, not casefolded: casefold() turns "ß" into "ss" and would penalise
+        # "Lachs" vs "Lachssoße" (ß/ss variants are merged automatically anyway, see fold())
+        low = {n: clean(n).lower() for n in names}
         cands = []
         for i, a in enumerate(names):
+            fa, la = fold(a), low[a]
             for b in names[i + 1:]:
-                if frozenset((fold(a), fold(b))) in keep_sep:
+                fb, lb = fold(b), low[b]
+                if fa == fb or canon[a] == canon[b] or frozenset((fa, fb)) in keep_sep:
                     continue
-                score = fuzz.WRatio(a.casefold(), b.casefold())
-                if score >= threshold:
-                    cands.append({"a": a, "b": b, "score": round(float(score), 1),
-                                  "count_a": ctr[a], "count_b": ctr[b]})
-        cands.sort(key=lambda x: -x["score"])
+                score = max(ratio(la, lb), token_sort(la, lb))
+                short, long = (la, lb) if len(la) <= len(lb) else (lb, la)
+                variant = with_component(short, long)
+                if score < threshold and not variant:
+                    continue
+                dist = int(lev(la, lb))
+                hint = "Tippfehler?" if dist <= 2 else ("Variante?" if variant or short in long else "ähnlich?")
+                cands.append({"a": a, "b": b, "score": round(float(score), 1), "distance": dist, "hint": hint,
+                              "count_a": ctr[a], "count_b": ctr[b]})
+        cands.sort(key=lambda x: (HINT_ORDER[x["hint"]], -x["score"], x["a"], x["b"]))
         out[cat] = cands
     return out
 
 
-def write_alias_report(path, raw_counts: dict[str, Counter], normalizer: Normalizer) -> None:
-    """reports/alias_candidates.md: applied aliases, open decisions and fuzzy proposals."""
+def write_alias_report(path, raw_counts: dict[str, Counter], normalizer: Normalizer,
+                       quirks: list[dict] | None = None) -> None:
+    """reports/alias_candidates.md: open decisions, kept-separate pairs, data quirks, applied aliases
+    and fuzzy proposals.
+
+    ``quirks`` (optional, computed by :mod:`engine.analyze`): ``[{"was", "tage": [iso dates], "hinweis"}]``
+    – data oddities that are not a naming problem (e.g. dishes entered in the wrong column).
+    """
     canon_counts: dict[str, Counter] = {}
     for cat, ctr in raw_counts.items():
         c = Counter()
@@ -196,9 +251,15 @@ def write_alias_report(path, raw_counts: dict[str, Counter], normalizer: Normali
                 c[opt] += n
         canon_counts[cat] = c
     cands = alias_candidates(canon_counts, normalizer)
+    folded_total: Counter = Counter()
+    for ctr in canon_counts.values():
+        for name, n in ctr.items():
+            folded_total[fold(name)] += n
     lines = ["# Alias-Kandidaten / candidati alias", "",
              "Automatisch erzeugt von `engine/normalize.py`. **Nichts hier wird automatisch zusammengeführt.**",
-             "Um zwei Namen zu vereinen, trage die Variante in `data/aliases.json` unter der Kategorie ein.", ""]
+             "Um zwei Namen zu vereinen, trage die Variante in `data/aliases.json` unter der Kategorie ein; "
+             "um einen Vorschlag dauerhaft auszublenden, trage das Paar unter `keep_separate` ein.",
+             "Zählung: servierte Menüs + Tipps (fremde Tipps nur vor dem Stichtag, Regel 6).", ""]
     review = normalizer.aliases.get("review", [])
     if review:
         lines += ["## Offene / getroffene Entscheidungen", "", "| Varianten | → kanonisch | Status | Begründung |", "|---|---|---|---|"]
@@ -207,8 +268,20 @@ def write_alias_report(path, raw_counts: dict[str, Counter], normalizer: Normali
         lines.append("")
     ks = normalizer.aliases.get("keep_separate", [])
     if ks:
-        lines += ["## Bewusst getrennt gehalten", "", "| A | B | Warum |", "|---|---|---|"]
-        lines += [f"| {x['a']} | {x['b']} | {x['why']} |" for x in ks]
+        lines += ["## Bewusst getrennt gehalten", "",
+                  "Diese Paare erscheinen nicht unter den Fuzzy-Vorschlägen. „unklar“ = Entscheidung noch offen.", "",
+                  "| A | B | n(A) | n(B) | Warum |", "|---|---|---|---|---|"]
+        lines += [f"| {x['a']} | {x['b']} | {folded_total[fold(x['a'])]} | {folded_total[fold(x['b'])]} | {x['why']} |"
+                  for x in ks]
+        lines.append("")
+    if quirks is not None:
+        lines += ["## Auffälligkeiten", "",
+                  "Keine Namensfrage, sondern Auffälligkeiten in den Daten (werden nicht automatisch korrigiert).", ""]
+        if quirks:
+            lines += ["| Auffälligkeit | Tage | Hinweis |", "|---|---|---|"]
+            lines += [f"| {q['was']} | {', '.join(q.get('tage', []))} | {q.get('hinweis', '')} |" for q in quirks]
+        else:
+            lines.append("_keine_")
         lines.append("")
     lines += ["## Angewandte Aliase (Rohschreibweise → kanonisch)", ""]
     for cat, ctr in raw_counts.items():
@@ -219,14 +292,21 @@ def write_alias_report(path, raw_counts: dict[str, Counter], normalizer: Normali
                 applied.append(f"| `{clean(raw)}` | {' / '.join(opts)} | {n} |")
         if applied:
             lines += [f"### {cat.capitalize()}", "", "| Roh | Kanonisch | Anzahl |", "|---|---|---|", *applied, ""]
-    lines += ["## Fuzzy-Vorschläge (rapidfuzz WRatio ≥ 85)", ""]
+    lines += ["## Fuzzy-Vorschläge", "",
+              "Kandidaten: max(rapidfuzz `ratio`, `token_sort_ratio`) ≥ 88 auf kleingeschriebenen Namen, oder "
+              "„X“ ↔ „X mit/und/vom …“. Ohne bereits zusammengeführte und bewusst getrennte Paare. "
+              "Hinweis: **Tippfehler?** = höchstens 2 Zeichen Unterschied (Levenshtein), **Variante?** = ein Name "
+              "enthält den anderen, **ähnlich?** = sonst.", ""]
     for cat, items in cands.items():
         lines += [f"### {cat.capitalize()}", ""]
         if not items:
             lines += ["_keine_", ""]
             continue
-        lines += ["| A | B | Score | n(A) | n(B) |", "|---|---|---|---|---|"]
-        lines += [f"| {c['a']} | {c['b']} | {c['score']} | {c['count_a']} | {c['count_b']} |" for c in items[:60]]
+        lines += ["| A | B | Score | Lev. | Hinweis | n(A) | n(B) |", "|---|---|---|---|---|---|---|"]
+        lines += [f"| {c['a']} | {c['b']} | {c['score']} | {c['distance']} | {c['hint']} | {c['count_a']} | {c['count_b']} |"
+                  for c in items[:60]]
+        if len(items) > 60:
+            lines.append(f"\n_… {len(items) - 60} weitere_")
         lines.append("")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")

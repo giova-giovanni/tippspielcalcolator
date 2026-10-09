@@ -8,7 +8,13 @@ Decision rule (identical in the backtest):
 * rule 4 (max 2× per week, never on consecutive working days) w.r.t. MY tips of the week only –
   other players' tips are never used (rule 6)
 * weekly planner: receding horizon – today's tip is the first step of the best R4-valid plan
-  for the rest of the week (per category, branch & bound); ``greedy`` = best valid tip for today only.
+  for the rest of the week (per category, branch & bound; later days weighted ``plan_discount^k``,
+  an "other dish" fallback that uses no quota is always allowed); ``greedy`` = best valid tip for
+  today only. Which one is used is chosen on the 2025 validation split by expected points
+  (data/model_params.json "strategy") – the same choice drives the backtest.
+* target day: first working day >= today whose menu is unknown; after today's deadline (config
+  "deadline", Europe/Rome) the next working day – possibly in the next ISO week, whose R4 history
+  and plan are then used.
 """
 from __future__ import annotations
 
@@ -85,16 +91,22 @@ def _top(probs: Mapping[str, float], k: int) -> list[tuple[str, float]]:
     return sorted(probs.items(), key=lambda kv: (-kv[1], kv[0]))[:k]
 
 
-def _best_future(days: Sequence[dt.date], cands: Sequence[list], w: float, used: dict,
-                 chk: _R4Fast) -> tuple[float, list]:
-    """Branch & bound over the remaining days of one category."""
+def _best_future(days: Sequence[dt.date], cands: Sequence[list], w: Sequence[float], used: dict,
+                 chk: _R4Fast, fallback: Sequence[float] | None = None) -> tuple[float, list]:
+    """Branch & bound over the remaining days of one category.
+
+    ``cands[i]`` = [(label, p)] sorted by p (top-k of day i); ``w[i]`` = category weight × discount of
+    day i; ``fallback[i]`` = p of the best label *outside* the top-k (an "other dish" tip that never
+    touches a rule-4 quota). Returns (value, [label | None per day]); None = "other dish".
+    """
     m = len(days)
     if m == 0:
         return 0.0, []
-    maxp = [c[0][1] if c else 0.0 for c in cands]
+    fb = list(fallback) if fallback is not None else [0.0] * m
+    maxp = [max(c[0][1] if c else 0.0, fb[i]) for i, c in enumerate(cands)]
     suffix = [0.0] * (m + 1)
     for i in range(m - 1, -1, -1):
-        suffix[i] = suffix[i + 1] + maxp[i]
+        suffix[i] = suffix[i + 1] + w[i] * maxp[i]
     best = [-1.0, [None] * m]
     assign: list = [None] * m
 
@@ -104,45 +116,55 @@ def _best_future(days: Sequence[dt.date], cands: Sequence[list], w: float, used:
                 best[0] = val
                 best[1] = list(assign)
             return
-        if val + w * suffix[i] <= best[0] + 1e-15:
+        if val + suffix[i] <= best[0] + 1e-15:
             return
-        any_ok = False
         for lab, p in cands[i]:
-            if val + w * p + w * suffix[i + 1] <= best[0] + 1e-15:
-                any_ok = True  # remaining candidates cannot improve; not a dead end
-                break
+            if p < fb[i] - 1e-15 or val + w[i] * p + suffix[i + 1] <= best[0] + 1e-15:
+                break   # sorted by p: later candidates cannot improve on the bound / the fallback
             key = fold(lab)
             ud = used.get(key, [])
             if not chk.ok(ud, days[i]):
                 continue
-            any_ok = True
             used[key] = ud + [days[i]]
             assign[i] = lab
-            rec(i + 1, val + w * p)
+            rec(i + 1, val + w[i] * p)
             assign[i] = None
             if ud:
                 used[key] = ud
             else:
                 del used[key]
-        if not any_ok:   # every candidate blocked: skip the day in the plan
-            rec(i + 1, val)
+        # "other dish" on day i (no quota used)
+        rec(i + 1, val + w[i] * fb[i])
 
     rec(0, 0.0)
     return max(best[0], 0.0), best[1]
 
 
+def _fallback_p(probs: Mapping[str, float], k: int) -> float:
+    top = _top(probs, k + 1)
+    return top[k][1] if len(top) > k else 0.0
+
+
 def decide(days: Sequence[DayProbs], history: Mapping[str, Mapping[dt.date, Sequence[str]]], r4: R4 | None,
            scoring: Mapping | None = None, strategy: str = "week_planner",
-           k_today: int = K_TODAY, k_future: int = K_FUTURE) -> Decision:
+           k_today: int = K_TODAY, k_future: int = K_FUTURE, discount: float = 1.0) -> Decision:
     """Choose today's tip (``days[0]``) – the decision rule used by recommend AND backtest.
 
     ``history``: cat -> {date: [canonical options]} of MY tips (other dates). ``strategy``:
     ``week_planner`` | ``greedy`` | ``no_r4`` (upper bound, ignores rule 4).
+
+    Per category the value of a candidate for today is ``w·p_today + Σ_k discount^k · w·p_k(plan)``
+    where the plan for the later days of the week is the best rule-4-valid assignment given that
+    candidate (``week_planner``; ``discount`` = 0 gives ``greedy``). The triple (V, H, B) maximises
+    the sum of the category values + bonus·P(V)·P(H)·P(B|H) of today; the returned ``ev`` is today's
+    EV = 1·P(V) + 0.5·P(H) + 0.5·P(B) + 1·P(V∧H∧B).
     """
     w, bonus = _weights(scoring)
     today = days[0]
-    future = list(days[1:]) if strategy == "week_planner" else []
+    future = list(days[1:]) if strategy == "week_planner" and discount > 0 else []
     chk = _R4Fast(r4) if r4 is not None and strategy != "no_r4" else None
+    if chk is None:
+        future = []
     values: dict = {}
     futures: dict = {}
     for cat in CATEGORIES:
@@ -155,6 +177,8 @@ def decide(days: Sequence[DayProbs], history: Mapping[str, Mapping[dt.date, Sequ
         cands = _top(today.probs.get(cat, {}), k_today)
         fut_days = [x.date for x in future]
         fut_c = [_top(x.probs.get(cat, {}), k_future) for x in future]
+        fut_fb = [_fallback_p(x.probs.get(cat, {}), k_future) for x in future]
+        fut_w = [w[cat] * discount ** (i + 1) for i in range(len(future))]
         vals = []
         for lab, p in cands:
             key = fold(lab)
@@ -162,9 +186,9 @@ def decide(days: Sequence[DayProbs], history: Mapping[str, Mapping[dt.date, Sequ
             if chk is not None and not chk.ok(ud, today.date):
                 continue
             fval, fplan = 0.0, []
-            if future and chk is not None:
+            if future:
                 used[key] = ud + [today.date]
-                fval, fplan = _best_future(fut_days, fut_c, w[cat], used, chk)
+                fval, fplan = _best_future(fut_days, fut_c, fut_w, used, chk, fut_fb)
                 if ud:
                     used[key] = ud
                 else:
@@ -175,7 +199,7 @@ def decide(days: Sequence[DayProbs], history: Mapping[str, Mapping[dt.date, Sequ
                 if chk is None or chk.ok(used.get(fold(lab), []), today.date):
                     vals.append((lab, p, w[cat] * p, [None] * len(future)))
                     break
-        vals.sort(key=lambda v: -v[2])
+        vals.sort(key=lambda v: (-v[2], -v[1], v[0]))
         values[cat] = vals[:K_TRIPLE]
         futures[cat] = {v[0]: v[3] for v in vals}
 
@@ -199,21 +223,53 @@ def decide(days: Sequence[DayProbs], history: Mapping[str, Mapping[dt.date, Sequ
             if tip[cat] and r4.violations(cat, tip[cat], today.date, history.get(cat) or {}):
                 valid = False
     plan = [{"date": today.date, **tip, "ev": ev}]
-    if strategy == "week_planner" and future:
+    if future:
+        planned = {c: {d: list(o) for d, o in (history.get(c) or {}).items() if d != today.date}
+                   for c in CATEGORIES}
+        for c in CATEGORIES:
+            if tip[c]:
+                planned[c][today.date] = [tip[c]]
+        rows = []
         for i, fd in enumerate(future):
             row = {"date": fd.date}
-            e = 0.0
             for cat in CATEGORIES:
                 fp = futures[cat].get(tip[cat]) or []
-                lab = fp[i] if i < len(fp) else None
-                row[cat] = lab
-                e += w[cat] * fd.probs.get(cat, {}).get(lab, 0.0) if lab else 0.0
-            pfx = 1.0
+                row[cat] = fp[i] if i < len(fp) else None
+                if row[cat]:
+                    planned[cat][fd.date] = [row[cat]]
+            rows.append(row)
+        for fd, row in zip(future, rows):
             for cat in CATEGORIES:
-                pfx *= fd.probs.get(cat, {}).get(row[cat], 0.0) if row[cat] else 0.0
-            row["ev"] = e + bonus * pfx
+                if row[cat] is None and r4 is not None:   # "other dish": best label still allowed
+                    row[cat] = next((x for x, _ in _top(fd.probs.get(cat, {}), 10**6)
+                                     if not r4.violations(cat, x, fd.date, planned[cat])), None)
+                    if row[cat]:
+                        planned[cat][fd.date] = [row[cat]]
+            row["ev"] = _plan_ev(fd, row, w, bonus)
             plan.append(row)
     return Decision(tip, p, pf, ev, valid, strategy, plan)
+
+
+def _plan_ev(day: DayProbs, row: Mapping, w: Mapping, bonus: float) -> float:
+    pr = {c: (day.probs.get(c, {}).get(row[c], 0.0) if row.get(c) else 0.0) for c in CATEGORIES}
+    return sum(w[c] * pr[c] for c in CATEGORIES) + bonus * pr["vorspeise"] * pr["hauptspeise"] * pr["beilage"]
+
+
+def rollout(days: Sequence[DayProbs], history: Mapping[str, Mapping[dt.date, Sequence[str]]], r4: R4 | None,
+            scoring: Mapping | None = None, strategy: str = "greedy", discount: float = 1.0) -> list[dict]:
+    """Plan for the whole list of days by applying ``decide`` day after day on the forecasts
+    (receding horizon; for ``greedy`` this is what the strategy would do if the forecasts held)."""
+    hist = {c: {d: list(o) for d, o in (history.get(c) or {}).items()} for c in CATEGORIES}
+    rows = []
+    w, bonus = _weights(scoring)
+    for i in range(len(days)):
+        dec = decide(days[i:], hist, r4, scoring, strategy, discount=discount)
+        rows.append({"date": days[i].date, **dec.tip,
+                     "ev": dec.ev if i == 0 else _plan_ev(days[i], dec.tip, w, bonus)})
+        for c in CATEGORIES:
+            if dec.tip[c]:
+                hist[c][days[i].date] = [dec.tip[c]]
+    return rows
 
 
 def _p_b_given_h(day: DayProbs, h: str, b: str, p_b: float) -> float:
@@ -258,19 +314,49 @@ def my_week_history(ds, day: dt.date) -> dict:
 
 
 # ------------------------------------------------------------------ run
-def _target_day(ds, today: dt.date) -> tuple[dt.date | None, bool]:
-    """First working day ≥ today whose menu is unknown yet (pending), not free, ≤ season end."""
+def _tz(cfg) -> zoneinfo.ZoneInfo:
+    return zoneinfo.ZoneInfo(cfg.get("timezone", "Europe/Rome"))
+
+
+def _deadline_dt(day: dt.date, cfg) -> dt.datetime:
+    hh, mm = (int(x) for x in cfg.get("deadline", "12:00").split(":"))
+    return dt.datetime(day.year, day.month, day.day, hh, mm, tzinfo=_tz(cfg))
+
+
+def deadline_passed(day: dt.date, now: dt.datetime | None, cfg) -> bool:
+    """Is ``now`` (aware, or naive = local time of the game) at/after the tip deadline of ``day``?"""
+    if now is None:
+        return False
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=_tz(cfg))
+    return now >= _deadline_dt(day, cfg)
+
+
+def _target_day(ds, today: dt.date, now: dt.datetime | None = None) -> tuple[dt.date | None, bool]:
+    """(target day, season_over).
+
+    Target = first working day >= ``today`` (Mon–Fri, not a known free day, <= season end) whose
+    menu is not known yet (no row or status "pending"). If that day is ``today`` and ``now``
+    (Europe/Rome) is at/after today's deadline (config "deadline", 12:00), today can no longer be
+    tipped → the next such working day. No such day left in the season → (None, True).
+    """
     end = season_end(today.year, ds.config.get("season_end_mmdd", "12-23"))
+
+    def first_from(d: dt.date) -> dt.date | None:
+        while d <= end:
+            if d.weekday() < 5 and d not in ds.free_days:
+                m = ds.menus_by_date.get(d)
+                if m is None or m.status == "pending":
+                    return d
+            d += dt.timedelta(days=1)
+        return None
+
     if today > end:
         return None, True
-    d = today
-    while d <= end:
-        if d.weekday() < 5 and d not in ds.free_days:
-            m = ds.menus_by_date.get(d)
-            if m is None or m.status == "pending":
-                return d, False
-        d += dt.timedelta(days=1)
-    return None, True
+    target = first_from(today)
+    if target == today and deadline_passed(today, now, ds.config):
+        target = first_from(today + dt.timedelta(days=1))
+    return target, target is None
 
 
 def _reasons(cf, i: int, day: dt.date) -> list[dict]:
@@ -306,9 +392,7 @@ def _reasons(cf, i: int, day: dt.date) -> list[dict]:
 
 
 def _deadline(day: dt.date, cfg) -> str:
-    tz = zoneinfo.ZoneInfo(cfg.get("timezone", "Europe/Rome"))
-    hh, mm = (int(x) for x in cfg.get("deadline", "12:00").split(":"))
-    return dt.datetime(day.year, day.month, day.day, hh, mm, tzinfo=tz).isoformat()
+    return _deadline_dt(day, cfg).isoformat()
 
 
 def _dec_json(dec: Decision) -> dict:
@@ -324,16 +408,23 @@ def _dec_json(dec: Decision) -> dict:
 
 
 def build(ds, today: dt.date, now: dt.datetime | None = None, model_name: str | None = None,
-          params: dict | None = None) -> tuple[dict, dict]:
-    """Compute today.json and week.json objects (no file writes)."""
+          params: dict | None = None, strategy: str | None = None) -> tuple[dict, dict]:
+    """Compute today.json and week.json objects (no file writes).
+
+    ``now`` (aware, Europe/Rome) enables the deadline check: after today's deadline the target is
+    the next working day (possibly next week – then R4 history, plan and week.json use that week).
+    Without ``now`` (e.g. ``--today`` debugging) no deadline is applied.
+    """
     from . import model as M
 
     cfg = ds.config
     best, prm = M.load_params()
     model_name = model_name or best
     params = M.merge_params(params if params is not None else prm)
-    now = now or dt.datetime.now(zoneinfo.ZoneInfo(cfg.get("timezone", "Europe/Rome")))
-    target, season_over = _target_day(ds, today)
+    strategy = strategy or M.load_strategy()
+    discount = float(params.get("plan_discount", 1.0))
+    gen_now = now or dt.datetime.now(_tz(cfg))
+    target, season_over = _target_day(ds, today, now)
     r4 = ds.r4()
     scoring = cfg.get("scoring", {})
     w, bonus = _weights(scoring)
@@ -349,31 +440,64 @@ def build(ds, today: dt.date, now: dt.datetime | None = None, model_name: str | 
         "weekday": target.weekday() if target else None,
         "is_today": bool(target == today),
         "deadline": _deadline(target, cfg) if target else None,
-        "generated_at": now.isoformat(timespec="seconds"),
+        "today_deadline_passed": bool(deadline_passed(today, now, cfg)) if today.weekday() < 5 else None,
+        "generated_at": gen_now.isoformat(timespec="seconds"),
         "is_lent": bool(is_lent(target)) if target else False,
         "model": model_name,
+        "strategy": strategy,
         "season_over": season_over,
     }
     forecasts: dict = {}
     if target is not None:
         cal = M.WorkCalendar(ds.workdays(), ds.free_days)
         hist = [m for m in ds.served if m.date < target]
+        last_known = hist[-1].date if hist else None
         pr = M.Predictor(model_name, params, ds.norm, cal).fit(hist)
         end = season_end(target.year, cfg.get("season_end_mmdd", "12-23"))
-        days = [d for d in week_rest(target, ds.workdays(), ds.free_days, end)
-                if (ds.menus_by_date.get(d) is None or ds.menus_by_date[d].status in ("pending",))]
+
+        def open_day(d: dt.date) -> bool:
+            m = ds.menus_by_date.get(d)
+            return d.weekday() < 5 and d not in ds.free_days and (m is None or m.status == "pending")
+
+        days = [d for d in week_rest(target, ds.workdays(), ds.free_days, end) if open_day(d)]
         if target not in days:
             days = [target] + days
-        raw = [pr.predict(d) for d in days]
+        # earlier days of the same week whose menu is still unknown (e.g. today after the deadline):
+        # they are forecast too, so that the same-week correction of the later days accounts for them
+        pre = [d for d in week_days_all if d < target and open_day(d)
+               and (last_known is None or d > last_known)]
+        raw = [pr.predict(d) for d in pre + days]
         rho = pr.week_factors(target)
-        probs = M.week_correction(raw, rho)
+        allp = M.week_correction(raw, rho)
+        probs = allp[len(pre):]
         df0 = pr.features([target])[0]
         pairs = M.full_pair_lookup(df0)
         dps = [DayProbs(d, pb, pairs if i == 0 else None) for i, (d, pb) in enumerate(zip(days, probs))]
         history = my_week_history(ds, target)
-        dec = decide(dps, history, r4, scoring, "week_planner")
-        greedy = decide(dps, history, r4, scoring, "greedy")
-        forecasts = {d: pb for d, pb in zip(days, probs)}
+        # Stale data: open days of this week before the target (menu not entered yet, e.g. the
+        # sheet was not pushed since yesterday, or today after the deadline) without a recorded tip
+        # of mine. On those mornings the site showed the engine's recommendation – computed from
+        # the same data, so it is reproduced here – and I most likely tipped it. Without this,
+        # the target's tip repeated yesterday's in ~50 % of stale mornings (rule 4: consecutive).
+        # A tip I enter later (site/sheet) replaces the assumption on the next run.
+        assumed = {}
+        seq = pre + days
+        for i, d in enumerate(pre):
+            if any(d in (history.get(c) or {}) for c in CATEGORIES):
+                continue
+            allp_d = M.week_correction(raw, pr.week_factors(d))
+            pairs_d = M.full_pair_lookup(pr.features([d])[0])
+            dps_d = [DayProbs(x, pb, pairs_d if j == 0 else None)
+                     for j, (x, pb) in enumerate(zip(seq[i:], allp_d[i:]))]
+            dec_d = decide(dps_d, history, r4, scoring, strategy, discount=discount)
+            for c in CATEGORIES:
+                if dec_d.tip[c]:
+                    history.setdefault(c, {})[d] = [dec_d.tip[c]]
+            assumed[d] = dict(dec_d.tip)
+        dec = decide(dps, history, r4, scoring, strategy, discount=discount)
+        greedy = dec if strategy == "greedy" else decide(dps, history, r4, scoring, "greedy")
+        week_plan = dec.plan if strategy == "week_planner" else rollout(dps, history, r4, scoring, strategy)
+        forecasts = {d: pb for d, pb in zip(pre + days, allp)}
 
         # alternatives with reasons and R4 status
         alts = {}
@@ -416,6 +540,8 @@ def build(ds, today: dt.date, now: dt.datetime | None = None, model_name: str | 
                 break
             t = my_tips.get(d)
             if t is None:
+                if d in assumed:   # not recorded yet: assumed = the engine's recommendation of that day
+                    my_week.append({"date": d.isoformat(), "tip": assumed[d], "points": None, "assumed": True})
                 continue
             my_week.append({"date": d.isoformat(),
                             "tip": {c: (t.options.get(c) or [""])[0] for c in CATEGORIES},
@@ -428,7 +554,7 @@ def build(ds, today: dt.date, now: dt.datetime | None = None, model_name: str | 
             "my_week": my_week,
             "blocked": blocked,
             "week_plan": [{"date": r["date"].isoformat(), **{c: r[c] for c in CATEGORIES}, "ev": r["ev"]}
-                          for r in dec.plan],
+                          for r in week_plan],
             "fish": {"lent": lent, "note_de": note_de, "note_it": note_it, "p_fish": p_fish},
             "p_new": pr.p_new(target),
         })
@@ -442,7 +568,8 @@ def build(ds, today: dt.date, now: dt.datetime | None = None, model_name: str | 
     wdays = []
     for d in week_days_all:
         m = ds.menus_by_date.get(d)
-        status = m.status if m else ("free" if d in ds.free_days else "pending")
+        status = m.status if m else ("free" if d in ds.free_days
+                                     or d > season_end(d.year, cfg.get("season_end_mmdd", "12-23")) else "pending")
         t = my_tips.get(d)
         fc = forecasts.get(d)
         wdays.append({
@@ -454,7 +581,9 @@ def build(ds, today: dt.date, now: dt.datetime | None = None, model_name: str | 
                          if fc else None),
         })
     tippable = {}
-    rest = [d for d in week_days_all if (target is None or d >= target) and d.weekday() < 5 and d not in ds.free_days]
+    s_end = season_end(mon.year, cfg.get("season_end_mmdd", "12-23"))
+    rest = [d for d in week_days_all if (target is None or d >= target) and d.weekday() < 5
+            and d not in ds.free_days and d <= s_end]
     for cat in CATEGORIES:
         names = []
         for d in week_days_all:
@@ -479,6 +608,24 @@ def build(ds, today: dt.date, now: dt.datetime | None = None, model_name: str | 
     return today_obj, week_obj
 
 
+def as_of(ds, day: dt.date):
+    """The dataset as it looked on the morning of ``day`` (debugging a past day with ``--today``).
+
+    Menus from ``day`` on are not known yet (served/unknown -> pending; free days stay free) and
+    no tips from ``day`` on are entered. Without this a past ``--today`` silently recommended for
+    the first day whose menu is still unknown (i.e. months later). Returns ``ds`` itself when
+    no menu from ``day`` on is known (the normal, live case).
+    """
+    from .data import Dataset, Menu
+
+    if not any(m.date >= day and m.status in ("served", "unknown") for m in ds.menus):
+        return ds
+    menus = [Menu(m.date, "pending", ["", "", ""], {c: [] for c in CATEGORIES}, m.source)
+             if m.date >= day and m.status in ("served", "unknown") else m for m in ds.menus]
+    tips = [t for t in ds.tips if t.date < day]
+    return Dataset(menus, tips, ds.norm, ds.config)
+
+
 def run(ds, today: dt.date, now: dt.datetime | None = None) -> dict:
     from .output import write_site_json
 
@@ -490,17 +637,42 @@ def run(ds, today: dt.date, now: dt.datetime | None = None) -> dict:
 
 def main(argv=None) -> int:
     import argparse
+    import sys
 
     from .data import load_dataset
 
     ap = argparse.ArgumentParser(description="Tagesempfehlung / raccomandazione del giorno")
     ap.add_argument("--today", type=dt.date.fromisoformat)
+    ap.add_argument("--now", type=dt.datetime.fromisoformat,
+                    help="pretend local time (e.g. 2026-10-09T12:30) – enables the deadline check")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="nur anzeigen, docs/data/today.json + week.json NICHT schreiben / solo stampa")
+    ap.add_argument("--json", action="store_true", help="today.json auf stdout ausgeben")
     a = ap.parse_args(argv)
     ds = load_dataset()
-    tz = zoneinfo.ZoneInfo(ds.config.get("timezone", "Europe/Rome"))
-    now = dt.datetime.now(tz)
-    today = a.today or now.date()
-    obj = run(ds, today, now if not a.today else None)
+    tz = _tz(ds.config)
+    if a.now is not None:
+        now = a.now if a.now.tzinfo else a.now.replace(tzinfo=tz)
+        today = a.today or now.astimezone(tz).date()
+    else:
+        now = dt.datetime.now(tz)
+        today = a.today or now.date()
+        if a.today:
+            now = None   # debugging another day: no deadline check
+    if a.today is not None or a.now is not None:
+        dsx = as_of(ds, today)     # a past day: pretend its morning (later menus/tips unknown)
+        if dsx is not ds:
+            print(f"Stand/stato: Morgen des {today.isoformat()} (spätere Menüs und Tipps ausgeblendet)",
+                  file=sys.stderr)
+            ds = dsx
+    if a.dry_run:
+        obj, _ = build(ds, today, now)
+    else:
+        obj = run(ds, today, now)
+    if a.json:   # machine-readable: only the today.json object on stdout
+        import json
+        print(json.dumps(obj, ensure_ascii=False, indent=1, default=str))
+        return 0
     if obj.get("season_over") or not obj.get("recommendation"):
         print("Saison vorbei / stagione finita")
         return 0

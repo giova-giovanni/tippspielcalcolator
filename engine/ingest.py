@@ -189,9 +189,9 @@ def merge(existing_menus: list[dict], existing_tips: list[dict], x_menus: list[d
         if old and m["status"] == "pending" and old.get("status") not in ("", "pending", None):
             continue
         menus[key] = new
-    tips = {(r["date"], r["player"]): r for r in existing_tips}
+    tips = {(r["date"], r["player"].casefold()): r for r in existing_tips}
     for t in x_tips:
-        key = (t["date"].isoformat(), t["player"])
+        key = (t["date"].isoformat(), t["player"].casefold())
         tips[key] = {"date": key[0], "player": t["player"], "vorspeise": t["raw"][0],
                      "hauptspeise": t["raw"][1], "beilage": t["raw"][2],
                      "points_sheet": fmt_points(t["points_sheet"]), "source": "xlsx"}

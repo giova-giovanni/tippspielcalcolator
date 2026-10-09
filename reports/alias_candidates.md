@@ -1,7 +1,8 @@
 # Alias-Kandidaten / candidati alias
 
 Automatisch erzeugt von `engine/normalize.py`. **Nichts hier wird automatisch zusammengeführt.**
-Um zwei Namen zu vereinen, trage die Variante in `data/aliases.json` unter der Kategorie ein.
+Um zwei Namen zu vereinen, trage die Variante in `data/aliases.json` unter der Kategorie ein; um einen Vorschlag dauerhaft auszublenden, trage das Paar unter `keep_separate` ein.
+Zählung: servierte Menüs + Tipps (fremde Tipps nur vor dem Stichtag, Regel 6).
 
 ## Offene / getroffene Entscheidungen
 
@@ -15,16 +16,26 @@ Um zwei Namen zu vereinen, trage die Variante in `data/aliases.json` unter der K
 
 ## Bewusst getrennt gehalten
 
-| A | B | Warum |
+Diese Paare erscheinen nicht unter den Fuzzy-Vorschlägen. „unklar“ = Entscheidung noch offen.
+
+| A | B | n(A) | n(B) | Warum |
+|---|---|---|---|---|
+| Kartoffelstampf | Püree | 13 | 191 | Entscheidung Johannes Paul III: zwei verschiedene Gerichte (Stampf = grob, mit Stücken). |
+| Safranreis | Reis | 1 | 394 | eigene Beilage (zu Ossobuchi). |
+| Tomatenrisotto | Tomatenrisotto mit Mozzarella | 4 | 3 | unklar, bleibt getrennt. |
+| Röstinchen | Röstkartoffeln | 3 | 118 | unklar, bleibt getrennt. |
+| Paprika-Schweinegulasch | Schweinsgulasch | 1 | 14 | unklar, bleibt getrennt. |
+| Schweinsfilet mit Pfeffersoße | Schweinsfilet | 2 | 101 | eigene Variante. |
+| Spinatknödel mit Käsesoße | Spinatknödel | 5 | 17 | eigene Variante. |
+| Schlutzer Schinken-Rahm | Schlutzer | 1 | 72 | eigene Variante. |
+
+## Auffälligkeiten
+
+Keine Namensfrage, sondern Auffälligkeiten in den Daten (werden nicht automatisch korrigiert).
+
+| Auffälligkeit | Tage | Hinweis |
 |---|---|---|
-| Kartoffelstampf | Püree | Entscheidung Johannes Paul III: zwei verschiedene Gerichte (Stampf = grob, mit Stücken). |
-| Safranreis | Reis | eigene Beilage (zu Ossobuchi). |
-| Tomatenrisotto | Tomatenrisotto mit Mozzarella | unklar, bleibt getrennt. |
-| Röstinchen | Röstkartoffeln | unklar, bleibt getrennt. |
-| Paprika-Schweinegulasch | Schweinsgulasch | unklar, bleibt getrennt. |
-| Schweinsfilet mit Pfeffersoße | Schweinsfilet | eigene Variante. |
-| Spinatknödel mit Käsesoße | Spinatknödel | eigene Variante. |
-| Schlutzer Schinken-Rahm | Schlutzer | eigene Variante. |
+| Beilage „Gulasch“ (3×), sonst Hauptspeise (4×); Hauptspeise an diesen Tagen: „Knödel“ | 2025-01-24, 2025-07-30, 2025-12-16 | Spalten Hauptspeise/Beilage vertauscht? Gemeint ist wohl Hauptspeise „Gulasch“ mit Beilage „Knödel“ („Knödel“ kommt als Hauptspeise nur an diesen Tagen vor). Für Statistik/Modell zählt es so, wie es im Excel steht; Korrektur in der Excel-Datei (oder bewusst so lassen). Tipps an diesen Tagen mit einem der Namen: 0. |
 
 ## Angewandte Aliase (Rohschreibweise → kanonisch)
 
@@ -112,97 +123,39 @@ Um zwei Namen zu vereinen, trage die Variante in `data/aliases.json` unter der K
 | `Salzkartoffel` | Salzkartoffeln | 2 |
 | `Spatzlen (und Blaukraut)` | Spatzlen | 2 |
 
-## Fuzzy-Vorschläge (rapidfuzz WRatio ≥ 85)
+## Fuzzy-Vorschläge
+
+Kandidaten: max(rapidfuzz `ratio`, `token_sort_ratio`) ≥ 88 auf kleingeschriebenen Namen, oder „X“ ↔ „X mit/und/vom …“. Ohne bereits zusammengeführte und bewusst getrennte Paare. Hinweis: **Tippfehler?** = höchstens 2 Zeichen Unterschied (Levenshtein), **Variante?** = ein Name enthält den anderen, **ähnlich?** = sonst.
 
 ### Vorspeise
 
-| A | B | Score | n(A) | n(B) |
-|---|---|---|---|---|
-| Gemüselasagne | Lasagne | 90.0 | 1 | 158 |
-| Gnocchi | Gnocchi mit Gorgonzolasoße | 90.0 | 6 | 2 |
-| Gnocchi | Gnocchi mit Kräutersauce | 90.0 | 6 | 1 |
-| Gnocchi | Gnocchi mit Käsesoße | 90.0 | 6 | 8 |
-| Gnocchi | Gnocchi mit Lachs | 90.0 | 6 | 1 |
-| Gnocchi | Gnocchi mit Ragu | 90.0 | 6 | 1 |
-| Gnocchi | Gnocchi mit Tomatensoße | 90.0 | 6 | 22 |
-| Knödel | Käseknödel | 90.0 | 2 | 46 |
-| Knödel | Spinatknödel | 90.0 | 2 | 17 |
-| Knödel | Spinatknödel mit Gorgonzolasoße | 90.0 | 2 | 1 |
-| Knödel | Spinatknödel mit Käsesoße | 90.0 | 2 | 5 |
-| Nudel mit Lachs | Nudel mit Lachs und Rahmsoße | 90.0 | 12 | 1 |
-| Nudel mit Lachs | Nudel mit Lachs und Tomantensoße | 90.0 | 12 | 1 |
-| Nudel mit Tomatensoße | Nudel mit Tomatensoße und Mozzarella | 90.0 | 2 | 5 |
-| Nudel mit Tomatensoße | Nudel mit Tomatensoße und Schinken | 90.0 | 2 | 1 |
-| Pizza | Pizzastrudel | 90.0 | 14 | 54 |
-| Ravioli | Ravioli mit Käsesoße | 90.0 | 2 | 1 |
-| Ravioli | Ravioli mit Parmesan-Butter | 90.0 | 2 | 36 |
-| Ravioli | Ravioli mit Tomantensoße | 90.0 | 2 | 1 |
-| Ravioli | Spinatravioli | 90.0 | 2 | 3 |
-| Spinatknödel | Spinatknödel mit Gorgonzolasoße | 90.0 | 17 | 1 |
-| Nudel mit Lachs | Nudel mit Lachssoße | 85.7 | 12 | 2 |
-| Gnocchi mit Gorgonzolasoße | Gnocchi mit Lachs | 85.5 | 2 | 1 |
-| Gnocchi mit Gorgonzolasoße | Gnocchi mit Ragu | 85.5 | 2 | 1 |
-| Gnocchi mit Gorgonzolasoße | Griesscheiben mit Schinken/Käse und Tomantensoße | 85.5 | 2 | 5 |
-| Gnocchi mit Gorgonzolasoße | Nudel mit Lachs | 85.5 | 2 | 12 |
-| Gnocchi mit Gorgonzolasoße | Nudel mit Pesto | 85.5 | 2 | 29 |
-| Gnocchi mit Gorgonzolasoße | Nudel mit Ragu | 85.5 | 2 | 63 |
-| Gnocchi mit Kräutersauce | Gnocchi mit Ragu | 85.5 | 1 | 1 |
-| Gnocchi mit Kräutersauce | Griesscheiben mit Schinken/Käse und Tomantensoße | 85.5 | 1 | 5 |
-| Gnocchi mit Kräutersauce | Nudel mit Lachs | 85.5 | 1 | 12 |
-| Gnocchi mit Kräutersauce | Nudel mit Pesto | 85.5 | 1 | 29 |
-| Gnocchi mit Kräutersauce | Nudel mit Ragu | 85.5 | 1 | 63 |
-| Gnocchi mit Kräutersauce | Nudel mit Tomatensoße und Mozzarella | 85.5 | 1 | 5 |
-| Gnocchi mit Kräutersauce | Schüttelbrot-Risotto mit Speckstreifen | 85.5 | 1 | 1 |
-| Gnocchi mit Käsesoße | Griesscheiben mit Schinken/Käse und Tomantensoße | 85.5 | 8 | 5 |
-| Gnocchi mit Käsesoße | Käse-Sofficini mit Tomantensoße | 85.5 | 8 | 1 |
-| Gnocchi mit Käsesoße | Nudel mit Lachs und Tomantensoße | 85.5 | 8 | 1 |
-| Gnocchi mit Käsesoße | Nudel mit Ragu | 85.5 | 8 | 63 |
-| Gnocchi mit Käsesoße | Nudel mit Tomatensoße und Mozzarella | 85.5 | 8 | 5 |
-| Gnocchi mit Käsesoße | Nudel mit Tomatensoße und Schinken | 85.5 | 8 | 1 |
-| Gnocchi mit Käsesoße | Schüttelbrot-Risotto mit Speckstreifen | 85.5 | 8 | 1 |
-| Gnocchi mit Käsesoße | Spinatknödel mit Gorgonzolasoße | 85.5 | 8 | 1 |
-| Gnocchi mit Lachs | Griesscheiben mit Schinken/Käse und Tomantensoße | 85.5 | 1 | 5 |
-| Gnocchi mit Lachs | Käse-Sofficini mit Tomantensoße | 85.5 | 1 | 1 |
-| Gnocchi mit Lachs | Nudel mit Lachs und Rahmsoße | 85.5 | 1 | 1 |
-| Gnocchi mit Lachs | Nudel mit Lachs und Tomantensoße | 85.5 | 1 | 1 |
-| Gnocchi mit Lachs | Nudel mit Tomatensoße und Mozzarella | 85.5 | 1 | 5 |
-| Gnocchi mit Lachs | Nudel mit Tomatensoße und Schinken | 85.5 | 1 | 1 |
-| Gnocchi mit Lachs | Omelett mit Schinken und Käse | 85.5 | 1 | 4 |
-| Gnocchi mit Lachs | Ravioli mit Parmesan-Butter | 85.5 | 1 | 36 |
-| Gnocchi mit Lachs | Schüttelbrot-Risotto mit Speckstreifen | 85.5 | 1 | 1 |
-| Gnocchi mit Lachs | Spinatknödel mit Gorgonzolasoße | 85.5 | 1 | 1 |
-| Gnocchi mit Lachs | Spinatknödel mit Käsesoße | 85.5 | 1 | 5 |
-| Gnocchi mit Lachs | Tomatenrisotto mit Mozzarella | 85.5 | 1 | 3 |
-| Gnocchi mit Lachs | Tortellini mit Schinken-Rahm | 85.5 | 1 | 86 |
-| Gnocchi mit Ragu | Gnocchi mit Tomatensoße | 85.5 | 1 | 22 |
-| Gnocchi mit Ragu | Griesscheiben mit Schinken/Käse und Tomantensoße | 85.5 | 1 | 5 |
-| Gnocchi mit Ragu | Käse-Sofficini mit Tomantensoße | 85.5 | 1 | 1 |
-| Gnocchi mit Ragu | Nudel mit Grillgemüseragu | 85.5 | 1 | 3 |
+| A | B | Score | Lev. | Hinweis | n(A) | n(B) |
+|---|---|---|---|---|---|---|
+| Nudel mit Lachs | Nudel mit Lachssoße | 88.2 | 4 | Variante? | 12 | 2 |
+| Nudel mit Tomatensoße | Nudel mit Tomatensoße und Schinken | 76.4 | 13 | Variante? | 2 | 1 |
+| Nudel mit Tomatensoße | Nudel mit Tomatensoße und Mozzarella | 73.7 | 15 | Variante? | 2 | 5 |
+| Nudel mit Lachs | Nudel mit Lachs und Rahmsoße | 69.8 | 13 | Variante? | 12 | 1 |
+| Nudel mit Lachs | Nudel mit Lachs und Tomantensoße | 63.8 | 17 | Variante? | 12 | 1 |
+| Gnocchi | Gnocchi mit Ragu | 60.9 | 9 | Variante? | 6 | 1 |
+| Gnocchi | Gnocchi mit Lachs | 58.3 | 10 | Variante? | 6 | 1 |
+| Spinatknödel | Spinatknödel mit Gorgonzolasoße | 55.8 | 19 | Variante? | 17 | 1 |
+| Gnocchi | Gnocchi mit Käsesoße | 51.9 | 13 | Variante? | 6 | 8 |
+| Ravioli | Ravioli mit Käsesoße | 51.9 | 13 | Variante? | 2 | 1 |
+| Gnocchi | Gnocchi mit Tomatensoße | 46.7 | 16 | Variante? | 6 | 22 |
+| Gnocchi | Gnocchi mit Kräutersauce | 45.2 | 17 | Variante? | 6 | 1 |
+| Ravioli | Ravioli mit Tomantensoße | 45.2 | 17 | Variante? | 2 | 1 |
+| Gnocchi | Gnocchi mit Gorgonzolasoße | 42.4 | 19 | Variante? | 6 | 2 |
+| Ravioli | Ravioli mit Parmesan-Butter | 41.2 | 20 | Variante? | 2 | 36 |
 
 ### Hauptspeise
 
-| A | B | Score | n(A) | n(B) |
-|---|---|---|---|---|
-| Fisch | Fischfilet | 90.0 | 10 | 1 |
-| Fisch | Fischstäbchen | 90.0 | 10 | 1 |
-| Frittiertes Pangasiusfilet | Pangasiusfilet | 90.0 | 3 | 1 |
-| Frittiertes Schollenfilet | Schollenfilet | 90.0 | 10 | 1 |
-| Gulasch | Hirschgulasch | 90.0 | 22 | 1 |
-| Gulasch | Kalbsgulasch | 90.0 | 22 | 2 |
-| Gulasch | Paprika-Schweinegulasch | 90.0 | 22 | 1 |
-| Gulasch | Rindsgulasch | 90.0 | 22 | 2 |
-| Gulasch | Schweinsgulasch | 90.0 | 22 | 14 |
-| Knödel | Speckknödel | 90.0 | 23 | 1 |
-| Pangasiusfilet | Pangasiusfilet mit Kräuterrahmsoße | 90.0 | 1 | 1 |
-| Paniertes Schollenfilet | Schollenfilet | 90.0 | 4 | 1 |
-| Schweinsschnitzel | Schweinsschnitzel mit Kräuterrahmsoße | 90.0 | 45 | 19 |
-| Truthahnschnitzel | Truthahnschnitzel vom Grill | 90.0 | 121 | 3 |
-| Wienerschnitzel | Zigeunerschnitzel | 87.5 | 166 | 26 |
+| A | B | Score | Lev. | Hinweis | n(A) | n(B) |
+|---|---|---|---|---|---|---|
+| Truthahnschnitzel | Truthahnschnitzel vom Grill | 77.3 | 10 | Variante? | 121 | 3 |
+| Schweinsschnitzel | Schweinsschnitzel mit Kräuterrahmsoße | 63.0 | 20 | Variante? | 45 | 19 |
+| Pangasiusfilet | Pangasiusfilet mit Kräuterrahmsoße | 58.3 | 20 | Variante? | 1 | 1 |
 
 ### Beilage
 
-| A | B | Score | n(A) | n(B) |
-|---|---|---|---|---|
-| Kartoffel-Käse-Kroketten | Kroketten | 90.0 | 1 | 97 |
-| Bratkartoffeln | Röstkartoffeln | 85.7 | 10 | 118 |
+_keine_
 

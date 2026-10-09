@@ -3,8 +3,12 @@
 For every working day from 2025-01-13 on (2024 = warm-up only) the models are trained on the
 served menus strictly before that day, the tip is chosen with the decision code of
 :mod:`engine.recommend` (EV maximisation, rule 4 w.r.t. the model's OWN simulated tips of the
-same ISO week, weekly planner) and scored with :func:`engine.rules.score_tip` against all
-announced options (fish rule included).
+same ISO week, strategy from data/model_params.json) and scored with :func:`engine.rules.score_tip`
+against all announced options (fish rule included).
+
+Leakage guards (tested in tests/test_model.py): one online feature pass where the features of a day
+with prefix n only use the served menus 0..n-1; ML scorers for prefix n are fitted on rows j < n only;
+the tuning simulations end at the validation split (no 2026 features, rows or metrics).
 
 Splits: tune 2025-01-13..2025-08-31 · validation 2025-09-01..2025-12-19 · test 2026 (never tuned).
 
@@ -23,7 +27,7 @@ import numpy as np
 from . import CATEGORIES
 from . import model as M
 from .config import MODEL_PARAMS_JSON, REPORTS, load_json, save_json
-from .dates import season_end, week_key
+from .dates import season_end, week_key, week_monday
 from .recommend import DayProbs, decide, week_rest
 from .rules import score_tip
 
@@ -42,6 +46,8 @@ def split_of(d: dt.date) -> str | None:
     for k, (a, b) in SPLITS.items():
         if a <= d <= b:
             return k
+    if d >= SPLITS["test"][0]:  # later seasons (2027 …) are out-of-sample too
+        return "test"
     return None
 
 
@@ -72,8 +78,11 @@ class Sim:
             for d in days:
                 targets.add((d, n))
         j0 = int(self.params["ml_min_day"])
+        # ML training rows: only served days that precede some evaluation day (the scorer of an
+        # evaluation day with prefix n is fitted on rows j < n) – nothing after ``end`` is touched
+        self.n_max = max((n for n, _ in self.weeks.values()), default=0)
         if with_ml:
-            for j in range(j0, self.enc.N):
+            for j in range(j0, self.n_max):
                 targets.add((self.enc.dates[j], j))
         self.with_ml = with_ml
         self.feats = M.walk(self.enc, sorted(targets, key=lambda x: (x[1], x[0])), self.params, with_ml=with_ml)
@@ -198,7 +207,7 @@ def calibration_all(sim: Sim, name: str, params=None, scorers=None) -> dict:
 
 
 def play(sim: Sim, name: str, params: dict | None = None, scorers: dict | None = None,
-         strategies=STRATEGIES) -> dict:
+         strategies=STRATEGIES, plan_discount: float | None = None) -> dict:
     """Simulated tipping with every strategy. Returns per-strategy daily records."""
     ds = sim.ds
     p = M.merge_params({**sim.params, **(params or {})})
@@ -206,6 +215,8 @@ def play(sim: Sim, name: str, params: dict | None = None, scorers: dict | None =
     scoring = ds.config.get("scoring", {})
     hist = {s: {c: {} for c in CATEGORIES} for s in strategies}
     out = {s: [] for s in strategies}
+    cross_week = r4.mode != "workday_adjacent_same_week"
+    discount = float(p.get("plan_discount", 1.0)) if plan_discount is None else float(plan_discount)
     for t in sim.eval_days:
         lst = sim.day_probs(name, t, p, scorers)
         dicts = [M.as_dict(df, arr) for df, arr in lst]
@@ -217,9 +228,13 @@ def play(sim: Sim, name: str, params: dict | None = None, scorers: dict | None =
         dps = [DayProbs(d, pb, pairs if i == 0 else None) for i, (d, pb) in enumerate(zip(days, probs))]
         m = ds.menus_by_date[t]
         for s in strategies:
-            h = {c: {d: o for d, o in hist[s][c].items() if week_key(d) == week_key(t)
-                     or (t - d).days <= 4} for c in CATEGORIES}
-            dec = decide(dps, h, r4, scoring, s)
+            # rule-4 history = the model's OWN simulated tips of the same ISO week (plus the previous
+            # working days only when the configured adjacency crosses week boundaries)
+            # (same window as recommend.my_week_history: a long weekend/holiday gap can make
+            # Friday -> Wednesday "adjacent" in the cross-week modes)
+            h = {c: {d: o for d, o in hist[s][c].items() if d < t and (week_key(d) == week_key(t)
+                     or (cross_week and d >= week_monday(t) - dt.timedelta(days=7)))} for c in CATEGORIES}
+            dec = decide(dps, h, r4, scoring, s, discount=discount)
             tip = {c: [dec.tip[c]] if dec.tip[c] else [] for c in CATEGORIES}
             for c in CATEGORIES:
                 if dec.tip[c]:
@@ -274,10 +289,12 @@ def summarize(records: list, key=lambda r: r["date"].year) -> dict:
     return out
 
 
-def player_stats(ds) -> dict:
-    """Real players per year (points recomputed by the engine; days = served days with a tip)."""
+def player_stats(ds, until: dt.date | None = None) -> dict:
+    """Real players per year (points recomputed by the engine; days = served days with a tip <= ``until``)."""
     out: dict = {}
     for t in ds.tips:
+        if until is not None and t.date > until:
+            continue
         m = ds.menus_by_date.get(t.date)
         if m is None or m.status not in ("served", "unknown") or t.points is None:
             continue
@@ -432,14 +449,24 @@ def tune(ds, n_sweeps: int = 2, verbose: bool = True) -> dict:
             f"(tune points {sel[name]['tune_points']})")
     best_model = min(sel, key=lambda k: sel[k]["val_wll"])
     say(f"best model (validation log-loss): {best_model}")
+
+    # ---- decision strategy for the chosen model: greedy vs weekly planner (discount grid),
+    #      chosen on the validation split by EXPECTED points (sum of the model's EV of the chosen tips;
+    #      far less noisy than realised points). 2026 is not looked at.
+    strategy, strat_sel = select_strategy(simw, best_model, params,
+                                          scw if best_model in ("ml", "ensemble") else None, say)
+    params["plan_discount"] = strat_sel["chosen_discount"]
     obj = {
         "best_model": best_model,
+        "strategy": strategy,
+        "strategy_selection": strat_sel,
         "params": params,
         "selection": sel,
         "selection_rule": "heuristic: coordinate descent per category on tune-split log-loss, number of sweeps "
                           "(0/1/2) chosen per category on validation log-loss; B|H mixing, ML regularisation and "
                           "ensemble weight chosen on validation; model = lowest validation weighted log-loss "
-                          "(V 1, H 0.5, B 0.5). 2026 never used.",
+                          "(V 1, H 0.5, B 0.5); strategy (greedy vs. weekly planner with discount) = highest "
+                          "validation expected points of the chosen model. 2026 never used.",
         "splits": {k: f"{a.isoformat()}..{b.isoformat()}" for k, (a, b) in SPLITS.items()},
         "n_configs": n_configs + 10 + 4 + 5 + 3,
         "tuned_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
@@ -450,6 +477,34 @@ def tune(ds, n_sweeps: int = 2, verbose: bool = True) -> dict:
     return obj
 
 
+PLAN_DISCOUNTS = (0.5, 0.7, 0.85, 1.0)
+
+
+def select_strategy(sim: Sim, name: str, params: dict, scorers: dict | None = None, say=print) -> tuple[str, dict]:
+    """Greedy vs. weekly planner (discount grid) by expected points on the VALIDATION split."""
+    cands = [("greedy", 1.0)] + [("week_planner", d) for d in PLAN_DISCOUNTS]
+    res = {}
+    for strat, disc in cands:
+        recs = play(sim, name, params, scorers, strategies=(strat,), plan_discount=disc)[strat]
+        val = [r for r in recs if split_of(r["date"]) == "validation"]
+        tun = [r for r in recs if split_of(r["date"]) == "tune"]
+        key = strat if strat == "greedy" else f"week_planner@{disc:g}"
+        res[key] = {"strategy": strat, "discount": disc,
+                    "val_expected": round(sum(r["ev"] for r in val), 3),
+                    "val_points": round(sum(r["points"] for r in val), 2),
+                    "tune_expected": round(sum(r["ev"] for r in tun), 3),
+                    "tune_points": round(sum(r["points"] for r in tun), 2)}
+        say(f"strategy {key}: val expected {res[key]['val_expected']:.2f} (realised {res[key]['val_points']:g}), "
+            f"tune expected {res[key]['tune_expected']:.2f}")
+    # highest validation expected points; ties (< 0.01) -> the simpler greedy / the smaller discount
+    best_key = max(res, key=lambda k: (round(res[k]["val_expected"], 2), k == "greedy", -res[k]["discount"]))
+    strat = res[best_key]["strategy"]
+    say(f"strategy chosen on validation expected points: {best_key}")
+    return strat, {"candidates": res, "chosen": best_key,
+                   "chosen_discount": res[best_key]["discount"] if strat == "week_planner" else 1.0,
+                   "rule": "max expected points (sum of EV) on the validation split 2025-09-01..2025-12-19"}
+
+
 # ------------------------------------------------------------------ run
 def run(ds, today: dt.date | None = None, verbose: bool = True) -> dict:
     """Full backtest with the tuned parameters; writes backtest.json, leaderboard.json, reports/backtest.md."""
@@ -457,10 +512,13 @@ def run(ds, today: dt.date | None = None, verbose: bool = True) -> dict:
 
     t0 = time.time()
     best_model, params = M.load_params()
+    strategy = M.load_strategy()
     stored = load_json(MODEL_PARAMS_JSON, {}) or {}
-    end = None
-    if today is not None:
-        end = today - dt.timedelta(days=1)
+    # The backtest runs through ``today``: a day's simulated tip only uses the menus before it, so
+    # once today's menu is entered (on-data run after lunch) today is scored like any other day.
+    # Ending at yesterday made the leaderboard compare the players through today with the model
+    # through yesterday until the next data push.
+    end = today
     sim = Sim(ds, params, START, end, week_targets=True, with_ml=True)
     sc = sim.ml_scorers(params)
     if verbose:
@@ -476,20 +534,30 @@ def run(ds, today: dt.date | None = None, verbose: bool = True) -> dict:
         calib[name] = calibration_all(sim, name, params, s)
         rec = play(sim, name, params, s)
         plays[name] = rec
-        yr = summarize(rec["week_planner"])
+        yr = summarize(rec[strategy])
+        planner = summarize(rec["week_planner"])
         greedy = summarize(rec["greedy"])
         nor4 = summarize(rec["no_r4"])
-        by_split = summarize(rec["week_planner"], key=lambda r: split_of(r["date"]))
+        by_split = summarize(rec[strategy], key=lambda r: split_of(r["date"]))
+        by_split_p = summarize(rec["week_planner"], key=lambda r: split_of(r["date"]))
         by_split_g = summarize(rec["greedy"], key=lambda r: split_of(r["date"]))
         test = pm["test"]
         models.append({
             "name": name, "label_de": M.MODEL_LABELS[name][0], "label_it": M.MODEL_LABELS[name][1],
+            "strategy": strategy,
             "years": yr,
+            "week_planner": {y: {"points": v["points"], "ppd": v["ppd"], "expected_points": v["expected_points"]}
+                             for y, v in planner.items()},
             "greedy": {y: {"points": v["points"], "ppd": v["ppd"], "expected_points": v["expected_points"]}
                        for y, v in greedy.items()},
             "no_r4": {y: {"points": v["points"], "ppd": v["ppd"]} for y, v in nor4.items()},
             "splits": {k: {"points": v["points"], "ppd": v["ppd"], "days": v["days"],
-                           "greedy_points": by_split_g.get(k, {}).get("points")} for k, v in by_split.items()},
+                           "expected_points": v["expected_points"],
+                           "planner_points": by_split_p.get(k, {}).get("points"),
+                           "planner_expected": by_split_p.get(k, {}).get("expected_points"),
+                           "greedy_points": by_split_g.get(k, {}).get("points"),
+                           "greedy_expected": by_split_g.get(k, {}).get("expected_points")}
+                       for k, v in by_split.items()},
             "logloss": {c: test[c]["logloss"] for c in CATEGORIES if test.get(c)},
             "top1": {c: test[c]["top1"] for c in CATEGORIES if test.get(c)},
             "top3": {c: test[c]["top3"] for c in CATEGORIES if test.get(c)},
@@ -499,9 +567,9 @@ def run(ds, today: dt.date | None = None, verbose: bool = True) -> dict:
             print(f"[backtest {time.time() - t0:5.1f}s] {name}: "
                   + ", ".join(f"{y}: {v['points']} P ({v['days']} Tage, greedy {greedy[y]['points']}, ohne R4 {nor4[y]['points']})"
                               for y, v in sorted(yr.items())), flush=True)
-    players = player_stats(ds)
-    comparison = _compare(ds, plays[best_model]["week_planner"])
-    best_rec = plays[best_model]["week_planner"]
+    players = player_stats(ds, today)
+    comparison = _compare(ds, plays[best_model][strategy])
+    best_rec = plays[best_model][strategy]
     daily = defaultdict(list)
     for r in best_rec:
         m = ds.menus_by_date[r["date"]]
@@ -513,7 +581,6 @@ def run(ds, today: dt.date | None = None, verbose: bool = True) -> dict:
             "points": r["points"], "ev": round(r["ev"], 4),
         })
     last = sim.end
-    summary_de, summary_it = _summaries(models, players, best_model)
     obj = {
         "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "split": {"tune": "2025-01-13..2025-08-31", "validation": "2025-09-01..2025-12-19",
@@ -521,16 +588,17 @@ def run(ds, today: dt.date | None = None, verbose: bool = True) -> dict:
         "models": models,
         "players": players,
         "best_model": best_model,
+        "strategy": strategy,
         "params": params,
         "selection": stored.get("selection"),
+        "strategy_selection": stored.get("strategy_selection"),
         "calibration": calib,
         "daily": dict(daily),
-        "summary_de": summary_de,
-        "summary_it": summary_it,
         "comparison": comparison,
     }
+    obj["summary_de"], obj["summary_it"] = _summaries(obj, ds)
     write_site_json("backtest", obj)
-    write_site_json("leaderboard", _leaderboard(ds, best_rec, best_model))
+    write_site_json("leaderboard", _leaderboard(ds, best_rec, best_model, today))
     _write_report(obj, ds)
     if verbose:
         print(f"[backtest {time.time() - t0:5.1f}s] fertig", flush=True)
@@ -563,18 +631,33 @@ def _compare(ds, model_rec, n_boot: int = 4000, seed: int = 11) -> dict:
             boot = diff[idx].sum(axis=1)
             # same comparison restricted to the days since the player's first tip of the year
             mask = np.array([d >= first for d in days])
+            # skill comparison: only the days the player actually tipped
+            tipped = np.array([d in tips[pl] for d in days])
+            dt_ = diff[tipped]
+            if dt_.size:
+                idx_t = rng.integers(0, dt_.size, size=(n_boot, dt_.size))
+                boot_t = dt_[idx_t].sum(axis=1)
+                ci_t = [round(float(np.percentile(boot_t, 2.5)), 1), round(float(np.percentile(boot_t, 97.5)), 1)]
+                pa_t = round(float((boot_t > 0).mean()), 3)
+            else:
+                ci_t, pa_t = [0.0, 0.0], 0.0
             res[pl] = {"diff": round(float(diff.sum()), 2), "ci95": [round(float(np.percentile(boot, 2.5)), 1),
                                                                      round(float(np.percentile(boot, 97.5)), 1)],
                        "p_model_ahead": round(float((boot > 0).mean()), 3),
-                       "diff_since_first_tip": round(float(diff[mask].sum()), 2), "days": len(days)}
+                       "diff_since_first_tip": round(float(diff[mask].sum()), 2), "days": len(days),
+                       "player_points": round(float(pv.sum()), 2), "model_points": round(float(mv.sum()), 2),
+                       "tipped_days": int(tipped.sum()), "diff_tipped_days": round(float(dt_.sum()), 2),
+                       "ci95_tipped_days": ci_t, "p_model_ahead_tipped_days": pa_t}
         out[str(y)] = res
     return out
 
 
-def _leaderboard(ds, model_rec, model_name) -> dict:
+def _leaderboard(ds, model_rec, model_name, until: dt.date | None = None) -> dict:
     by_year_days = defaultdict(set)
     pts = defaultdict(lambda: defaultdict(float))
     for t in ds.tips:
+        if until is not None and t.date > until:
+            continue
         m = ds.menus_by_date.get(t.date)
         if m is None or m.status not in ("served", "unknown") or t.points is None:
             continue
@@ -607,26 +690,153 @@ def _leaderboard(ds, model_rec, model_name) -> dict:
     return {"years": years, "model_name": model_name}
 
 
-def _summaries(models, players, best) -> tuple[str, str]:
+STRAT_DE = {"week_planner": "Wochenplaner", "greedy": "Greedy (nur heute)"}
+STRAT_IT = {"week_planner": "pianificatore settimanale", "greedy": "greedy (solo oggi)"}
+
+
+def _num(x) -> str:
+    return f"{x:g}"
+
+
+def _headline(obj: dict, ds, lang: str = "de") -> list[str]:
+    """Honest verdict lines (markdown bullets) for the top of the report."""
+    models, players, best = obj["models"], obj["players"], obj["best_model"]
+    strategy = obj.get("strategy", "week_planner")
     bm = next(m for m in models if m["name"] == best)
-    parts_de, parts_it = [], []
-    for y in ("2025", "2026"):
-        if y not in bm["years"]:
-            continue
-        mp = bm["years"][y]["points"]
+    comp = obj.get("comparison") or {}
+    de = lang == "de"
+    out = []
+    ss = obj.get("strategy_selection") or {}
+    if de:
+        out.append(f"* **Modell:** *{best}* (auf der Validierung 2025 nach Log-Loss gewählt), **Strategie:** "
+                   f"{STRAT_DE.get(strategy, strategy)} (auf der Validierung nach *erwarteten* Punkten gewählt). "
+                   "Regel 4 gilt gegen die eigenen simulierten Tipps der Woche; gewertet wird mit `rules.score_tip`.")
+        out.append("* **2026 ist echter Test (out-of-sample):** keine Hyperparameter, keine Modell- oder "
+                   "Strategiewahl hat 2026 gesehen; für jeden Tag wird nur mit den Menüs *davor* trainiert.")
+    else:
+        out.append(f"* **Modello:** *{best}* (scelto sulla validazione 2025 per log-loss), **strategia:** "
+                   f"{STRAT_IT.get(strategy, strategy)} (scelta sulla validazione per punti *attesi*). "
+                   "Regola 4 rispettata rispetto ai propri tip simulati della settimana; punteggio con `rules.score_tip`.")
+        out.append("* **Il 2026 è un vero test (fuori campione):** nessun iperparametro, nessuna scelta di modello o "
+                   "strategia ha visto il 2026; ogni giorno il modello usa solo i menù *precedenti*.")
+    for y in ("2026", "2025"):
+        v = bm["years"].get(y)
         pl = players.get(y, {})
-        if not pl:
+        if not v or not pl:
             continue
-        top = max(pl.items(), key=lambda kv: kv[1]["points"])
-        diff = mp - top[1]["points"]
+        ranking = sorted(pl.items(), key=lambda kv: -kv[1]["points"])
+        top_name, top = ranking[0]
+        beaten = [n for n, x in ranking if v["points"] > x["points"]]
+        c = (comp.get(y) or {}).get(top_name)
+        tag = ("Test, out-of-sample" if y == "2026" else "teilweise in-sample: Tuning/Validierung") if de else \
+              ("test, fuori campione" if y == "2026" else "in parte nel campione: tuning/validazione")
+        others = ", ".join(f"{n} {_num(x['points'])}" for n, x in ranking)
+        if de:
+            pos = ("vor **allen** Spielern" if len(beaten) == len(ranking) else
+                   f"vor {len(beaten)} von {len(ranking)} Spielern" if beaten else "hinter allen Spielern")
+            line = (f"* **{y}** ({tag}, mit Regel 4): Modell **{_num(v['points'])} Punkte** an {v['days']} Spieltagen "
+                    f"({v['ppd']:.3f}/Tag; laut Modell erwartet {v.get('expected_points', 0):.1f}) → {pos}. "
+                    f"Spieler: {others}.")
+        else:
+            pos = ("davanti a **tutti** i giocatori" if len(beaten) == len(ranking) else
+                   f"davanti a {len(beaten)} giocatori su {len(ranking)}" if beaten else "dietro a tutti i giocatori")
+            line = (f"* **{y}** ({tag}, con regola 4): modello **{_num(v['points'])} punti** in {v['days']} giorni "
+                    f"({v['ppd']:.3f}/giorno; attesi secondo il modello {v.get('expected_points', 0):.1f}) → {pos}. "
+                    f"Giocatori: {others}.")
+        out.append(line)
+        if c:
+            sig = c["ci95"][0] > 0 or c["ci95"][1] < 0
+            sig_t = c["ci95_tipped_days"][0] > 0 or c["ci95_tipped_days"][1] < 0
+            if de:
+                out.append(f"  * Gegen den Besten ({top_name}): {c['diff']:+g} Punkte, 95 %-Bootstrap-Intervall "
+                           f"[{c['ci95'][0]:+g}, {c['ci95'][1]:+g}], P(Modell vorne) {c['p_model_ahead']:.0%} → "
+                           + ("**statistisch gesichert**." if sig else "**statistisch nicht gesichert** (Intervall enthält 0)."))
+                out.append(f"  * Nur an den {c['tipped_days']} Tagen, an denen {top_name} getippt hat: "
+                           f"{c['diff_tipped_days']:+g} [{c['ci95_tipped_days'][0]:+g}, {c['ci95_tipped_days'][1]:+g}]"
+                           + (" (gesichert)." if sig_t else " (nicht gesichert)."))
+            else:
+                out.append(f"  * Contro il migliore ({top_name}): {c['diff']:+g} punti, intervallo bootstrap 95 % "
+                           f"[{c['ci95'][0]:+g}, {c['ci95'][1]:+g}], P(modello davanti) {c['p_model_ahead']:.0%} → "
+                           + ("**statisticamente significativo**." if sig else "**non statisticamente significativo** (l'intervallo contiene 0)."))
+                out.append(f"  * Solo nei {c['tipped_days']} giorni in cui {top_name} ha tippato: "
+                           f"{c['diff_tipped_days']:+g} [{c['ci95_tipped_days'][0]:+g}, {c['ci95_tipped_days'][1]:+g}]"
+                           + (" (significativo)." if sig_t else " (non significativo)."))
+        me = ds.me
+        cm = (comp.get(y) or {}).get(me)
+        if cm and me != top_name:
+            if de:
+                out.append(f"  * Gegen {me} (ich): {cm['diff']:+g} [{cm['ci95'][0]:+g}, {cm['ci95'][1]:+g}], "
+                           f"nur meine {cm['tipped_days']} Tipptage {cm['diff_tipped_days']:+g} "
+                           f"[{cm['ci95_tipped_days'][0]:+g}, {cm['ci95_tipped_days'][1]:+g}].")
+            else:
+                out.append(f"  * Contro {me} (io): {cm['diff']:+g} [{cm['ci95'][0]:+g}, {cm['ci95'][1]:+g}], "
+                           f"solo i miei {cm['tipped_days']} giorni tippati {cm['diff_tipped_days']:+g} "
+                           f"[{cm['ci95_tipped_days'][0]:+g}, {cm['ci95_tipped_days'][1]:+g}].")
+        if y == "2026":
+            oth = ", ".join(f"{m['name']} {_num(m['years'][y]['points'])}" for m in models
+                            if m["name"] != best and y in m["years"])
+            out.append(("  * Andere Modelle 2026 (gleiche Strategie, nur zur Information – nicht zur Auswahl benutzt): "
+                        if de else "  * Altri modelli 2026 (stessa strategia, solo informativo – non usati per la scelta): ") + oth + ".")
+    # strategy
+    cand = ss.get("candidates") or {}
+    g = cand.get("greedy")
+    pk = [k for k in cand if k != "greedy"]
+    if g and pk:
+        bp = max(pk, key=lambda k: cand[k]["val_expected"])
+        y26p = bm.get("week_planner", {}).get("2026", {}).get("points")
+        y26g = bm.get("greedy", {}).get("2026", {}).get("points")
+        if de:
+            out.append(f"* **Wochenplaner vs. Greedy:** Validierung erwartete Punkte {cand[bp]['val_expected']:.2f} "
+                       f"({bp}) vs. {g['val_expected']:.2f} (Greedy) → gewählt: {STRAT_DE.get(strategy, strategy)}. "
+                       f"Der Unterschied ist klein ({cand[bp]['val_expected'] - g['val_expected']:+.2f} erwartete Punkte "
+                       f"auf der Validierung); 2026 realisiert: Planer {_num(y26p)} vs. Greedy {_num(y26g)} – "
+                       "innerhalb des Zufallsrauschens.")
+        else:
+            out.append(f"* **Pianificatore vs. greedy:** punti attesi sulla validazione {cand[bp]['val_expected']:.2f} "
+                       f"({bp}) vs. {g['val_expected']:.2f} (greedy) → scelto: {STRAT_IT.get(strategy, strategy)}. "
+                       f"Differenza piccola ({cand[bp]['val_expected'] - g['val_expected']:+.2f} punti attesi sulla "
+                       f"validazione); 2026 realizzato: pianificatore {_num(y26p)} vs. greedy {_num(y26g)} – "
+                       "dentro il rumore casuale.")
+    if de:
+        out.append("* Eine Saison hat ~180 Spieltage mit stark schwankenden Tagespunkten (0–3): Unterschiede von "
+                   "wenigen Punkten sind Zufall. Das Modell tippt jeden Tag; Spieler haben einzelne Tage ausgelassen "
+                   "(zählen 0) – deshalb auch der Vergleich nur über die getippten Tage.")
+    else:
+        out.append("* Una stagione ha ~180 giorni con punti giornalieri molto variabili (0–3): differenze di pochi "
+                   "punti sono casuali. Il modello tippa ogni giorno; i giocatori hanno saltato alcuni giorni "
+                   "(contano 0) – per questo anche il confronto solo sui giorni tippati.")
+    return out
+
+
+def _summaries(obj: dict, ds) -> tuple[str, str]:
+    """One-paragraph summaries (backtest.json summary_de / summary_it)."""
+    models, players, best = obj["models"], obj["players"], obj["best_model"]
+    bm = next(m for m in models if m["name"] == best)
+    comp = obj.get("comparison") or {}
+    strategy = obj.get("strategy", "week_planner")
+    parts_de, parts_it = [], []
+    for y in ("2026", "2025"):
+        v = bm["years"].get(y)
+        pl = players.get(y, {})
+        if not v or not pl:
+            continue
+        top_name, top = max(pl.items(), key=lambda kv: kv[1]["points"])
+        c = (comp.get(y) or {}).get(top_name) or {}
+        ci = c.get("ci95", [0, 0])
+        sig = ci[0] > 0 or ci[1] < 0
+        diff = v["points"] - top["points"]
         tag_de = "Test, nie getunt" if y == "2026" else "teilweise getunt"
         tag_it = "test, mai ottimizzato" if y == "2026" else "parzialmente ottimizzato"
-        parts_de.append(f"{y} ({tag_de}): Modell {mp:g} Punkte vs. bester Spieler {top[0]} {top[1]['points']:g} "
-                        f"({'+' if diff >= 0 else ''}{diff:g})")
-        parts_it.append(f"{y} ({tag_it}): modello {mp:g} punti vs. miglior giocatore {top[0]} {top[1]['points']:g} "
-                        f"({'+' if diff >= 0 else ''}{diff:g})")
-    de = f"Bestes Modell (auf Validierung gewählt): {best}. " + "; ".join(parts_de) + ". Mit Regel 4, gleiche Entscheidungslogik wie die Tagesempfehlung."
-    it = f"Modello migliore (scelto sulla validazione): {best}. " + "; ".join(parts_it) + ". Con la regola 4, stessa logica della raccomandazione giornaliera."
+        parts_de.append(f"{y} ({tag_de}): Modell {_num(v['points'])} Punkte vs. bester Spieler {top_name} "
+                        f"{_num(top['points'])} ({diff:+g}; 95 %-Intervall [{ci[0]:+g}, {ci[1]:+g}], "
+                        f"{'gesichert' if sig else 'nicht gesichert'})")
+        parts_it.append(f"{y} ({tag_it}): modello {_num(v['points'])} punti vs. miglior giocatore {top_name} "
+                        f"{_num(top['points'])} ({diff:+g}; intervallo 95 % [{ci[0]:+g}, {ci[1]:+g}], "
+                        f"{'significativo' if sig else 'non significativo'})")
+    de = (f"Bestes Modell (auf Validierung gewählt): {best}, Strategie {STRAT_DE.get(strategy, strategy)}. "
+          + "; ".join(parts_de) + ". Mit Regel 4, gleiche Entscheidungslogik wie die Tagesempfehlung.")
+    it = (f"Modello migliore (scelto sulla validazione): {best}, strategia {STRAT_IT.get(strategy, strategy)}. "
+          + "; ".join(parts_it) + ". Con la regola 4, stessa logica della raccomandazione giornaliera.")
     return de, it
 
 
@@ -641,12 +851,18 @@ def _write_report(obj: dict, ds) -> None:
     bm = next(m for m in models if m["name"] == best)
     L = ["# Backtest – Tippspiel Essen Wies", "",
          f"_Automatisch erzeugt von `engine/backtest.py` am {obj['generated_at']}._", "",
+         "## Kurzfassung", ""] + _headline(obj, ds, "de") + ["", "## Riassunto (italiano)", ""] + \
+        _headline(obj, ds, "it") + ["",
          "## Methode", "",
          "* **Walk-forward**: für jeden Arbeitstag ab 13.01.2025 wird nur mit den Menüs *vor* diesem Tag trainiert "
          "(2024 = Aufwärmphase). Keine Tipps anderer Spieler als Eingabe (Regel 6).",
          "* **Entscheidung** exakt wie in der Tagesempfehlung (`engine/recommend.py::decide`): Erwartungswert "
-         "EV = 1·P(V) + 0,5·P(H) + 0,5·P(B) + 1·P(V∧H∧B), Regel 4 gegen die *eigenen simulierten* Tipps derselben "
-         "Woche, Wochenplaner (Receding Horizon über die restlichen Arbeitstage der Woche).",
+         "EV = 1·P(V) + 0,5·P(H) + 0,5·P(B) + 1·P(V∧H∧B) mit P(V∧H∧B) = P(V)·P(H)·P(B|H), Regel 4 gegen die "
+         "*eigenen simulierten* Tipps derselben ISO-Woche. Strategien: Wochenplaner (Receding Horizon über die "
+         "restlichen Arbeitstage der Woche, spätere Tage mit Faktor discount^k gewichtet, „anderes Gericht“ als "
+         "Ausweichoption) oder Greedy (bester gültiger Tipp nur für heute). "
+         f"Verwendet: **{STRAT_DE.get(obj.get('strategy'), obj.get('strategy'))}**, gewählt nach erwarteten Punkten "
+         "auf der Validierung (Regel vorab festgelegt, nicht nach 2026).",
          "* **Wertung** mit `rules.score_tip`: jede angesagte Option zählt, „Fisch“-Regel außerhalb der Fastenzeit.",
          "* **Splits**: Tuning 13.01.–31.08.2025 · Validierung 01.09.–19.12.2025 · **Test 2026 (nie getunt)**. "
          "2025 ist damit *teilweise in-sample* (Hyperparameter), 2026 ist ehrlich out-of-sample.",
@@ -654,7 +870,7 @@ def _write_report(obj: dict, ds) -> None:
          "* Modellentwicklung (Features, Suchgitter, Entscheidungslogik) nur mit 2024/2025; 2026 wurde erst mit "
          "eingefrorenem Modell ausgewertet. Einzige Ausnahme: ein früher Diagnoselauf mit *ungetunten* "
          "Standardparametern zeigte einmal den 2026-Log-Loss; daraus wurde nichts abgeleitet.", "",
-         "## Punkte pro Jahr (mit Regel 4, Wochenplaner)", ""]
+         f"## Punkte pro Jahr (mit Regel 4, {STRAT_DE.get(obj.get('strategy'), obj.get('strategy'))})", ""]
     years = ["2025", "2026"]
     L += ["| Wer | " + " | ".join(f"{y} Punkte | {y} Tage | {y} Pkt/Tag" for y in years) + " |",
           "|---|" + "---|---|---|" * len(years)]
@@ -700,36 +916,56 @@ def _write_report(obj: dict, ds) -> None:
     comp = obj.get("comparison") or {}
     if comp:
         L += ["### Wie sicher ist der Vorsprung? (gepaarter Bootstrap über Tage, 4000 Ziehungen)", "",
-              "| Jahr | gegen | Differenz Modell − Spieler | 95 %-Intervall | P(Modell vorne) | Differenz ab 1. Tipp des Spielers |",
-              "|---|---|---|---|---|---|"]
+              "| Jahr | gegen | Modell | Spieler | Differenz | 95 %-Intervall | P(Modell vorne) | nur getippte Tage (n) | 95 %-Intervall |",
+              "|---|---|---|---|---|---|---|---|---|"]
         for y in years:
             for pl, v in (comp.get(y) or {}).items():
-                L.append(f"| {y} | {pl} | {v['diff']:+g} | [{v['ci95'][0]:+g}, {v['ci95'][1]:+g}] | {v['p_model_ahead']:.0%} | "
-                         f"{v['diff_since_first_tip']:+g} |")
+                L.append(f"| {y} | {pl} | {v['model_points']:g} | {v['player_points']:g} | {v['diff']:+g} | "
+                         f"[{v['ci95'][0]:+g}, {v['ci95'][1]:+g}] | {v['p_model_ahead']:.0%} | "
+                         f"{v['diff_tipped_days']:+g} ({v['tipped_days']}) | "
+                         f"[{v['ci95_tipped_days'][0]:+g}, {v['ci95_tipped_days'][1]:+g}] |")
         L += ["", "Eine Saison hat nur ~180 Spieltage; die Tagespunkte schwanken stark (0 / 0,5 / 1 / 1,5 / 2 / 3). "
               "Ein Vorsprung von wenigen Punkten ist daher statistisch nicht gesichert.", ""]
     L += ["## Wochenplaner vs. Greedy vs. ohne Regel 4", "",
-          "| Modell | Jahr | Wochenplaner | Greedy | ohne R4 (Obergrenze) | erwartete Punkte Planer | erwartete Punkte Greedy |",
+          "| Modell | Jahr | Wochenplaner | Greedy | ohne R4 (Obergrenze nur im Erwartungswert) | erwartete Punkte Planer | erwartete Punkte Greedy |",
           "|---|---|---|---|---|---|---|"]
     for m in models:
         for y in years:
-            if y in m["years"]:
-                L.append(f"| {m['name']} | {y} | {_fmt(m['years'][y]['points'])} | {_fmt(m['greedy'].get(y, {}).get('points'))} | "
-                         f"{_fmt(m['no_r4'].get(y, {}).get('points'))} | {_fmt(m['years'][y].get('expected_points'))} | "
+            wp = m["week_planner"].get(y)
+            if wp:
+                L.append(f"| {m['name']} | {y} | {_fmt(wp['points'])} | {_fmt(m['greedy'].get(y, {}).get('points'))} | "
+                         f"{_fmt(m['no_r4'].get(y, {}).get('points'))} | {_fmt(wp.get('expected_points'))} | "
                          f"{_fmt(m['greedy'].get(y, {}).get('expected_points'))} |")
-    tot_p = sum(m["years"][y]["points"] for m in models for y in years if y in m["years"])
+    tot_p = sum(m["week_planner"][y]["points"] for m in models for y in years if y in m["week_planner"])
     tot_g = sum(m["greedy"][y]["points"] for m in models for y in years if y in m["greedy"])
-    gain = [m["years"][y].get("expected_points", 0) - m["greedy"][y].get("expected_points", 0)
-            for m in models for y in years if y in m["years"] and y in m["greedy"] and m["name"] != "frequency"]
+    gain = [m["week_planner"][y].get("expected_points", 0) - m["greedy"][y].get("expected_points", 0)
+            for m in models for y in years if y in m["week_planner"] and y in m["greedy"] and m["name"] != "frequency"]
     r4cost = [m["no_r4"][y]["points"] - m["years"][y]["points"] for m in models for y in years
               if y in m["years"] and m["name"] != "frequency"]
+    vs = []
+    for m in models:
+        sp = m["splits"].get("validation") or {}
+        if sp.get("planner_expected") is not None:
+            vs.append(f"{m['name']} {sp['planner_expected']:.1f} vs. {sp['greedy_expected']:.1f}")
     L += ["", f"Summe über alle Modelle und Jahre: Wochenplaner {tot_p:g} vs. Greedy {tot_g:g} Punkte. "
           "„Erwartete Punkte“ = Summe der EV der gewählten Tipps laut Modell. Der Planer verteilt die knappen "
           "Regel-4-Kontingente (v. a. Reis, Montags-Favoriten) auf die Tage mit der höchsten Wahrscheinlichkeit; "
           f"sein erwarteter Vorteil laut Modell beträgt {min(gain):.1f}–{max(gain):.1f} Punkte pro Saison und ist im "
-          "realisierten Ergebnis vom Zufall nicht zu unterscheiden. Regel 4 selbst kostet (Obergrenze ohne R4) "
-          f"{min(r4cost):g}–{max(r4cost):g} Punkte pro Saison.", ""]
-    L += ["", "## Punkte nach Split (Wochenplaner)", "", "| Modell | Tuning | Validierung | Test 2026 |", "|---|---|---|---|"]
+          "realisierten Ergebnis vom Zufall nicht zu unterscheiden. Erwartete Punkte auf der Validierung "
+          f"(Planer vs. Greedy): {'; '.join(vs)}. Ohne Regel 4 hätten die Modelle (außer frequency) realisiert "
+          f"{min(r4cost):g}–{max(r4cost):g} Punkte pro Saison mehr erzielt (ohne R4 ist nur der *erwartete* Wert eine "
+          "Obergrenze – realisiert kann es auch weniger sein).", ""]
+    ss = obj.get("strategy_selection") or {}
+    if ss.get("candidates"):
+        L += [f"Strategiewahl für *{best}* (Validierung, erwartete Punkte = Summe der EV): ", "",
+              "| Kandidat | Val. erwartet | Val. realisiert | Tuning erwartet | Tuning realisiert |", "|---|---|---|---|---|"]
+        for k, v in ss["candidates"].items():
+            mark = " ✔" if k == ss.get("chosen") else ""
+            L.append(f"| {k}{mark} | {v['val_expected']:.2f} | {v['val_points']:g} | {v['tune_expected']:.2f} | "
+                     f"{v['tune_points']:g} |")
+        L.append("")
+    L += ["", f"## Punkte nach Split ({STRAT_DE.get(obj.get('strategy'), obj.get('strategy'))})", "",
+          "| Modell | Tuning | Validierung | Test 2026 |", "|---|---|---|---|"]
     for m in models:
         s = m["splits"]
         L.append(f"| {m['name']} | {_fmt(s.get('tune', {}).get('points'))} | {_fmt(s.get('validation', {}).get('points'))} | "
@@ -770,38 +1006,6 @@ def _write_report(obj: dict, ds) -> None:
         for k, v in obj["selection"].items():
             L.append(f"| {k} | {v['val_wll']:.4f} | {_fmt(v['val_points'])} | {_fmt(v['tune_points'])} |")
         L.append("")
-    L += ["## Riassunto (italiano)", "", obj["summary_it"], ""]
-    it_lines = []
-    for y in years:
-        v = bm["years"].get(y)
-        pl = players.get(y, {})
-        if not v or not pl:
-            continue
-        top = max(pl.items(), key=lambda kv: kv[1]["points"])
-        diff = v["points"] - top[1]["points"]
-        esito = "batte" if diff > 0 else ("pareggia con" if diff == 0 else "perde contro")
-        tag = "anno di test, fuori campione" if y == "2026" else "parzialmente ottimizzato"
-        it_lines.append(f"* **{y}** ({tag}): il modello *{best}* fa {v['points']:g} punti e {esito} il miglior "
-                        f"giocatore {top[0]} ({top[1]['points']:g}), differenza {diff:+g}; punti per giorno {v['ppd']:.3f}.")
-        cy = (obj.get("comparison") or {}).get(y, {}).get(top[0])
-        if cy:
-            it_lines.append(f"  Bootstrap appaiato sui giorni: differenza {cy['diff']:+g}, intervallo 95 % "
-                            f"[{cy['ci95'][0]:+g}, {cy['ci95'][1]:+g}], P(modello davanti) {cy['p_model_ahead']:.0%}.")
-        me = ds.me
-        cm = (obj.get("comparison") or {}).get(y, {}).get(me)
-        if cm and me in pl:
-            it_lines.append(f"  Rispetto a {me}: {cm['diff']:+g} punti (dal primo tip {cm['diff_since_first_tip']:+g}); "
-                            f"punti per giorno tippato {pl[me]['ppd']:.3f} vs. modello {v['ppd']:.3f}.")
-    gp = bm["greedy"]
-    for y in years:
-        if y in bm["years"] and y in gp:
-            it_lines.append(f"* Pianificatore settimanale vs. greedy {y}: {bm['years'][y]['points']:g} vs. {gp[y]['points']:g} punti "
-                            f"(attesi {bm['years'][y].get('expected_points', 0):g} vs. {gp[y].get('expected_points', 0):g}); "
-                            f"senza regola 4 (limite superiore): {bm['no_r4'][y]['points']:g}.")
-    it_lines.append("* Il vantaggio del pianificatore è piccolo (circa 1 punto atteso a stagione) e non distinguibile "
-                    "dal caso; la regola 4 costa alcuni punti a stagione (vedi tabella). Una stagione ha ~180 giorni: "
-                    "differenze di pochi punti non sono statisticamente sicure.")
-    L += it_lines + [""]
     REPORTS.mkdir(parents=True, exist_ok=True)
     (REPORTS / "backtest.md").write_text("\n".join(L) + "\n", encoding="utf-8")
 

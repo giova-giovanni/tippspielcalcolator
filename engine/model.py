@@ -68,6 +68,7 @@ DEFAULT_PARAMS: dict = {
     "ml_refit_every": 5,
     "ml_min_day": 20,
     "ensemble_w": 0.5,           # weight of ml in the geometric blend
+    "plan_discount": 1.0,        # weekly planner: weight discount^k of the k-th later day (decision, not model)
 }
 
 BREAK_DAYS = 14   # calendar gap counted as a season break (lag + 1 only)
@@ -592,10 +593,11 @@ def _ml_matrix(ev: dict, cat: str, wd: int, lent: bool, mix_b: np.ndarray | None
 
 
 def walk(enc: Encoded, targets: Sequence[tuple[dt.date, int]], params: dict,
-         with_ml: bool = True) -> dict[tuple[dt.date, int], DayFeatures]:
+         with_ml: bool = True, keep_state: dict | None = None) -> dict[tuple[dt.date, int], DayFeatures]:
     """One online pass over ``enc``; returns features for every ``(day, prefix_len)`` target.
 
-    The features of a target with prefix ``n`` use menus ``0..n-1`` only.
+    The features of a target with prefix ``n`` use menus ``0..n-1`` only. ``keep_state`` (a dict)
+    receives the final online states (prefix = all of ``enc``) for later targets.
     """
     params = merge_params(params)
     states = {key: _ChanState(enc.ch[key], params) for key in CHANNELS}
@@ -616,6 +618,8 @@ def walk(enc: Encoded, targets: Sequence[tuple[dt.date, int]], params: dict,
             st.observe(j, t, wd, s, wk, lent, date)
         for p in pairs.values():
             p.observe(j, t)
+    if keep_state is not None:
+        keep_state.update({"states": states, "pairs": pairs, "params": params})
     return out
 
 
@@ -904,6 +908,7 @@ class Predictor:
         self.enc: Encoded | None = None
         self.ml: MLScorer | None = None
         self._cache: dict = {}
+        self._state: dict | None = None
         self.history_end: dt.date | None = None
 
     def fit(self, history: Sequence) -> "Predictor":
@@ -914,6 +919,7 @@ class Predictor:
         self.enc = Encoded(hist, self.norm, cal)
         self.history_end = hist[-1].date if hist else None
         self._cache = {}
+        self._state = None
         self.ml = None
         if self.name in ("ml", "ensemble") and self.enc.N > 0:
             j0 = int(self.params["ml_min_day"])
@@ -936,9 +942,13 @@ class Predictor:
                 raise ValueError(f"target {d} is not after the history ({self.history_end})")
         need = [d for d in days if d not in self._cache]
         if need:
-            res = walk(self.enc, [(d, self.enc.N) for d in need], self.params, with_ml=self.name in ("ml", "ensemble"))
+            if self._state is None:   # one pass over the whole history, final state kept
+                self._state = {}
+                walk(self.enc, [], self.params, with_ml=False, keep_state=self._state)
+            st = self._state
             for d in need:
-                self._cache[d] = res[(d, self.enc.N)]
+                self._cache[d] = _target_features(self.enc, st["states"], st["pairs"], d, self.enc.N,
+                                                  st["params"], self.name in ("ml", "ensemble"))
         return [self._cache[d] for d in days]
 
     def predict_arrays(self, day: dt.date) -> tuple[DayFeatures, dict]:
@@ -981,6 +991,18 @@ def p_beilage_given_haupt(day: dt.date, history_menus: Sequence, norm, params: d
                           calendar: WorkCalendar | None = None) -> dict:
     hist = [m for m in history_menus if m.date < day]
     return Predictor("heuristic", params, norm, calendar).fit(hist).p_beilage_given_haupt(day)
+
+
+STRATEGY_NAMES = ("week_planner", "greedy")
+
+
+def load_strategy() -> str:
+    """Decision strategy chosen on the validation split (data/model_params.json "strategy")."""
+    from .config import MODEL_PARAMS_JSON, load_json
+
+    obj = load_json(MODEL_PARAMS_JSON, None) or {}
+    s = obj.get("strategy", "week_planner")
+    return s if s in STRATEGY_NAMES else "week_planner"
 
 
 def load_params() -> tuple[str, dict]:

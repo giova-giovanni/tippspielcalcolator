@@ -21,6 +21,32 @@ def now_local(cfg) -> dt.datetime:
     return dt.datetime.now(zoneinfo.ZoneInfo(cfg.get("timezone", "Europe/Rome")))
 
 
+def _backtest_reusable() -> bool:
+    """--daily may skip the backtest only if its outputs exist with the current encryption state."""
+    import json
+
+    want_enc = bool(os.environ.get("SITE_PASSPHRASE"))
+    for name in ("backtest.json", "leaderboard.json"):
+        path = SITE_DATA / name
+        if not path.exists():
+            return False
+        try:
+            obj = json.loads(path.read_text(encoding="utf-8"))
+        except ValueError:
+            return False
+        is_enc = isinstance(obj, dict) and "enc" in obj
+        if is_enc != want_enc:
+            return False
+        if is_enc:
+            from .output import read_site_json
+            try:
+                if read_site_json(name) is None:
+                    return False
+            except Exception:  # wrong passphrase / corrupt file
+                return False
+    return True
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--today", type=dt.date.fromisoformat)
@@ -49,7 +75,7 @@ def main(argv=None) -> int:
     if a.tune:
         backtest.tune(ds)
         print(f"[{time.time() - t0:5.1f}s] Tuning fertig")
-    if not (a.daily and (SITE_DATA / "backtest.json").exists() and not a.tune):
+    if not (a.daily and not a.tune and _backtest_reusable()):
         backtest.run(ds, today=today)
         print(f"[{time.time() - t0:5.1f}s] Backtest fertig")
 

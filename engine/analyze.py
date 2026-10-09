@@ -355,6 +355,8 @@ def weekday(c: _Ctx) -> tuple[dict, dict]:
                 continue
             for w in range(5):
                 p0 = n_wd[w] / N
+                if not p0:
+                    continue  # no served day on this weekday yet (very short history)
                 k = row[w]
                 facts["n_tests"] += 1
                 lift_w = (k / n) / p0
@@ -769,6 +771,22 @@ def _report(c: _Ctx, stats: dict, F: dict) -> str:
         return (f"nur {s['same_week_pairs']}× doppelt in derselben Woche" if lang == "de"
                 else f"solo {s['same_week_pairs']} doppioni nella stessa settimana")
 
+    avoid_week = sv["same_week_p"] is not None and sv["same_week_p"] < 0.05
+    b_rep = max(stats["repeat_intervals"]["beilage"], key=lambda r: (r["same_week_repeats"], r["n"]), default=None)
+    b_rep_dish = b_rep["dish"] if b_rep and b_rep["same_week_repeats"] else None
+    wv, wh = rv["weekly"], rh["weekly"]
+    rhythm = [lab for lab, w in (("V", wv), ("H", wh))
+              if w["p"] is not None and w["p"] < 0.05 and w["rate_wk"] > w["rate_other"]]
+    vh_indep = pr["mi"]["V–H"]["p"] >= 0.05
+    has_lent = bool(fish_lent and fish_lent["na"])
+    cur_rows = [r for r in stats["players"] if r["year"] == cur]
+    ppd_span = (max(r["ppd"] for r in cur_rows) - min(r["ppd"] for r in cur_rows)) if cur_rows else 0.0
+    changed = [d for cat in ("vorspeise", "hauptspeise") for key in ("new_2026", "gone_2026")
+               for d in stats["trends"][key][cat]]
+    tot_vh = {cat: {r["dish"]: r["total"] for r in stats["frequencies"][cat]} for cat in ("vorspeise", "hauptspeise")}
+    rare_share = (sum(1 for d in changed if min(tot_vh["vorspeise"].get(d, 99), tot_vh["hauptspeise"].get(d, 99)) <= 3)
+                  / len(changed)) if changed else 0.0
+
     L += ["# Analyse Tippspiel Essen Wies", "",
           f"_Automatisch erzeugt von `engine/analyze.py` am {stats['generated_at'][:16].replace('T', ' ')} UTC "
           f"(Stichtag {c.today.isoformat()}). Datenstand: {len(c.served)} servierte Menüs "
@@ -783,12 +801,13 @@ def _report(c: _Ctx, stats: dict, F: dict) -> str:
     for cat in CATEGORIES:
         top3 = ", ".join(f"{r['dish']} ({r['total']})" for r in stats["frequencies"][cat][:3])
         it.append(f"**{CAT_IT[cat].capitalize()} più frequenti**: {top3}; i primi 5 coprono {_pct(fr[cat]['top_share5'])} dei giorni.")
-    it.append(f"**Ripetizioni**: la cucina evita le ripetizioni. Primo e secondo: {week_phrase(sv, 'it')} "
+    it.append(f"**Ripetizioni**: {'la cucina evita le ripetizioni. ' if avoid_week else ''}Primo e secondo: {week_phrase(sv, 'it')} "
               f"({sv['same_week_pairs']} e {sh['same_week_pairs']} coppie contro "
               f"{_num(sv['same_week_expected'], 0)} e {_num(sh['same_week_expected'], 0)} attese per caso, {_peq(sv['same_week_p'])}); "
               f"quasi nessuna ripetizione entro {rv['n_avoid']} (primo) / {rh['n_avoid']} (secondo) giorni lavorativi; "
               f"intervallo mediano {_num(sv['median_gap'], 0)} / {_num(sh['median_gap'], 0)} giorni lavorativi. "
-              f"Il contorno si ripete molto di più ({sb['same_week_pairs']} coppie nella stessa settimana). "
+              f"Il contorno si ripete molto di più ({sb['same_week_pairs']} coppie nella stessa settimana, "
+              f"{_num(sb['same_week_expected'], 0)} attese per caso). "
               f"→ Non tippare primo/secondo serviti negli ultimi giorni o già serviti questa settimana.")
     if wk["notable"]:
         top = (strong_wd or wk["notable"])[:4]
@@ -804,21 +823,26 @@ def _report(c: _Ctx, stats: dict, F: dict) -> str:
     it.append(f"**Contorno ↔ secondo**: conoscendo il secondo, il contorno più tipico è giusto nel {_pct(hb_loo)} dei casi "
               f"(leave-one-out) contro {_pct(hb_top)} tippando sempre {pr['top_b']}"
               + (" (es. " + ", ".join(f"{h} → {b['dish']} {_pct(b['p'])}" for h, b in det_pairs[:4]) + ")" if det_pairs else "")
-              + f". Primo e secondo invece sono quasi indipendenti (MI {_num(pr['mi']['V–H']['mi'], 2)} bit vs "
+              + (". Primo e secondo invece sono quasi indipendenti" if vh_indep else
+                 ". Tra primo e secondo c'è un legame debole ma significativo")
+              + f" (MI {_num(pr['mi']['V–H']['mi'], 2)} bit vs "
               f"{_num(pr['mi']['V–H']['perm_mean'], 2)} per caso, {_peq(pr['mi']['V–H']['p'])}).")
-    if fish_lent:
+    if not has_lent:
+        it.append("**Quaresima / pesce**: nessun giorno di Quaresima nei dati finora.")
+    elif fish_lent:
         it.append(f"**Quaresima / pesce**: pesce in Quaresima nel {_pct(fish_lent['pa'])} dei giorni contro {_pct(fish_lent['pb'])} "
                   f"fuori ({fish_lent['ka']} vs {fish_lent['kb']} giorni). Nessuna differenza significativa estate/inverno"
                   + ("" if not any(sw_sig.values()) else " tranne " + ", ".join(r["dish"] for v in sw_sig.values() for r in v))
                   + ".")
     it.append(f"**Trend {cur}**: nuovi primi {len(stats['trends']['new_2026']['vorspeise'])}, nuovi secondi "
               f"{len(stats['trends']['new_2026']['hauptspeise'])}; spariti primi {len(stats['trends']['gone_2026']['vorspeise'])}, "
-              f"secondi {len(stats['trends']['gone_2026']['hauptspeise'])} (quasi tutti piatti rari). " + _halflife_sentence(tr, "it"))
+              f"secondi {len(stats['trends']['gone_2026']['hauptspeise'])}"
+              + (" (quasi tutti piatti rari, ≤ 3 volte)" if rare_share >= 0.75 else "") + ". " + _halflife_sentence(tr, "it"))
     if best_cur:
-        it.append(f"**Giocatori {cur}**: miglior media {best_cur['player']} con {_num(best_cur['ppd'], 2)} punti/giorno. "
-                  f"Tipp su piatti serviti negli ultimi 5 giorni lavorativi: primo centrato solo nel "
-                  f"{_pct(tl_recent['vorspeise'][0], 1)} (n={tl_recent['vorspeise'][1]}) contro {_pct(tl_recent['vorspeise'][2], 1)} "
-                  f"per gli altri tipp"
+        it.append(f"**Giocatori {cur}**: miglior media {best_cur['player']} con {_num(best_cur['ppd'], 2)} punti/giorno"
+                  + (f". Tipp (tutti i giocatori e anni) su piatti serviti negli ultimi 5 giorni lavorativi: primo centrato nel "
+                     f"{_pct(tl_recent['vorspeise'][0], 1)} (n={tl_recent['vorspeise'][1]}) contro {_pct(tl_recent['vorspeise'][2], 1)} "
+                     f"per gli altri tipp" if tl_recent["vorspeise"][1] else "")
                   + (f"; il momento migliore per tippare un primo è {best_gap['vorspeise'][0]} giorni lavorativi dopo "
                      f"l'ultima volta ({_pct(best_gap['vorspeise'][1], 1)})" if "vorspeise" in best_gap else "") + ".")
     L += [f"- {x}" for x in it] + [""]
@@ -826,21 +850,26 @@ def _report(c: _Ctx, stats: dict, F: dict) -> str:
     # ---------------------------------------------------------------- Kernaussagen DE
     L += ["## Kernaussagen", ""]
     de = []
-    de.append(f"**Keine Wiederholung in derselben Woche**: Vorspeise {week_phrase(sv, 'de')} ({sv['same_week_pairs']} Paare, "
+    head = ("Keine Wiederholung in derselben Woche" if sv["same_week_pairs"] == 0 and sh["same_week_pairs"] == 0
+            else "Kaum Wiederholung in derselben Woche" if avoid_week else "Wiederholung in derselben Woche")
+    de.append(f"**{head}**: Vorspeise {week_phrase(sv, 'de')} ({sv['same_week_pairs']} Paare, "
               f"Zufall {_num(sv['same_week_expected'], 1)}, {_peq(sv['same_week_p'])}), Hauptspeise {week_phrase(sh, 'de')} "
-              f"({sh['same_week_pairs']} Paare, Zufall {_num(sh['same_week_expected'], 1)}). Beilage dagegen "
-              f"{sb['same_week_pairs']} Paare (Zufall {_num(sb['same_week_expected'], 1)}), v. a. {pr['top_b']}.")
+              f"({sh['same_week_pairs']} Paare, Zufall {_num(sh['same_week_expected'], 1)}, {_peq(sh['same_week_p'])}). "
+              f"Beilage dagegen {sb['same_week_pairs']} Paare (Zufall {_num(sb['same_week_expected'], 1)})"
+              + (f", v. a. {b_rep_dish}" if b_rep_dish else "") + ".")
     de.append(f"**Mindestabstand**: Vorspeise frühestens wieder nach {rv['first_repeat']} Arbeitstagen, Hauptspeise nach "
               f"{rh['first_repeat']}; innerhalb von {rv['n_avoid']} bzw. {rh['n_avoid']} AT praktisch nie (< 25 % der "
               f"Zufallsrate). Median-Abstand {_num(sv['median_gap'], 1)} (V), {_num(sh['median_gap'], 1)} (H), "
               f"{_num(sb['median_gap'], 1)} (B) Arbeitstage.")
-    wv, wh = rv["weekly"], rh["weekly"]
     if wv["rate_wk"] is not None and wh["rate_wk"] is not None:
-        de.append(f"**Wochenrhythmus**: Bei Abständen von 10, 15, … 30 AT (gleicher Wochentag) ist dieselbe Speise "
-                  f"häufiger als bei anderen Abständen – V {_pct(wv['rate_wk'], 1)} vs {_pct(wv['rate_other'], 1)} "
-                  f"({_peq(wv['p'])}), H {_pct(wh['rate_wk'], 1)} vs {_pct(wh['rate_other'], 1)} ({_peq(wh['p'])}). "
-                  + "; ".join(f"Spitze {CAT_DE[cat]} L={pk['lag']}: {_pct(pk['rate'], 1)} vs {_pct(pk['baseline'], 1)} ({_peq(pk['p'])})"
-                              for cat in CATEGORIES for pk in rf[cat]["peaks"][:1]) + ".")
+        verdict = ("ist dieselbe Speise häufiger" if len(rhythm) == 2 else
+                   f"ist dieselbe Speise nur bei {rhythm[0]} signifikant häufiger" if rhythm else
+                   "ist dieselbe Speise nicht signifikant häufiger")
+        de.append(f"**Wochenrhythmus**: Bei Abständen von 10, 15, … 30 AT (gleicher Wochentag) {verdict} "
+                  f"als bei anderen Abständen – V {_pct(wv['rate_wk'], 1)} vs {_pct(wv['rate_other'], 1)} "
+                  f"({_peq(wv['p'])}), H {_pct(wh['rate_wk'], 1)} vs {_pct(wh['rate_other'], 1)} ({_peq(wh['p'])})."
+                  + "".join(f" Spitze {CAT_DE[cat]} L={pk['lag']}: {_pct(pk['rate'], 1)} vs {_pct(pk['baseline'], 1)} ({_peq(pk['p'])})."
+                            for cat in CATEGORIES for pk in rf[cat]["peaks"][:1]))
     for x in (strong_wd or wk["notable"])[:6]:
         de.append(f"**Wochentag**: {x['dish']} ({CAT_DE[x['cat']]}) am {WEEKDAYS_DE_LONG[x['wd']]} {x['k']}/{x['n']} "
                   f"({_pct(x['share'])}, erwartet {_pct(x['exp'])}, Lift {_num(x['lift'], 1)}, {_peq(x['p'])}"
@@ -854,10 +883,12 @@ def _report(c: _Ctx, stats: dict, F: dict) -> str:
               f"{_pct(hb_loo)} der Fälle (Leave-one-out), ohne nur {_pct(hb_top)} ({pr['top_b']}); Entropie "
               f"{_num(pr['h_b'], 2)} → {_num(pr['h_b_given_h'], 2)} bit. Feste Paare: "
               + ", ".join(f"{h} → {b['dish']} {_pct(b['p'])} ({b['n']})" for h, b in det_pairs) + ".")
-    de.append(f"**Vorspeise ↔ Hauptspeise**: kaum Zusammenhang (MI {_num(pr['mi']['V–H']['mi'], 3)} vs Zufall "
+    de.append(f"**Vorspeise ↔ Hauptspeise**: {'kaum Zusammenhang' if vh_indep else 'schwacher, aber signifikanter Zusammenhang'} (MI {_num(pr['mi']['V–H']['mi'], 3)} vs Zufall "
               f"{_num(pr['mi']['V–H']['perm_mean'], 3)} bit, {_peq(pr['mi']['V–H']['p'])}); einzelne Paare mit hohem Lift "
               f"entstehen v. a. über den gemeinsamen Wochentag.")
-    if fish_lent:
+    if not has_lent:
+        de.append("**Fisch & Fastenzeit**: noch keine Fastentage im Datenstand.")
+    elif fish_lent:
         de.append(f"**Fisch & Fastenzeit**: Fisch an {_pct(fish_lent['pa'])} der Fastentage ({fish_lent['ka']}) vs "
                   f"{_pct(fish_lent['pb'])} sonst ({fish_lent['kb']}; {_peq(fish_lent['p'])}). Sommer/Winter: "
                   + ("keine signifikanten Unterschiede." if not any(sw_sig.values()) else
@@ -870,8 +901,9 @@ def _report(c: _Ctx, stats: dict, F: dict) -> str:
                   + ", ".join(f"{CAT_DE[cat]} {k} AT ({_pct(r, 1)}, n={n})" for cat, (k, r, n) in best_gap.items()) + ".")
     if best_cur:
         de.append(f"**Spieler {cur}**: beste Quote {best_cur['player']} mit {_num(best_cur['ppd'], 3)} Punkten/Tag; "
-                  f"alle Spieler liegen eng beieinander (" + ", ".join(
-                      f"{r['player']} {_num(r['ppd'], 3)}" for r in stats["players"] if r["year"] == cur) + ").")
+                  + ("alle Spieler liegen eng beieinander: " if ppd_span <= 0.05 else
+                     f"Spannweite {_num(ppd_span, 3)} Punkte/Tag: ") + ", ".join(
+                      f"{r['player']} {_num(r['ppd'], 3)} ({r['days']} T.)" for r in cur_rows) + ".")
     L += [f"- {x}" for x in de] + [""]
 
     # ---------------------------------------------------------------- 1 frequencies
@@ -935,8 +967,9 @@ def _report(c: _Ctx, stats: dict, F: dict) -> str:
                 [[CAT_DE[cat], f"{_pct(rf[cat]['weekly']['rate_wk'], 1)} ({rf[cat]['weekly']['s_wk']}/{rf[cat]['weekly']['n_wk']})",
                   f"{_pct(rf[cat]['weekly']['rate_other'], 1)} ({rf[cat]['weekly']['s_ot']}/{rf[cat]['weekly']['n_ot']})",
                   _pval(rf[cat]["weekly"]["p"])] for cat in CATEGORIES])
-    L += ["", "→ Der Wochentag-Effekt (Abschnitt 3) erzeugt einen schwachen Wochenrhythmus; die Refraktärzeit "
-          "dominiert aber die ersten 1–2 Wochen.", ""]
+    L += ["", ("→ Der Wochentag-Effekt (Abschnitt 3) erzeugt einen schwachen Wochenrhythmus; die Refraktärzeit "
+               "dominiert aber die ersten 1–2 Wochen." if rhythm else
+               "→ Kein signifikanter Wochenrhythmus; die Refraktärzeit dominiert die ersten 1–2 Wochen."), ""]
     for cat in ("vorspeise", "hauptspeise"):
         L += [f"### Abstände je Gericht – {CAT_DE[cat]} (n ≥ 8)", ""]
         L += _table(["Gericht", "n", "Mittel", "Median", "min", "max", "Wdh. gleiche Woche"],
@@ -1140,8 +1173,9 @@ def _report(c: _Ctx, stats: dict, F: dict) -> str:
                   _pct(pl["per_py"][(r["player"], r["year"])]["recent"])] for r in stats["players"]])
     L += ["", f"Korrelation mit Punkten/Tag über {pl['n_big']} Spieler-Jahre mit ≥ 100 Tagen (sehr kleine Stichprobe, nur Hinweis): "
           f"Top-5-Anteil r={_num(corr['top5'], 2)}, Vielfalt r={_num(corr['entropy'], 2)}, kürzlich r={_num(corr['recent'], 2)}, "
-          f"V-Trefferquote r={_num(corr['acc_v'], 2)}. Die Vorspeise zählt doppelt so viel wie H oder B – wer bei der "
-          f"Vorspeise besser trifft, gewinnt.", ""]
+          f"V-Trefferquote r={_num(corr['acc_v'], 2)}. Die Vorspeise zählt doppelt so viel wie H oder B (1 vs 0,5 Punkte)"
+          + (" – wer bei der Vorspeise besser trifft, liegt vorne." if (corr["acc_v"] or 0) >= 0.5 else
+             "; über die Spieler-Jahre erklärt die V-Trefferquote die Rangfolge aber nur schwach.") , ""]
     L += ["### Notizen je Spieler", ""]
     L += [f"- **{r['player']} {r['year']}**: {r['strategy_note_de']}" for r in stats["players"]] + [""]
 
@@ -1174,17 +1208,71 @@ def _halflife_sentence(tr: dict, lang: str) -> str:
 
 
 # ======================================================================== run
-def raw_counts(ds: Dataset) -> dict[str, Counter]:
-    """Raw cell strings of served menus + all tips, per category (for the alias report)."""
+def raw_counts(ds: Dataset, today: dt.date | None = None) -> dict[str, Counter]:
+    """Raw cell strings of served menus + tips, per category (for the alias report).
+
+    With ``today`` other players' tips of ``date >= today`` are left out (rule 6: not even their
+    spelling may leak through the report); my own tips are always counted.
+    """
     out = {cat: Counter() for cat in CATEGORIES}
     for m in ds.served:
         for cat, raw in zip(CATEGORIES, m.raw):
             if raw:
                 out[cat][raw] += 1
     for t in ds.tips:
+        if today is not None and t.date >= today and t.player != ds.me:
+            continue
         for cat, raw in zip(CATEGORIES, t.raw):
             if raw:
                 out[cat][raw] += 1
+    return out
+
+
+def data_quirks(c: _Ctx) -> list[dict]:
+    """Data oddities for ``reports/alias_candidates.md`` ("Auffälligkeiten").
+
+    A dish name that appears in two categories of the served menus (e.g. "Gulasch" mostly as
+    Hauptspeise, a few times as Beilage) is reported with the dates of the rarer category.  If
+    on those dates the dish of the other category occurs *only* there (e.g. Hauptspeise
+    "Knödel"), the two columns were probably swapped in the Excel.
+    """
+    seen: dict[str, dict[str, list[dt.date]]] = defaultdict(lambda: defaultdict(list))
+    display: dict[str, str] = {}
+    for m in c.served:
+        for cat in CATEGORIES:
+            for o in m.options.get(cat, []):
+                k = o.casefold()
+                display.setdefault(k, o)
+                seen[k][cat].append(m.date)
+    menus = {m.date: m for m in c.served}
+    tips = [t for t in c.ds.tips if t.date < c.today]
+    out = []
+    for k, by_cat in sorted(seen.items()):
+        if len(by_cat) < 2:
+            continue
+        cats = sorted(by_cat, key=lambda cat: (len(by_cat[cat]), CATEGORIES.index(cat)))
+        minor, major = cats[0], cats[-1]
+        days = by_cat[minor]
+        name = display[k]
+        # what is in the major category on those days, and is it ever there on other days?
+        partners = Counter(o for d in days for o in menus[d].options.get(major, []))
+        dayset = set(days)
+        swapped = [p for p in partners if set(seen.get(p.casefold(), {}).get(major, [])) <= dayset]
+        names = {k} | {p.casefold() for p in partners}
+        n_tips = sum(1 for t in tips if t.date in dayset
+                     and any(o.casefold() in names for cat in CATEGORIES for o in t.options.get(cat, [])))
+        what = (f"{CAT_DE[minor]} „{name}“ ({len(days)}×), sonst {CAT_DE[major]} "
+                f"({len(by_cat[major])}×)"
+                + (f"; {CAT_DE[major]} an diesen Tagen: " + ", ".join(f"„{p}“" for p in sorted(partners)) if partners else ""))
+        if swapped:
+            hint = (f"Spalten {CAT_DE[major]}/{CAT_DE[minor]} vertauscht? Gemeint ist wohl {CAT_DE[major]} „{name}“ mit "
+                    f"{CAT_DE[minor]} " + ", ".join(f"„{p}“" for p in sorted(swapped))
+                    + f" ({', '.join(f'„{p}“' for p in sorted(swapped))} kommt als {CAT_DE[major]} nur an diesen Tagen vor). ")
+        else:
+            hint = f"Bitte prüfen, ob „{name}“ hier wirklich {CAT_DE[minor]} ist. "
+        hint += (f"Für Statistik/Modell zählt es so, wie es im Excel steht; Korrektur in der Excel-Datei "
+                 f"(oder bewusst so lassen). Tipps an diesen Tagen mit einem der Namen: {n_tips}.")
+        out.append({"was": what, "tage": [d.isoformat() for d in days], "hinweis": hint})
     return out
 
 
@@ -1222,7 +1310,7 @@ def _write(ds: Dataset, c: _Ctx, stats: dict, F: dict) -> str:
     REPORTS.mkdir(parents=True, exist_ok=True)
     md = _report(c, stats, F)
     (REPORTS / "analysis.md").write_text(md, encoding="utf-8")
-    write_alias_report(REPORTS / "alias_candidates.md", raw_counts(ds), ds.norm)
+    write_alias_report(REPORTS / "alias_candidates.md", raw_counts(ds, c.today), ds.norm, quirks=data_quirks(c))
     return md
 
 

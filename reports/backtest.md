@@ -1,11 +1,41 @@
 # Backtest – Tippspiel Essen Wies
 
-_Automatisch erzeugt von `engine/backtest.py` am 2026-10-09T12:05:38+00:00._
+_Automatisch erzeugt von `engine/backtest.py` am 2026-10-09T17:02:02+00:00._
+
+## Kurzfassung
+
+* **Modell:** *ensemble* (auf der Validierung 2025 nach Log-Loss gewählt), **Strategie:** Wochenplaner (auf der Validierung nach *erwarteten* Punkten gewählt). Regel 4 gilt gegen die eigenen simulierten Tipps der Woche; gewertet wird mit `rules.score_tip`.
+* **2026 ist echter Test (out-of-sample):** keine Hyperparameter, keine Modell- oder Strategiewahl hat 2026 gesehen; für jeden Tag wird nur mit den Menüs *davor* trainiert.
+* **2026** (Test, out-of-sample, mit Regel 4): Modell **54.5 Punkte** an 177 Spieltagen (0.308/Tag; laut Modell erwartet 62.0) → vor **allen** Spielern. Spieler: Johannes 45.5, Andreas 44.5, Noah 41.5, Johannes Paul III 41.
+  * Gegen den Besten (Johannes): +9 Punkte, 95 %-Bootstrap-Intervall [-6.5, +24.5], P(Modell vorne) 86% → **statistisch nicht gesichert** (Intervall enthält 0).
+  * Nur an den 165 Tagen, an denen Johannes getippt hat: +5 [-10, +20.5] (nicht gesichert).
+  * Gegen Johannes Paul III (ich): +13.5 [-0.5, +28], nur meine 163 Tipptage +9 [-4.5, +22.5].
+  * Andere Modelle 2026 (gleiche Strategie, nur zur Information – nicht zur Auswahl benutzt): frequency 32.5, heuristic 58, ml 56.5.
+* **2025** (teilweise in-sample: Tuning/Validierung, mit Regel 4): Modell **65.5 Punkte** an 221 Spieltagen (0.296/Tag; laut Modell erwartet 57.2) → vor **allen** Spielern. Spieler: Noah 51.5, Andreas 47.5, Johannes 39.
+  * Gegen den Besten (Noah): +14 Punkte, 95 %-Bootstrap-Intervall [-3, +31], P(Modell vorne) 94% → **statistisch nicht gesichert** (Intervall enthält 0).
+  * Nur an den 213 Tagen, an denen Noah getippt hat: +11.5 [-5.5, +29] (nicht gesichert).
+* **Wochenplaner vs. Greedy:** Validierung erwartete Punkte 24.93 (week_planner@1) vs. 24.62 (Greedy) → gewählt: Wochenplaner. Der Unterschied ist klein (+0.30 erwartete Punkte auf der Validierung); 2026 realisiert: Planer 54.5 vs. Greedy 53.5 – innerhalb des Zufallsrauschens.
+* Eine Saison hat ~180 Spieltage mit stark schwankenden Tagespunkten (0–3): Unterschiede von wenigen Punkten sind Zufall. Das Modell tippt jeden Tag; Spieler haben einzelne Tage ausgelassen (zählen 0) – deshalb auch der Vergleich nur über die getippten Tage.
+
+## Riassunto (italiano)
+
+* **Modello:** *ensemble* (scelto sulla validazione 2025 per log-loss), **strategia:** pianificatore settimanale (scelta sulla validazione per punti *attesi*). Regola 4 rispettata rispetto ai propri tip simulati della settimana; punteggio con `rules.score_tip`.
+* **Il 2026 è un vero test (fuori campione):** nessun iperparametro, nessuna scelta di modello o strategia ha visto il 2026; ogni giorno il modello usa solo i menù *precedenti*.
+* **2026** (test, fuori campione, con regola 4): modello **54.5 punti** in 177 giorni (0.308/giorno; attesi secondo il modello 62.0) → davanti a **tutti** i giocatori. Giocatori: Johannes 45.5, Andreas 44.5, Noah 41.5, Johannes Paul III 41.
+  * Contro il migliore (Johannes): +9 punti, intervallo bootstrap 95 % [-6.5, +24.5], P(modello davanti) 86% → **non statisticamente significativo** (l'intervallo contiene 0).
+  * Solo nei 165 giorni in cui Johannes ha tippato: +5 [-10, +20.5] (non significativo).
+  * Contro Johannes Paul III (io): +13.5 [-0.5, +28], solo i miei 163 giorni tippati +9 [-4.5, +22.5].
+  * Altri modelli 2026 (stessa strategia, solo informativo – non usati per la scelta): frequency 32.5, heuristic 58, ml 56.5.
+* **2025** (in parte nel campione: tuning/validazione, con regola 4): modello **65.5 punti** in 221 giorni (0.296/giorno; attesi secondo il modello 57.2) → davanti a **tutti** i giocatori. Giocatori: Noah 51.5, Andreas 47.5, Johannes 39.
+  * Contro il migliore (Noah): +14 punti, intervallo bootstrap 95 % [-3, +31], P(modello davanti) 94% → **non statisticamente significativo** (l'intervallo contiene 0).
+  * Solo nei 213 giorni in cui Noah ha tippato: +11.5 [-5.5, +29] (non significativo).
+* **Pianificatore vs. greedy:** punti attesi sulla validazione 24.93 (week_planner@1) vs. 24.62 (greedy) → scelto: pianificatore settimanale. Differenza piccola (+0.30 punti attesi sulla validazione); 2026 realizzato: pianificatore 54.5 vs. greedy 53.5 – dentro il rumore casuale.
+* Una stagione ha ~180 giorni con punti giornalieri molto variabili (0–3): differenze di pochi punti sono casuali. Il modello tippa ogni giorno; i giocatori hanno saltato alcuni giorni (contano 0) – per questo anche il confronto solo sui giorni tippati.
 
 ## Methode
 
 * **Walk-forward**: für jeden Arbeitstag ab 13.01.2025 wird nur mit den Menüs *vor* diesem Tag trainiert (2024 = Aufwärmphase). Keine Tipps anderer Spieler als Eingabe (Regel 6).
-* **Entscheidung** exakt wie in der Tagesempfehlung (`engine/recommend.py::decide`): Erwartungswert EV = 1·P(V) + 0,5·P(H) + 0,5·P(B) + 1·P(V∧H∧B), Regel 4 gegen die *eigenen simulierten* Tipps derselben Woche, Wochenplaner (Receding Horizon über die restlichen Arbeitstage der Woche).
+* **Entscheidung** exakt wie in der Tagesempfehlung (`engine/recommend.py::decide`): Erwartungswert EV = 1·P(V) + 0,5·P(H) + 0,5·P(B) + 1·P(V∧H∧B) mit P(V∧H∧B) = P(V)·P(H)·P(B|H), Regel 4 gegen die *eigenen simulierten* Tipps derselben ISO-Woche. Strategien: Wochenplaner (Receding Horizon über die restlichen Arbeitstage der Woche, spätere Tage mit Faktor discount^k gewichtet, „anderes Gericht“ als Ausweichoption) oder Greedy (bester gültiger Tipp nur für heute). Verwendet: **Wochenplaner**, gewählt nach erwarteten Punkten auf der Validierung (Regel vorab festgelegt, nicht nach 2026).
 * **Wertung** mit `rules.score_tip`: jede angesagte Option zählt, „Fisch“-Regel außerhalb der Fastenzeit.
 * **Splits**: Tuning 13.01.–31.08.2025 · Validierung 01.09.–19.12.2025 · **Test 2026 (nie getunt)**. 2025 ist damit *teilweise in-sample* (Hyperparameter), 2026 ist ehrlich out-of-sample.
 * Bestes Modell (Auswahl nach Validierungs-Log-Loss, nicht nach 2026): **ensemble**.
@@ -36,21 +66,21 @@ Spieler: Tage = servierte Tage mit eigenem Tipp (nicht getippte Tage zählen 0 P
 
 ### Wie sicher ist der Vorsprung? (gepaarter Bootstrap über Tage, 4000 Ziehungen)
 
-| Jahr | gegen | Differenz Modell − Spieler | 95 %-Intervall | P(Modell vorne) | Differenz ab 1. Tipp des Spielers |
-|---|---|---|---|---|---|
-| 2025 | Andreas | +18 | [-0.5, +36] | 97% | +18 |
-| 2025 | Johannes | +26.5 | [+8.5, +44.5] | 100% | +26.5 |
-| 2025 | Noah | +14 | [-3.5, +32] | 94% | +14 |
-| 2026 | Andreas | +10 | [-5.5, +25.5] | 88% | +10 |
-| 2026 | Johannes | +9 | [-6, +24.5] | 87% | +9 |
-| 2026 | Noah | +13 | [-1.5, +28.5] | 96% | +11.5 |
-| 2026 | Johannes Paul III | +13.5 | [-1, +27.5] | 96% | +11.5 |
+| Jahr | gegen | Modell | Spieler | Differenz | 95 %-Intervall | P(Modell vorne) | nur getippte Tage (n) | 95 %-Intervall |
+|---|---|---|---|---|---|---|---|---|
+| 2025 | Andreas | 65.5 | 47.5 | +18 | [-0.5, +36] | 97% | +16.5 (214) | [-1.5, +35] |
+| 2025 | Johannes | 65.5 | 39 | +26.5 | [+9.5, +44.5] | 100% | +23 (209) | [+5.5, +39.5] |
+| 2025 | Noah | 65.5 | 51.5 | +14 | [-3, +31] | 94% | +11.5 (213) | [-5.5, +29] |
+| 2026 | Andreas | 54.5 | 44.5 | +10 | [-4.5, +26] | 90% | +9.5 (171) | [-5.5, +25.5] |
+| 2026 | Johannes | 54.5 | 45.5 | +9 | [-6.5, +24.5] | 86% | +5 (165) | [-10, +20.5] |
+| 2026 | Noah | 54.5 | 41.5 | +13 | [-2, +28.5] | 95% | +11.5 (173) | [-3.5, +26] |
+| 2026 | Johannes Paul III | 54.5 | 41 | +13.5 | [-0.5, +28] | 97% | +9 (163) | [-4.5, +22.5] |
 
 Eine Saison hat nur ~180 Spieltage; die Tagespunkte schwanken stark (0 / 0,5 / 1 / 1,5 / 2 / 3). Ein Vorsprung von wenigen Punkten ist daher statistisch nicht gesichert.
 
 ## Wochenplaner vs. Greedy vs. ohne Regel 4
 
-| Modell | Jahr | Wochenplaner | Greedy | ohne R4 (Obergrenze) | erwartete Punkte Planer | erwartete Punkte Greedy |
+| Modell | Jahr | Wochenplaner | Greedy | ohne R4 (Obergrenze nur im Erwartungswert) | erwartete Punkte Planer | erwartete Punkte Greedy |
 |---|---|---|---|---|---|---|
 | frequency | 2025 | 36.0 | 34.5 | 36.0 | 31.4 | 31.4 |
 | frequency | 2026 | 32.5 | 30.5 | 28.5 | 29.9 | 29.9 |
@@ -61,7 +91,17 @@ Eine Saison hat nur ~180 Spieltage; die Tagespunkte schwanken stark (0 / 0,5 / 1
 | ensemble | 2025 | 65.5 | 57.5 | 71.0 | 57.2 | 56.3 |
 | ensemble | 2026 | 54.5 | 53.5 | 60.5 | 62.0 | 60.6 |
 
-Summe über alle Modelle und Jahre: Wochenplaner 423 vs. Greedy 413.5 Punkte. „Erwartete Punkte“ = Summe der EV der gewählten Tipps laut Modell. Der Planer verteilt die knappen Regel-4-Kontingente (v. a. Reis, Montags-Favoriten) auf die Tage mit der höchsten Wahrscheinlichkeit; sein erwarteter Vorteil laut Modell beträgt 0.9–1.4 Punkte pro Saison und ist im realisierten Ergebnis vom Zufall nicht zu unterscheiden. Regel 4 selbst kostet (Obergrenze ohne R4) 5.5–11.5 Punkte pro Saison.
+Summe über alle Modelle und Jahre: Wochenplaner 423 vs. Greedy 413.5 Punkte. „Erwartete Punkte“ = Summe der EV der gewählten Tipps laut Modell. Der Planer verteilt die knappen Regel-4-Kontingente (v. a. Reis, Montags-Favoriten) auf die Tage mit der höchsten Wahrscheinlichkeit; sein erwarteter Vorteil laut Modell beträgt 0.9–1.4 Punkte pro Saison und ist im realisierten Ergebnis vom Zufall nicht zu unterscheiden. Erwartete Punkte auf der Validierung (Planer vs. Greedy): frequency 12.8 vs. 12.7; heuristic 27.6 vs. 27.2; ml 25.4 vs. 24.9; ensemble 24.9 vs. 24.6. Ohne Regel 4 hätten die Modelle (außer frequency) realisiert 5.5–11.5 Punkte pro Saison mehr erzielt (ohne R4 ist nur der *erwartete* Wert eine Obergrenze – realisiert kann es auch weniger sein).
+
+Strategiewahl für *ensemble* (Validierung, erwartete Punkte = Summe der EV): 
+
+| Kandidat | Val. erwartet | Val. realisiert | Tuning erwartet | Tuning realisiert |
+|---|---|---|---|---|
+| greedy | 24.62 | 23.5 | 31.66 | 34 |
+| week_planner@0.5 | 24.88 | 26 | 32.06 | 33 |
+| week_planner@0.7 | 24.88 | 26 | 32.23 | 35 |
+| week_planner@0.85 | 24.78 | 25.5 | 32.28 | 35.5 |
+| week_planner@1 ✔ | 24.93 | 28 | 32.23 | 37.5 |
 
 
 ## Punkte nach Split (Wochenplaner)
@@ -198,7 +238,8 @@ Summe über alle Modelle und Jahre: Wochenplaner 423 vs. Greedy 413.5 Punkte. �
  "ml_kind": "clogit",
  "ml_refit_every": 5,
  "ml_min_day": 20,
- "ensemble_w": 0.7
+ "ensemble_w": 0.7,
+ "plan_discount": 1.0
 }
 ```
 
@@ -210,17 +251,4 @@ Modellauswahl auf der Validierung:
 | heuristic | 2.9575 | 23.5 | 41.0 |
 | ml | 2.9429 | 26.5 | 29.0 |
 | ensemble | 2.9311 | 28.0 | 37.5 |
-
-## Riassunto (italiano)
-
-Modello migliore (scelto sulla validazione): ensemble. 2025 (parzialmente ottimizzato): modello 65.5 punti vs. miglior giocatore Noah 51.5 (+14); 2026 (test, mai ottimizzato): modello 54.5 punti vs. miglior giocatore Johannes 45.5 (+9). Con la regola 4, stessa logica della raccomandazione giornaliera.
-
-* **2025** (parzialmente ottimizzato): il modello *ensemble* fa 65.5 punti e batte il miglior giocatore Noah (51.5), differenza +14; punti per giorno 0.296.
-  Bootstrap appaiato sui giorni: differenza +14, intervallo 95 % [-3.5, +32], P(modello davanti) 94%.
-* **2026** (anno di test, fuori campione): il modello *ensemble* fa 54.5 punti e batte il miglior giocatore Johannes (45.5), differenza +9; punti per giorno 0.308.
-  Bootstrap appaiato sui giorni: differenza +9, intervallo 95 % [-6, +24.5], P(modello davanti) 87%.
-  Rispetto a Johannes Paul III: +13.5 punti (dal primo tip +11.5); punti per giorno tippato 0.252 vs. modello 0.308.
-* Pianificatore settimanale vs. greedy 2025: 65.5 vs. 57.5 punti (attesi 57.16 vs. 56.29); senza regola 4 (limite superiore): 71.
-* Pianificatore settimanale vs. greedy 2026: 54.5 vs. 53.5 punti (attesi 61.97 vs. 60.56); senza regola 4 (limite superiore): 60.5.
-* Il vantaggio del pianificatore è piccolo (circa 1 punto atteso a stagione) e non distinguibile dal caso; la regola 4 costa alcuni punti a stagione (vedi tabella). Una stagione ha ~180 giorni: differenze di pochi punti non sono statisticamente sicure.
 

@@ -1,5 +1,53 @@
 {
   "best_model": "ensemble",
+  "strategy": "week_planner",
+  "strategy_selection": {
+    "candidates": {
+      "greedy": {
+        "strategy": "greedy",
+        "discount": 1.0,
+        "val_expected": 24.624,
+        "val_points": 23.5,
+        "tune_expected": 31.662,
+        "tune_points": 34.0
+      },
+      "week_planner@0.5": {
+        "strategy": "week_planner",
+        "discount": 0.5,
+        "val_expected": 24.878,
+        "val_points": 26.0,
+        "tune_expected": 32.062,
+        "tune_points": 33.0
+      },
+      "week_planner@0.7": {
+        "strategy": "week_planner",
+        "discount": 0.7,
+        "val_expected": 24.879,
+        "val_points": 26.0,
+        "tune_expected": 32.227,
+        "tune_points": 35.0
+      },
+      "week_planner@0.85": {
+        "strategy": "week_planner",
+        "discount": 0.85,
+        "val_expected": 24.782,
+        "val_points": 25.5,
+        "tune_expected": 32.279,
+        "tune_points": 35.5
+      },
+      "week_planner@1": {
+        "strategy": "week_planner",
+        "discount": 1.0,
+        "val_expected": 24.927,
+        "val_points": 28.0,
+        "tune_expected": 32.229,
+        "tune_points": 37.5
+      }
+    },
+    "chosen": "week_planner@1",
+    "chosen_discount": 1.0,
+    "rule": "max expected points (sum of EV) on the validation split 2025-09-01..2025-12-19"
+  },
   "params": {
     "half_life": {
       "vorspeise": 1000.0,
@@ -58,7 +106,8 @@
     "ml_kind": "clogit",
     "ml_refit_every": 5,
     "ml_min_day": 20,
-    "ensemble_w": 0.7
+    "ensemble_w": 0.7,
+    "plan_discount": 1.0
   },
   "selection": {
     "frequency": {
@@ -90,15 +139,15 @@
       "val_ppd": 0.3544
     }
   },
-  "selection_rule": "heuristic: coordinate descent per category on tune-split log-loss, number of sweeps (0/1/2) chosen per category on validation log-loss; B|H mixing, ML regularisation and ensemble weight chosen on validation; model = lowest validation weighted log-loss (V 1, H 0.5, B 0.5). 2026 never used.",
+  "selection_rule": "heuristic: coordinate descent per category on tune-split log-loss, number of sweeps (0/1/2) chosen per category on validation log-loss; B|H mixing, ML regularisation and ensemble weight chosen on validation; model = lowest validation weighted log-loss (V 1, H 0.5, B 0.5); strategy (greedy vs. weekly planner with discount) = highest validation expected points of the chosen model. 2026 never used.",
   "splits": {
     "tune": "2025-01-13..2025-08-31",
     "validation": "2025-09-01..2025-12-19",
     "test": "2026-01-12..2026-12-23"
   },
   "n_configs": 68,
-  "tuned_at": "2026-10-09T09:53:04+00:00",
-  "tuning_seconds": 60.3,
+  "tuned_at": "2026-10-09T12:36:12+00:00",
+  "tuning_seconds": 67.1,
   "log": [
     "sweep 1 half_life: v=1000.0, h=1000.0, b=1000.0  tune ll v=3.3071, h=3.1302, b=2.4884",
     "sweep 1 hazard_mode: v=rel, h=rel, b=rel  tune ll v=3.2991, h=3.0758, b=2.4337",
@@ -145,6 +194,12 @@
     "model heuristic: val wll 2.9575 val points 23.5 (tune points 41.0)",
     "model ml: val wll 2.9429 val points 26.5 (tune points 29.0)",
     "model ensemble: val wll 2.9311 val points 28.0 (tune points 37.5)",
-    "best model (validation log-loss): ensemble"
+    "best model (validation log-loss): ensemble",
+    "strategy greedy: val expected 24.62 (realised 23.5), tune expected 31.66",
+    "strategy week_planner@0.5: val expected 24.88 (realised 26), tune expected 32.06",
+    "strategy week_planner@0.7: val expected 24.88 (realised 26), tune expected 32.23",
+    "strategy week_planner@0.85: val expected 24.78 (realised 25.5), tune expected 32.28",
+    "strategy week_planner@1: val expected 24.93 (realised 28), tune expected 32.23",
+    "strategy chosen on validation expected points: week_planner@1"
   ]
 }

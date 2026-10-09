@@ -114,6 +114,9 @@ def load_dataset(menus_path=MENUS_CSV, tips_path=TIPS_CSV, config: dict | None =
         d = to_date(r.get("date"))
         if d is None:
             continue
+        if d.weekday() >= 5:  # hand-edited weekend row: no game on Sat/Sun
+            print(f"Warnung: Menüzeile am Wochenende ignoriert ({d})")
+            continue
         raw = [clean(r.get(c, "")) for c in CATEGORIES]
         status = (r.get("status") or "").strip()
         if not status:  # hand-edited row without status
@@ -129,6 +132,13 @@ def load_dataset(menus_path=MENUS_CSV, tips_path=TIPS_CSV, config: dict | None =
         menus.append(Menu(d, status, raw, opts, r.get("source", "")))
     by_date = {m.date: m for m in menus}
     scoring = cfg.get("scoring", {})
+    canon_player: dict[str, str] = {}
+    if cfg.get("me"):
+        canon_player[cfg["me"].casefold()] = cfg["me"]
+    for r in trows:  # prefer the spelling of the workbook rows
+        name = aliases_p.get(clean(r.get("player")), clean(r.get("player")))
+        if name and r.get("source") == "xlsx":
+            canon_player.setdefault(name.casefold(), name)
     tips = []
     for r in trows:
         d = to_date(r.get("date"))
@@ -136,6 +146,10 @@ def load_dataset(menus_path=MENUS_CSV, tips_path=TIPS_CSV, config: dict | None =
         if d is None or not player:
             continue
         player = aliases_p.get(player, player)
+        player = canon_player.setdefault(player.casefold(), player)  # 'johannes paul iii' == 'Johannes Paul III'
+        if d.weekday() >= 5:
+            print(f"Warnung: Tipp am Wochenende ignoriert ({d}, {player})")
+            continue
         raw = [clean(r.get(c, "")) for c in CATEGORIES]
         opts = {c: norm.options(x, c) for c, x in zip(CATEGORIES, raw)}
         t = Tip(d, player, raw, opts, _float(r.get("points_sheet")), None, {}, r.get("source", ""))
@@ -145,7 +159,13 @@ def load_dataset(menus_path=MENUS_CSV, tips_path=TIPS_CSV, config: dict | None =
         elif m and m.status in ("served", "unknown"):
             t.points, t.hits = 0.0, {c: False for c in CATEGORIES}
         tips.append(t)
-    return Dataset(menus, tips, norm, cfg)
+    # one tip per (date, player); the workbook row wins over a website/manual duplicate
+    uniq: dict[tuple, Tip] = {}
+    for t in tips:
+        k = (t.date, t.player)
+        if k not in uniq or t.source == "xlsx" or uniq[k].source != "xlsx":
+            uniq[k] = t
+    return Dataset(menus, list(uniq.values()), norm, cfg)
 
 
 def refresh_csvs(menus_path=MENUS_CSV, tips_path=TIPS_CSV) -> Dataset:
