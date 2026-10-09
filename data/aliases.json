@@ -1,0 +1,133 @@
+{
+  "_doc": [
+    "Normalisierung der Gerichtnamen / normalizzazione dei nomi dei piatti.",
+    "Schlüssel = Schreibweise wie im Excel/Tipp (Groß-/Kleinschreibung egal), Wert = kanonischer Name.",
+    "Ein Wert kann auch eine Liste sein: dann zählt die Zelle als mehrere angebotene Optionen.",
+    "Varianten, die sich nur in Groß-/Kleinschreibung oder Leerzeichen unterscheiden, werden automatisch zusammengeführt.",
+    "Alles andere wird NIE automatisch zusammengeführt: Vorschläge stehen in reports/alias_candidates.md.",
+    "Nach einer Änderung hier: Push genügt, die GitHub Action rechnet alles neu."
+  ],
+
+  "missing_tokens": ["-", "Bo", "NV", "v", "0", "?", "x"],
+  "free_tokens": ["Frei"],
+
+  "option_separators": {
+    "vorspeise": [" / ", " oder ", " + "],
+    "hauptspeise": [" / ", " oder "],
+    "beilage": [" / ", " oder ", " + ", " und "]
+  },
+  "strip_patterns": ["\\s*\\((?:und|mit)\\b[^)]*\\)\\s*$"],
+
+  "vorspeise": {
+    "Aglio Olio": "Aglio olio",
+    "Algio Olio": "Aglio olio",
+    "Nudel mit Käsesauce": "Nudel mit Käsesoße",
+    "Nudel mit Käsesosse": "Nudel mit Käsesoße",
+    "Spinatcanneloni": "Spinatcannelloni",
+    "Ravioli mit Parmesan + Butter": "Ravioli mit Parmesan-Butter",
+    "Ravioli mit Parmesan+Butter": "Ravioli mit Parmesan-Butter",
+    "Ravioli mit Butter + Parmesan": "Ravioli mit Parmesan-Butter",
+    "Ravioli mit Butter+Parmesan": "Ravioli mit Parmesan-Butter",
+    "Nudel mit Meeresfrüchte": "Nudel mit Meeresfrüchten",
+    "Nudel Ragu": "Nudel mit Ragu",
+    "Nudel mt Ragu": "Nudel mit Ragu",
+    "Penne mamma rosa": "Nudel Mammarosa",
+    "Nudel mamma rosa": "Nudel Mammarosa",
+    "Gnocchi mit Tomantensoße": "Gnocchi mit Tomatensoße",
+    "Gnocchi mit Tomantensoße + Mozzarelline": "Gnocchi mit Tomatensoße",
+    "Gnocchi mit Tomatensoße + Mozzarelline": "Gnocchi mit Tomatensoße",
+    "Omlett mit Schinken und Käse": "Omelett mit Schinken und Käse",
+    "Tortellini Schinken-Rahm": "Tortellini mit Schinken-Rahm",
+    "Speck-Zwiebelkuchen": "Speck-Zwiebel-Kuchen",
+    "Nudel mit Tomantensauce": "Nudel mit Tomatensoße",
+    "Nudel mit Tomatensauce": "Nudel mit Tomatensoße",
+    "Nudel mit Thunfisch": "Nudel mit Thunfischsoße",
+    "Nudel mit Tomatensoße und Mozarella": "Nudel mit Tomatensoße und Mozzarella",
+    "Griesscheiben mit Schinken/Käse und Tomatensoße": "Griesscheiben mit Schinken/Käse und Tomantensoße",
+    "Tomantenrisotto": "Tomatenrisotto",
+    "Puttanesca": "Putanesca",
+    "Arrabiata": "Arrabbiata"
+  },
+
+  "hauptspeise": {
+    "Schweinsschopf-braten": "Schweinsschopf",
+    "Schweinsschopfbraten": "Schweinsschopf",
+    "Schweinschopf": "Schweinsschopf",
+    "Truthahn-geschnetzeltes": "Truthahngeschnetzeltes",
+    "Pizzaioloschnitzel": "Pizzaiolaschnitzel",
+    "Pizzalioloschnitzel": "Pizzaiolaschnitzel",
+    "Chili con carne": "Chilli con carne",
+    "Schweinshax": "Schweinshaxe",
+    "Schweinschnitzel": "Schweinsschnitzel",
+    "Hühnerhaxl": "Hühnerhaxlen",
+    "Hühnnerhaxlen": "Hühnerhaxlen",
+    "Fleischkarpfln": "Fleischkrapfln",
+    "Fleischkrapflen": "Fleischkrapfln",
+    "Spareribs": "Sparerips",
+    "Vitello tonato": "Vitello tonnato",
+    "Osso buchi": "Ossobuchi",
+    "Champignonschintzel": "Champignonschnitzel",
+    "Chmpignonschnitzel": "Champignonschnitzel",
+    "Truthahnschnitzel mit Champignonsauce": "Champignonschnitzel",
+    "Schnitzel mit Champignonsauce": "Champignonschnitzel",
+    "Schweinsschnitzel mit Champignonsauce": "Champignonschnitzel",
+    "Kräuterrahmschnitzel": "Schweinsschnitzel mit Kräuterrahmsoße",
+    "Frittiertes Pengasiusfilet": "Frittiertes Pangasiusfilet",
+    "Panierter Pengasius": "Panierter Pangasius",
+    "Lachsforelle": "Forelle",
+    "Lachsforellenfilet": "Forelle",
+    "Forellenfilet": "Forelle",
+    "Rotbarsch": "Rotbarschfilet",
+    "Plent mit Scombri": "Scombri"
+  },
+
+  "beilage": {
+    "Pürree": "Püree",
+    "Puree": "Püree",
+    "Bratkaroffeln": "Bratkartoffeln",
+    "Bratkartoffel": "Bratkartoffeln",
+    "Kartoffelwedges": "Wedges",
+    "Kartoffegratin": "Kartoffelgratin",
+    "Ofenkaroffel": "Ofenkartoffeln",
+    "Ofenkartoffel": "Ofenkartoffeln",
+    "Salzkartoffel": "Salzkartoffeln",
+    "Spätzle": "Spatzlen",
+    "Röstkartoffel": "Röstkartoffeln"
+  },
+
+  "fish": {
+    "generic_label": "Fisch",
+    "always_exact": ["Scombri"],
+    "dishes": [
+      "Forelle", "Pangasiusfilet", "Pangasiusfilet mit Kräuterrahmsoße", "Frittiertes Pangasiusfilet",
+      "Panierter Pangasius", "Frittiertes Schollenfilet", "Paniertes Schollenfilet", "Schollenfilet",
+      "Rotbarschfilet", "Lachsfilet", "Fischstäbchen", "Fischfilet"
+    ],
+    "keywords": [
+      "fisch", "lachs", "forelle", "pangasius", "pengasius", "scholle", "rotbarsch", "kabeljau", "dorsch",
+      "zander", "seehecht", "saibling", "branzino", "orata", "makrele", "hering", "sardine", "stockfisch",
+      "baccal", "calamari", "tintenfisch", "scampi", "garnele", "thunfischsteak"
+    ],
+    "not_fish": ["Vitello tonnato"]
+  },
+
+  "keep_separate": [
+    {"a": "Kartoffelstampf", "b": "Püree", "why": "Entscheidung Johannes Paul III: zwei verschiedene Gerichte (Stampf = grob, mit Stücken)."},
+    {"a": "Safranreis", "b": "Reis", "why": "eigene Beilage (zu Ossobuchi)."},
+    {"a": "Tomatenrisotto", "b": "Tomatenrisotto mit Mozzarella", "why": "unklar, bleibt getrennt."},
+    {"a": "Röstinchen", "b": "Röstkartoffeln", "why": "unklar, bleibt getrennt."},
+    {"a": "Paprika-Schweinegulasch", "b": "Schweinsgulasch", "why": "unklar, bleibt getrennt."},
+    {"a": "Schweinsfilet mit Pfeffersoße", "b": "Schweinsfilet", "why": "eigene Variante."},
+    {"a": "Spinatknödel mit Käsesoße", "b": "Spinatknödel", "why": "eigene Variante."},
+    {"a": "Schlutzer Schinken-Rahm", "b": "Schlutzer", "why": "eigene Variante."}
+  ],
+
+  "review": [
+    {"merge": ["Truthahnschnitzel mit Champignonsauce", "Schnitzel mit Champignonsauce", "Schweinsschnitzel mit Champignonsauce"], "into": "Champignonschnitzel",
+     "status": "OFFEN – bitte bestätigen", "why": "2024/Anfang 2025 so notiert, ab 27.02.2025 nur noch 'Champignonschnitzel'; immer mit Reis. Zum Trennen die 3 Zeilen oben in 'hauptspeise' löschen."},
+    {"merge": ["Penne mamma rosa"], "into": "Nudel Mammarosa", "status": "angenommen", "why": "2024 'Penne mamma rosa', ab 2025 'Nudel Mammarosa'."},
+    {"merge": ["Kräuterrahmschnitzel"], "into": "Schweinsschnitzel mit Kräuterrahmsoße", "status": "angenommen", "why": "gleiches Gericht, andere Schreibweise."},
+    {"merge": ["Forellenfilet", "Lachsforelle"], "into": "Forelle", "status": "Regel 17", "why": "Lachsforelle gilt als Forelle."},
+    {"merge": ["Puttanesca"], "into": "Putanesca", "status": "angenommen", "why": "Schreibweise wie im Excel beibehalten."}
+  ]
+}
