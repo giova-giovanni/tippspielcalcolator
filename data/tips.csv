@@ -1,0 +1,1409 @@
+date,player,vorspeise,hauptspeise,beilage,points,points_sheet,source
+2024-10-25,Andreas,Lasagne,Leberkas,Röstkartoffeln,1,1,xlsx
+2024-10-25,Johannes,Lasagne,Truthahnbraten,Spatzlen,1,1,xlsx
+2024-10-25,Noah,Spinatspatzlen,Fisch,Kartoffelsalat,0,0,xlsx
+2024-10-28,Andreas,Putanesca,Schweinsschopf-braten,Spatzlen,3,3,xlsx
+2024-10-28,Johannes,Amatriciana,Truthahn-geschnetzeltes,Reis,0,0,xlsx
+2024-10-28,Noah,Arrabbiata,Truthahnschnitzel mit Champignonsauce,Reis,0,0,xlsx
+2024-10-29,Andreas,Knödel,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2024-10-29,Noah,Schlutzer,Hühnerhaxlen,Pommes,0,0,xlsx
+2024-10-30,Andreas,Schlutzer,Gulasch,Plent,0,0,xlsx
+2024-10-30,Noah,Carbonara,Hauswurst,Kraut,0,0,xlsx
+2024-10-31,Andreas,Nudel mit Käsesauce,Hauswurst,Kraut,0,0,xlsx
+2024-10-31,Noah,Tortellini mit Ragu,Truthahnschnitzel mit Champignonsauce,Reis,0,0,xlsx
+2024-11-11,Andreas,Spinatspatzlen,Truthahnschnitzel vom Grill,Ofenkartoffeln,0,0,xlsx
+2024-11-11,Johannes,Hirten,Truthahnbraten,Pürree,0,0,xlsx
+2024-11-11,Noah,Carbonara,Truthahnschnitzel mit Champignonsauce,Reis,0.5,0.5,xlsx
+2024-11-12,Andreas,Nudel mit Käsesauce,Truthahn-geschnetzeltes,Reis,0,0,xlsx
+2024-11-12,Johannes,Spinatspatzlen,Leberkas,Röstkartoffeln,1,1,xlsx
+2024-11-12,Noah,Lasagne,Leberkas,Röstkartoffeln,0,0,xlsx
+2024-11-13,Andreas,Schlutzer,Hauswurst,Kraut,0,0,xlsx
+2024-11-13,Johannes,Knödel,Schweinskotelett,Pommes,0.5,0.5,xlsx
+2024-11-13,Noah,Carbonara,Hauswurst,Kraut,0,0,xlsx
+2024-11-14,Andreas,Hirten,Truthahnschnitzel vom Grill,Ofenkartoffeln,0.5,0.5,xlsx
+2024-11-14,Johannes,Gulaschsuppe,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2024-11-14,Noah,Tortellini mit Ragu,Pizzaioloschnitzel,Ofenkartoffeln,0.5,0.5,xlsx
+2024-11-15,Andreas,Ravioli mit Parmesan-Butter,Leberkas,Röstkartoffeln,0,0,xlsx
+2024-11-15,Johannes,Lasagne,Sparerips,Röstkartoffeln,0,0,xlsx
+2024-11-15,Noah,Lasagne,Truthahnschnitzel mit Champignonsauce,Reis,0,0,xlsx
+2024-11-18,Andreas,Hirten,Fleischkarpfln,Pürree,0,0,xlsx
+2024-11-18,Johannes,Hirten,Knödel,Gulasch,0,0,xlsx
+2024-11-18,Noah,Hirten,Hauswurst,Plent,0,0,xlsx
+2024-11-19,Andreas,Speck-Zwiebelkuchen,Truthahnbraten,Reis,0,0,xlsx
+2024-11-19,Johannes,Spinatknödel,Schweinsbraten,Reis,0,0,xlsx
+2024-11-19,Noah,Carbonara,Leberkas,Röstkartoffeln,0,0,xlsx
+2024-11-20,Andreas,Gnocchi,Hauswurst,Plent,0,0,xlsx
+2024-11-20,Johannes,Käseknödel,Pizzaioloschnitzel,Ofenkartoffeln,1,1,xlsx
+2024-11-20,Noah,Pizza,Truthahnschnitzel mit Champignonsauce,Reis,0,0,xlsx
+2024-11-21,Andreas,Lasagne,Wienerschnitzel,Pommes,0,0,xlsx
+2024-11-21,Johannes,Carbonara,Leberkas,Pommes,0,0,xlsx
+2024-11-21,Noah,Putanesca,Truthahnbraten,Pürree,0,0,xlsx
+2024-11-22,Andreas,Tortellini Schinken-Rahm,Leberkas,Röstkartoffeln,0,0,xlsx
+2024-11-22,Johannes,Käseknödel,Wienerschnitzel,Kartoffelsalat,1,1,xlsx
+2024-11-22,Noah,Tortellini mit Ragu,Fisch,Kartoffelsalat,0,0,xlsx
+2024-11-25,Andreas,Lasagne,Curry-Geschnetzeltes,Reis,0,0,xlsx
+2024-11-25,Johannes,Carbonara,Schweinsbraten,Reis,0,0,xlsx
+2024-11-25,Noah,Aglio olio,Truthahnschnitzel mit Champignonsauce,Reis,0,0,xlsx
+2024-11-26,Andreas,Tortellini Schinken-Rahm,Truthahnbraten,Pürree,0,0,xlsx
+2024-11-27,Andreas,Spinatspatzlen,Leberkas,Röstkartoffeln,0,0,xlsx
+2024-11-27,Johannes,Hirten,Knödel,Gulasch,0,0,xlsx
+2024-11-27,Noah,Carbonara,Leberkas,Röstkartoffeln,0,0,xlsx
+2024-11-28,Andreas,Lasagne,Hühnerhaxlen,Pommes,0,0,xlsx
+2024-11-28,Noah,Hirten,Hauswurst,Plent,0,0,xlsx
+2024-11-29,Andreas,Carbonara,Leberkas,Röstkartoffeln,0,0,xlsx
+2024-11-29,Johannes,Putanesca,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2024-11-29,Noah,Lasagne,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2024-12-02,Andreas,Nudel mit Ragu,Schweinsschopf-braten,Spatzlen,0,0,xlsx
+2024-12-02,Johannes,Amatriciana,Schweinsschnitzel,Ofenkartoffeln,0,0,xlsx
+2024-12-02,Noah,Hirten,Hauswurst,Plent,0,0,xlsx
+2024-12-03,Andreas,Spinatspatzlen,Leberkas,Röstkartoffeln,0,0,xlsx
+2024-12-03,Johannes,Carbonara,Gekochtes Rindfleisch,Salzkartoffel,0,0,xlsx
+2024-12-03,Noah,Lasagne,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2024-12-04,Andreas,Tortellini Schinken-Rahm,Sparerips,Ofenkartoffeln,0,0,xlsx
+2024-12-04,Johannes,Spinatspatzlen,Knödel,Gulasch,0,0,xlsx
+2024-12-04,Noah,Carbonara,Schweinsschopf-braten,Spatzlen,0,0,xlsx
+2024-12-05,Andreas,Spinatspatzlen,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2024-12-05,Johannes,Carbonara,Sparerips,Ofenkartoffeln,1,1,xlsx
+2024-12-05,Noah,Lasagne,Schweinsfilet,Kroketten,0.5,0.5,xlsx
+2024-12-06,Andreas,Nudel mit Meeresfrüchte,Truthahnschnitzel vom Grill,Ofenkartoffeln,0,0,xlsx
+2024-12-06,Johannes,Spinatknödel,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2024-12-06,Noah,Tortellini mit Ragu,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2024-12-09,Andreas,Gnocchi,Rindsgulasch,Reis,0,0,xlsx
+2024-12-09,Johannes,Putanesca,Truthahnbraten,Reis,0,0,xlsx
+2024-12-09,Noah,Lasagne,Truthahnschnitzel,Ofenkartoffeln,1,1,xlsx
+2024-12-10,Andreas,Spinatspatzlen,Pizzaioloschnitzel,Kroketten,0,0,xlsx
+2024-12-10,Noah,Gnocchi,Hühnerhaxlen,Kroketten,0,0,xlsx
+2024-12-11,Andreas,Nudel mit Käsesauce,Hühnerbrust,Reis,0.5,0.5,xlsx
+2024-12-11,Johannes,Spinatspatzlen,Knödel,Gulasch,0,0,xlsx
+2024-12-11,Noah,Putanesca,Gekochtes Rindfleisch,Salzkartoffeln,0,0,xlsx
+2024-12-12,Andreas,Lasagne,Hühnerhaxlen,Pommes,0,0,xlsx
+2024-12-12,Johannes,Hirten,Sparerips,Ofenkartoffeln,0,0,xlsx
+2024-12-12,Noah,Lasagne,Schweinskotelett,Spatzlen,0.5,0.5,xlsx
+2024-12-13,Andreas,Nudel mit Käsesauce,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2024-12-13,Johannes,Spinatknödel,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2024-12-13,Noah,Spinatcannelloni,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2024-12-16,Andreas,Hirten,Truthahngeschnetzeltes,Pürree,0,0,xlsx
+2024-12-17,Andreas,Gnocchi,Rindsgulasch,Reis,0,0,xlsx
+2024-12-17,Johannes,Carbonara,Schweinsbraten,Pürree,0,0,xlsx
+2024-12-18,Andreas,Aglio olio,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2024-12-18,Johannes,Lasagne,Hauswurst,Plent,0,0,xlsx
+2024-12-19,Andreas,Lasagne,Truthahngeschnetzeltes,Pürree,1.5,1.5,xlsx
+2024-12-19,Johannes,Käseknödel,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2024-12-20,Andreas,Nudel mit Lachs und Rahmsoße,Pfeffersteak,Kartoffelstrudel,,,xlsx
+2024-12-20,Johannes,Hirten,Fischfilet,Salzkartoffel,,,xlsx
+2024-12-20,Noah,Nudel mit Meeresfrüchten,Rindsschnitzel,Ofenkartoffeln,,,xlsx
+2025-01-13,Andreas,Spinatspatzlen,Schweinskotelett,Ofenkartoffeln,0,0,xlsx
+2025-01-13,Johannes,Hirten,Truthahnschnitzel,Pommes,0.5,0.5,xlsx
+2025-01-13,Noah,Hirten,Truthahnschnitzel,Reis,1,1,xlsx
+2025-01-14,Andreas,Nudel mit Käsesoße,Fleischkrapfln,Püree,1,1,xlsx
+2025-01-14,Johannes,Käseknödel,Schweinsbraten,Püree,0,0,xlsx
+2025-01-14,Noah,Lasagne,Schweinskotelett,Spatzlen,0,0,xlsx
+2025-01-15,Andreas,Tortellini mit Schinken-Rahm,Schweinsschopfbraten,Spatzlen,0,0,xlsx
+2025-01-15,Johannes,Carbonara,Knödel,Gulasch,0,0,xlsx
+2025-01-15,Noah,Nudel mit Ragu,Truthahnbraten,Püree,0,0,xlsx
+2025-01-16,Andreas,Lasagne,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-01-16,Johannes,Hirten,Schweinsbraten,Püree,0,0,xlsx
+2025-01-16,Noah,Carbonara,Knödel,Gulasch,0,0,xlsx
+2025-01-17,Andreas,Spinatcannelloni,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-01-17,Johannes,Käseknödel,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-01-17,Noah,Lasagne,Gekochtes Rindfleisch,Salzkartoffeln,0,0,xlsx
+2025-01-20,Andreas,Hirten,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-01-20,Johannes,Hirten,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-01-20,Noah,Carbonara,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-01-21,Andreas,Tortellini mit Schinken-Rahm,Gekochtes Rindfleisch,Salzkartoffeln,1,1,xlsx
+2025-01-21,Johannes,Lasagne,Knödel,Gulasch,0,0,xlsx
+2025-01-21,Noah,Hirten,Hühnerhaxl,Bratkartoffeln,0,0,xlsx
+2025-01-22,Andreas,Ravioli mit Butter + Parmesan,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-01-22,Johannes,Carbonara,Truthahnbraten,Püree,0.5,0.5,xlsx
+2025-01-22,Noah,Nudel mit Thunfischsoße,Truthahnschnitzel,Spatzlen,0,0,xlsx
+2025-01-23,Andreas,Lasagne,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-01-23,Johannes,Hirten,Truthahngeschnetzeltes,Reis,0,0,xlsx
+2025-01-23,Noah,Lasagne,Truthahnbraten,Kartoffelgratin,0,0,xlsx
+2025-01-24,Andreas,Putanesca,Fisch,Salzkartoffeln,0,0,xlsx
+2025-01-24,Johannes,Carbonara,Fisch,Kartoffelsalat,0,0,xlsx
+2025-01-24,Noah,Carbonara,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-01-27,Andreas,Putanesca,Hühnerbrust,Reis,0,0,xlsx
+2025-01-27,Johannes,Hirten,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-01-27,Noah,Carbonara,Truthahnschnitzel,Reis,0,0,xlsx
+2025-01-28,Andreas,Nudel mit Käsesoße,Schweinsschopfbraten,Spatzlen,0.5,0.5,xlsx
+2025-01-28,Johannes,Spinatspatzlen,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-01-28,Noah,Aglio olio,Hauswurst,Plent,1,1,xlsx
+2025-01-29,Andreas,Spinatspatzlen,Gulasch,Plent,0,0,xlsx
+2025-01-29,Johannes,Käseknödel,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-01-29,Noah,Hirten,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-01-30,Andreas,Carbonara,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-01-30,Johannes,Carbonara,Knödel,Gulasch,0,0,xlsx
+2025-01-30,Noah,Carbonara,Truthahnschnitzel,Spatzlen,0,0,xlsx
+2025-01-31,Andreas,Tortellini mit Schinken-Rahm,Wienerschnitzel,Pommes,0,0,xlsx
+2025-01-31,Johannes,Käseknödel,Wienerschnitzel,Pommes,0,0,xlsx
+2025-01-31,Noah,Hirten,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-02-03,Andreas,Hirten,Fleischkrapfln,Püree,1,1,xlsx
+2025-02-03,Johannes,Hirten,Truthahngeschnetzeltes,Püree,1,1,xlsx
+2025-02-03,Noah,Hirten,Truthahnschnitzel,Reis,1.5,1.5,xlsx
+2025-02-04,Andreas,Pizzastrudel,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2025-02-04,Johannes,Käseknödel,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-02-04,Noah,Pizza,Schweinsfilet,Spatzlen,0,0,xlsx
+2025-02-05,Andreas,Carbonara,Pizzaioloschnitzel,Pommes,0.5,0.5,xlsx
+2025-02-05,Johannes,Nudel mit Thunfischsoße,Leberkas,Pommes,1.5,1.5,xlsx
+2025-02-05,Noah,Putanesca,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-02-06,Andreas,Käseknödel,Sparerips,Ofenkartoffeln,0,0,xlsx
+2025-02-06,Johannes,Käseknödel,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-02-06,Noah,Carbonara,Hauswurst,Plent,1,1,xlsx
+2025-02-07,Andreas,Plentauflauf,Vitello tonnato,Salzkartoffeln,0,0,xlsx
+2025-02-07,Johannes,Spinatknödel,Fisch,Salzkartoffeln,0,0,xlsx
+2025-02-07,Noah,Pizzastrudel,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2025-02-10,Johannes,Putanesca,Leberkas,Ofenkartoffeln,0.5,0.5,xlsx
+2025-02-10,Noah,Lasagne,Truthahnschnitzel,Reis,0.5,0.5,xlsx
+2025-02-11,Andreas,Nudel mit Käsesoße,Gekochtes Rindfleisch,Salzkartoffeln,0,0,xlsx
+2025-02-11,Johannes,Spinatspatzlen,Schweinsbraten,Reis,0.5,0.5,xlsx
+2025-02-11,Noah,Putanesca,Schweinsfilet,Spatzlen,0,0,xlsx
+2025-02-12,Andreas,Spinatspatzlen,Fleischkrapfln,Püree,0,0,xlsx
+2025-02-12,Johannes,Aglio olio,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-02-12,Noah,Arrabbiata,Schweinskotelett,Püree,0,0,xlsx
+2025-02-13,Andreas,Lasagne,Knödel,Gulasch,0,0,xlsx
+2025-02-13,Johannes,Arrabbiata,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-02-13,Noah,Hirten,Schweinsfilet,Spatzlen,0,0,xlsx
+2025-02-14,Andreas,Pizza,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-02-14,Johannes,Pizzastrudel,Fisch,Salzkartoffeln,0,0,xlsx
+2025-02-14,Noah,Lasagne,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-02-17,Andreas,Putanesca,Truthahngeschnetzeltes,Püree,0.5,0.5,xlsx
+2025-02-17,Johannes,Hirten,Truthahngeschnetzeltes,Püree,0.5,0.5,xlsx
+2025-02-17,Noah,Hirten,Truthahnschnitzel,Reis,0,0,xlsx
+2025-02-18,Andreas,Tortellini mit Schinken-Rahm,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-02-18,Johannes,Spinatspatzlen,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-02-18,Noah,Aglio olio,Hauswurst,Plent,0,0,xlsx
+2025-02-19,Andreas,Nudel mit Käsesoße,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-02-19,Johannes,Hirten,Leberkas,Ofenkartoffeln,0,0,xlsx
+2025-02-19,Noah,Nudel mit Thunfischsoße,Schweinsfilet,Spatzlen,0,0,xlsx
+2025-02-20,Andreas,Plentauflauf,Sparerips,Ofenkartoffeln,0.5,0.5,xlsx
+2025-02-20,Johannes,Spinatspatzlen,Gulasch,Plent,0,0,xlsx
+2025-02-20,Noah,Hirten,Hühnerbrust,Kroketten,0,0,xlsx
+2025-02-21,Andreas,Pizzastrudel,Gulasch,Plent,0,0,xlsx
+2025-02-21,Johannes,Pizzastrudel,Fisch,Salzkartoffeln,0,0,xlsx
+2025-02-21,Noah,Carbonara,Schweinsfilet,Spatzlen,0.5,0.5,xlsx
+2025-02-24,Andreas,Nudel Mammarosa,Champignonschintzel,Pommes,0,0,xlsx
+2025-02-24,Johannes,Hirten,Schweinsbraten,Reis,0,0,xlsx
+2025-02-24,Noah,Hirten,Truthahnschnitzel,Reis,0,0,xlsx
+2025-02-25,Andreas,Nudel mit Käsesoße,Leberkas,Reis,0.5,0.5,xlsx
+2025-02-25,Johannes,Amatriciana,Leberkas,Pommes,0,0,xlsx
+2025-02-25,Noah,Aglio olio,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-02-26,Andreas,Pizzastrudel,Gulasch,Püree,0.5,0.5,xlsx
+2025-02-26,Johannes,Aglio olio,Truthahngeschnetzeltes,Püree,0.5,0.5,xlsx
+2025-02-26,Noah,Gnocchi,Schweinsfilet,Spatzlen,0,0,xlsx
+2025-02-27,Andreas,Tortellini mit Schinken-Rahm,Currywurst,Pommes,0,0,xlsx
+2025-02-27,Johannes,Hirten,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-02-27,Noah,Lasagne,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-02-28,Andreas,Nudel Mammarosa,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2025-02-28,Johannes,Carbonara,Fisch,Salzkartoffeln,0,0,xlsx
+2025-02-28,Noah,Carbonara,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-03-03,Andreas,Hirten,Gulasch,Reis,0.5,0.5,xlsx
+2025-03-03,Johannes,Hirten,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-03-03,Noah,Lasagne,Truthahnschnitzel,Reis,0.5,0.5,xlsx
+2025-03-04,Andreas,Schlutzer,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-03-04,Johannes,Spinatknödel,Wienerschnitzel,Pommes,0,0,xlsx
+2025-03-04,Noah,Hirten,Wienerschnitzel,Kartoffelsalat,1,1,xlsx
+2025-03-05,Andreas,Nudel mit Käsesoße,Fischstäbchen,Kartoffelsalat,1,1,xlsx
+2025-03-05,Johannes,Aglio olio,Lachsfilet,Salzkartoffeln,0,0,xlsx
+2025-03-05,Noah,Nudel mit Käsesoße,Frittiertes Schollenfilet,Salzkartoffeln,1,1,xlsx
+2025-03-06,Andreas,Lasagne,Wienerschnitzel,Pommes,0,0,xlsx
+2025-03-06,Johannes,Carbonara,Gekochtes Rindfleisch,Ofenkartoffeln,0,0,xlsx
+2025-03-06,Noah,Lasagne,Schweinsfilet,Spatzlen,0,0,xlsx
+2025-03-07,Andreas,Tomatenrisotto,Frittiertes Schollenfilet,Pommes,0,0,xlsx
+2025-03-07,Johannes,Lasagne,Frittiertes Schollenfilet,Salzkartoffeln,0,0,xlsx
+2025-03-07,Noah,Nudel mit Pesto,Frittiertes Schollenfilet,Salzkartoffeln,0,0,xlsx
+2025-03-10,Andreas,Spinatspatzlen,Schweinskotelett,Kroketten,0,0,xlsx
+2025-03-10,Noah,Lasagne,Truthahnschnitzel,Reis,0.5,0.5,xlsx
+2025-03-11,Andreas,Carbonara,Gulasch,Reis,0,0,xlsx
+2025-03-11,Johannes,Spinatspatzlen,Truthahngeschnetzeltes,Püree,1,1,xlsx
+2025-03-11,Noah,Käseknödel,Schweinsfilet,Spatzlen,0,0,xlsx
+2025-03-12,Andreas,Spinatspatzlen,Schweinsfilet,Ofenkartoffeln,0,0,xlsx
+2025-03-12,Johannes,Hirten,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2025-03-12,Noah,Hirten,Schweinskotelett,Kartoffelgratin,0,0,xlsx
+2025-03-13,Andreas,Tortellini mit Schinken-Rahm,Currywurst,Pommes,0,0,xlsx
+2025-03-13,Johannes,Putanesca,Wienerschnitzel,Pommes,0,0,xlsx
+2025-03-13,Noah,Putanesca,Chilli con carne,Reis,0,0,xlsx
+2025-03-14,Andreas,Carbonara,Frittiertes Schollenfilet,Salzkartoffeln,0.5,0.5,xlsx
+2025-03-14,Johannes,Aglio olio,Frittiertes Schollenfilet,Salzkartoffeln,0.5,0.5,xlsx
+2025-03-14,Noah,Nudel mit Pesto,Frittiertes Schollenfilet,Salzkartoffeln,0.5,0.5,xlsx
+2025-03-17,Andreas,Nudel mit Käsesoße,Fleischkrapfln,Püree,0,0,xlsx
+2025-03-17,Johannes,Hirten,Schweinskotelett,Ofenkartoffeln,0,0,xlsx
+2025-03-17,Noah,Lasagne,Hühnerbrust,Kroketten,0,0,xlsx
+2025-03-18,Andreas,Tortellini mit Schinken-Rahm,Hühnerbrust,Pommes,0,0,xlsx
+2025-03-18,Johannes,Spinatspatzlen,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-03-18,Noah,Hirten,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-03-19,Andreas,Spinatspatzlen,Sparerips,Ofenkartoffeln,1,1,xlsx
+2025-03-19,Johannes,Spinatknödel,Schweinskotelett,Ofenkartoffeln,0,0,xlsx
+2025-03-19,Noah,Käseknödel,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2025-03-20,Andreas,Lasagne,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-03-20,Johannes,Hirten,Leberkas,Pommes,0,0,xlsx
+2025-03-20,Noah,Hirten,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-03-21,Andreas,Nudel mit Meeresfrüchte,Scombri,Plent,0,0,xlsx
+2025-03-21,Johannes,Nudel mit Thunfischsoße,Scombri,Plent,0,0,xlsx
+2025-03-21,Noah,Nudel mit Pesto,Scombri,Plent,0,0,xlsx
+2025-03-24,Andreas,Arrabbiata,Truthahnschnitzel,Ofenkartoffeln,0.5,0.5,xlsx
+2025-03-24,Johannes,Hirten,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-03-24,Noah,Hirten,Truthahnschnitzel,Reis,0,0,xlsx
+2025-03-25,Andreas,Carbonara,Fleischkrapfln,Püree,0,0,xlsx
+2025-03-25,Johannes,Käseknödel,Truthahnbraten,Reis,0,0,xlsx
+2025-03-25,Noah,Lasagne,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-03-26,Andreas,Käseknödel,Zigeunerschnitzel,Reis,0,0,xlsx
+2025-03-26,Johannes,Hirten,Gulasch,Püree,0,0,xlsx
+2025-03-26,Noah,Nudel mit Käsesoße,Schweinsschopfbraten,Spatzlen,0,0,xlsx
+2025-03-27,Andreas,Ravioli mit Butter + Parmesan,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-03-27,Noah,Hirten,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2025-03-28,Andreas,Nudel mit Lachs,Scombri,Plent,1,1,xlsx
+2025-03-28,Noah,Nudel mit Thunfischsoße,Scombri,Plent,1,1,xlsx
+2025-03-31,Andreas,Putanesca,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-03-31,Johannes,Hirten,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-03-31,Noah,Hirten,Truthahnschnitzel,Reis,0.5,0.5,xlsx
+2025-04-01,Andreas,Spinatspatzlen,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-04-01,Johannes,Lasagne,Wienerschnitzel,Pommes,0,0,xlsx
+2025-04-01,Noah,Nudel mit Ragu,Hühnerbrust,Spatzlen,0,0,xlsx
+2025-04-02,Andreas,Nudel mit Käsesoße,Wienerschnitzel,Pommes,0,0,xlsx
+2025-04-02,Noah,Lasagne,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-04-03,Andreas,Pizzastrudel,Leberkas,Kartoffelsalat,0,0,xlsx
+2025-04-03,Johannes,Lasagne,Hühnerhaxlen,Pommes,1,1,xlsx
+2025-04-03,Noah,Pizza,Gekochtes Rindfleisch,Salzkartoffeln,0,0,xlsx
+2025-04-04,Andreas,Spinatroulade,Frittiertes Schollenfilet,Salzkartoffeln,0.5,0.5,xlsx
+2025-04-04,Johannes,Nudel mit Thunfischsoße,Forellenfilet,Salzkartoffeln,0,0,xlsx
+2025-04-04,Noah,Spinatcannelloni,Frittiertes Schollenfilet,Kartoffelsalat,1,1,xlsx
+2025-04-07,Andreas,Putanesca,Fleischkrapfln,Püree,0,0,xlsx
+2025-04-07,Johannes,Hirten,Schweinsschnitzel,Pommes,0,0,xlsx
+2025-04-07,Noah,Hirten,Truthahnschnitzel,Reis,0.5,0.5,xlsx
+2025-04-08,Andreas,Hirten,Hühnerbrust,Kroketten,0,0,xlsx
+2025-04-08,Johannes,Spinatknödel,Hühnerhaxlen,Reis,0,0,xlsx
+2025-04-08,Noah,Putanesca,Hackbraten,Püree,0,0,xlsx
+2025-04-09,Andreas,Nudel mit Ragu,Schweinsfilet,Reis,1.5,1.5,xlsx
+2025-04-09,Johannes,Hirten,Schweinsschopfbraten,Püree,0,0,xlsx
+2025-04-09,Noah,Hirten,Schweinsschopfbraten,Reis,0.5,0.5,xlsx
+2025-04-10,Andreas,Ravioli mit Butter + Parmesan,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-04-10,Johannes,Käseknödel,Pizzaioloschnitzel,Spatzlen,0,0,xlsx
+2025-04-10,Noah,Putanesca,Hackbraten,Püree,0,0,xlsx
+2025-04-11,Andreas,Spargelrisotto,Lachsforelle,Salzkartoffeln,0,0,xlsx
+2025-04-11,Johannes,Tomantenrisotto,Lachsfilet,Salzkartoffeln,0,0,xlsx
+2025-04-11,Noah,Käseknödel,Scombri,Plent,0,0,xlsx
+2025-04-14,Andreas,Schlutzer,Champignonschnitzel,Reis,0,0,xlsx
+2025-04-14,Johannes,Hirten,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-04-14,Noah,Hirten,Schweinsfilet,Spatzlen,0.5,0.5,xlsx
+2025-04-15,Andreas,Tortellini mit Schinken-Rahm,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2025-04-15,Johannes,Carbonara,Schweinskotelett,Kartoffelgratin,0.5,0.5,xlsx
+2025-04-15,Noah,Spinatspatzlen,Chilli con carne,Reis,0,0,xlsx
+2025-04-16,Andreas,Nudel mit Käsesoße,Schweinsfilet,Pommes,0,0,xlsx
+2025-04-16,Johannes,Käseknödel,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-04-16,Noah,Hirten,Hackbraten,Püree,0,0,xlsx
+2025-04-17,Andreas,Lasagne,Hühnerbrust,Kroketten,0.5,0.5,xlsx
+2025-04-17,Johannes,Hirten,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-04-17,Noah,Carbonara,Sparerips,Ofenkartoffeln,0,0,xlsx
+2025-05-05,Andreas,Nudel mit Ragu,Champignonschnitzel,Reis,1,1,xlsx
+2025-05-05,Johannes,Hirten,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2025-05-05,Noah,Hirten,Truthahnschnitzel,Reis,0.5,0.5,xlsx
+2025-05-06,Andreas,Lasagne,Leberkas,Pommes,1,1,xlsx
+2025-05-06,Johannes,Spinatspatzlen,Schweinsschopfbraten,Kartoffelgratin,0,0,xlsx
+2025-05-06,Noah,Lasagne,Hühnerbrust,Kartoffelgratin,1,1,xlsx
+2025-05-07,Andreas,Schlutzer,Schweinsfilet,Kroketten,0,0,xlsx
+2025-05-07,Johannes,Spinatknödel,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-05-07,Noah,Amatriciana,Schweinsfilet,Spatzlen,0.5,0.5,xlsx
+2025-05-08,Andreas,Pizzastrudel,Currywurst,Pommes,0,0,xlsx
+2025-05-08,Noah,Hirten,Hühnerbrust,Kroketten,0,0,xlsx
+2025-05-09,Andreas,Spinatcannelloni,Gulasch,Plent,0,0,xlsx
+2025-05-09,Johannes,Käseknödel,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2025-05-09,Noah,Arrabbiata,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-05-12,Andreas,Arrabbiata,Fleischkrapfln,Püree,0,0,xlsx
+2025-05-12,Johannes,Nudel mit Ragu,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2025-05-12,Noah,Hirten,Schweinsfilet,Kartoffelgratin,0.5,0.5,xlsx
+2025-05-13,Andreas,Pizzastrudel,Champignonschnitzel,Reis,0,0,xlsx
+2025-05-13,Johannes,Carbonara,Schweinsschopfbraten,Reis,0,0,xlsx
+2025-05-13,Noah,Spinatspatzlen,Chilli con carne,Reis,1,1,xlsx
+2025-05-14,Andreas,Käseknödel,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-05-14,Johannes,Spargelrisotto,Wienerschnitzel,Pommes,0,0,xlsx
+2025-05-14,Noah,Lasagne,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-05-15,Andreas,Carbonara,Gulasch,Plent,0,0,xlsx
+2025-05-15,Johannes,Lasagne,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2025-05-15,Noah,Hirten,Currywurst,Pommes,0,0,xlsx
+2025-05-16,Andreas,Ravioli mit Butter + Parmesan,Currywurst,Pommes,0,0,xlsx
+2025-05-16,Johannes,Nudel mit Thunfischsoße,Wienerschnitzel,Pommes,0,0,xlsx
+2025-05-16,Noah,Spinatcannelloni,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-05-19,Andreas,Nudel mit Käsesoße,Champignonschnitzel,Reis,0,0,xlsx
+2025-05-19,Johannes,Nudel mit Ragu,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2025-05-19,Noah,Hirten,Truthahnschnitzel,Reis,0,0,xlsx
+2025-05-20,Andreas,Hirten,Hühnerbrust,Kroketten,0,0,xlsx
+2025-05-20,Johannes,Carbonara,Schweinsschopfbraten,Reis,0.5,0.5,xlsx
+2025-05-20,Noah,Lasagne,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-05-21,Andreas,Spinatknödel,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-05-21,Johannes,Spargelrisotto,Wienerschnitzel,Pommes,0,0,xlsx
+2025-05-21,Noah,Hirten,Truthahngeschnetzeltes,Püree,1.5,1.5,xlsx
+2025-05-22,Andreas,Käseknödel,Hühnerhaxlen,Kartoffelsalat,0.5,0.5,xlsx
+2025-05-22,Johannes,Lasagne,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2025-05-22,Noah,Gnocchi mit Tomatensoße,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-05-23,Andreas,Gnocchi mit Käsesoße,Hauswurst,Plent,0.5,0.5,xlsx
+2025-05-23,Johannes,Nudel mit Thunfischsoße,Wienerschnitzel,Pommes,0,0,xlsx
+2025-05-23,Noah,Nudel mit Pesto,Hühnerbrust,Kroketten,0,0,xlsx
+2025-05-26,Andreas,Putanesca,Hühnerbrust,Kroketten,0,0,xlsx
+2025-05-26,Johannes,Nudel mit Ragu,Truthahnschnitzel,Pommes,0.5,0.5,xlsx
+2025-05-26,Noah,Lasagne,Champignonschnitzel,Reis,0,0,xlsx
+2025-05-27,Andreas,Tortellini mit Schinken-Rahm,Schweinsfilet,Reis,0.5,0.5,xlsx
+2025-05-27,Johannes,Käseknödel,Schweinsschopfbraten,Reis,0.5,0.5,xlsx
+2025-05-27,Noah,Pizzastrudel,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-05-28,Andreas,Spinatspatzlen,Schweinsschopfbraten,Püree,0,0,xlsx
+2025-05-28,Johannes,Tortellini mit Schinken-Rahm,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-05-28,Noah,Aglio olio,Schweinsfilet,Kartoffelgratin,0.5,0.5,xlsx
+2025-05-29,Andreas,Pizzastrudel,Champignonschintzel,Reis,0,0,xlsx
+2025-05-29,Johannes,Gnocchi mit Tomatensoße,Zigeunerschnitzel,Spatzlen,0,0,xlsx
+2025-05-30,Andreas,Schlutzer,Currywurst,Röstkartoffeln,0,0,xlsx
+2025-05-30,Johannes,Pizzastrudel,Currywurst,Pommes,0,0,xlsx
+2025-06-03,Andreas,Putanesca,Champignonschnitzel,Pommes,0,0,xlsx
+2025-06-03,Johannes,Hirten,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-06-03,Noah,Carbonara,Champignonschnitzel,Reis,0,0,xlsx
+2025-06-04,Andreas,Spinatspatzlen,Hühnerhaxlen,Kroketten,0,0,xlsx
+2025-06-04,Johannes,Putanesca,Truthahnbraten,Püree,0.5,0.5,xlsx
+2025-06-04,Noah,Spinatspatzlen,Hühnerbrust,Püree,1,1,xlsx
+2025-06-05,Andreas,Hirten,Currywurst,Pommes,0,0,xlsx
+2025-06-05,Johannes,Carbonara,Wienerschnitzel,Pommes,0,0,xlsx
+2025-06-05,Noah,Hirten,Champignonschnitzel,Reis,0,0,xlsx
+2025-06-06,Andreas,Pizzastrudel,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-06-06,Johannes,Nudel mit Thunfischsoße,Fisch,Salzkartoffeln,0,0,xlsx
+2025-06-06,Noah,Carbonara,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2025-06-10,Andreas,Hirten,Champignonschnitzel,Reis,1,1,xlsx
+2025-06-10,Johannes,Hirten,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-06-10,Noah,Schlutzer,Champignonschnitzel,Reis,1,1,xlsx
+2025-06-11,Andreas,Nudel mit Pesto,Truthahnschnitzel,Pommes,0.5,0.5,xlsx
+2025-06-11,Johannes,Melone mit Rohschinken,Truthahnbraten,Püree,0,0,xlsx
+2025-06-11,Noah,Reissalat,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-06-12,Andreas,Ravioli mit Butter + Parmesan,Schweinsschopfbraten,Spatzlen,0,0,xlsx
+2025-06-12,Johannes,Käseknödel,Leberkas,Ofenkartoffeln,0,0,xlsx
+2025-06-12,Noah,Pizzastrudel,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2025-06-13,Andreas,Reissalat,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-06-13,Johannes,Reissalat,Wienerschnitzel,Pommes,0,0,xlsx
+2025-06-13,Noah,Putanesca,Vitello tonato,Salzkartoffeln,0,0,xlsx
+2025-06-16,Andreas,Lasagne,Pizzaioloschnitzel,Kroketten,0,0,xlsx
+2025-06-16,Johannes,Amatriciana,Leberkas,Reis,0.5,0.5,xlsx
+2025-06-16,Noah,Arrabbiata,Champignonschnitzel,Reis,1,1,xlsx
+2025-06-17,Andreas,Tortellini mit Schinken-Rahm,Hühnerbrust,Ofenkartoffeln,0,0,xlsx
+2025-06-17,Johannes,Nudel mit Käsesoße,Sparerips,Pommes,1.5,1.5,xlsx
+2025-06-17,Noah,Reissalat,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-06-18,Andreas,Pizzastrudel,Truthahngeschnetzeltes,Reis,0,0,xlsx
+2025-06-18,Johannes,Lasagne,Pizzaioloschnitzel,Reis,1,1,xlsx
+2025-06-18,Noah,Nudelsalat,Chilli con carne,Reis,0,0,xlsx
+2025-06-19,Andreas,Spinatspatzlen,Sparerips,Ofenkartoffeln,0,0,xlsx
+2025-06-19,Johannes,Pizzastrudel,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2025-06-19,Noah,Aglio olio,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2025-06-20,Andreas,Reissalat,Hühnerbrust,Salzkartoffeln,0,0,xlsx
+2025-06-20,Johannes,Nudel mit Ragu,Schweinskotelett,Ofenkartoffeln,0,0,xlsx
+2025-06-20,Noah,Nudelsalat,Vitello tonato,Salzkartoffeln,0,0,xlsx
+2025-06-23,Andreas,Nudel Mammarosa,Hühnerhaxlen,Pommes,1,1,xlsx
+2025-06-23,Johannes,Melone mit Rohschinken,Truthahnbraten,Püree,0,0,xlsx
+2025-06-23,Noah,Nudelsalat,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2025-06-24,Andreas,Nudel mit Pesto,Hühnerbrust,Kartoffelgratin,1,1,xlsx
+2025-06-24,Johannes,Nudel mit Thunfischsoße,Chilli con carne,Reis,1,1,xlsx
+2025-06-24,Noah,Reissalat,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-06-25,Andreas,Hirten,Sparerips,Ofenkartoffeln,0,0,xlsx
+2025-06-25,Johannes,Hirten,Zwiebelrostbraten,Püree,0,0,xlsx
+2025-06-25,Noah,Melone mit Rohschinken,Hauswurst,Plent,0,0,xlsx
+2025-06-26,Andreas,Tortellini mit Schinken-Rahm,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-06-26,Johannes,Schlutzer,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-06-26,Noah,Nudelsalat,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-06-27,Andreas,Pizzastrudel,Fleischkrapfln,Püree,0,0,xlsx
+2025-06-27,Johannes,Carbonara,Gulasch,Plent,0,0,xlsx
+2025-06-27,Noah,Melone mit Rohschinken,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-06-30,Andreas,Hirten,Champignonschnitzel,Reis,0,0,xlsx
+2025-06-30,Johannes,Nudel Mammarosa,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2025-06-30,Noah,Putanesca,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-07-01,Andreas,Tortellini mit Schinken-Rahm,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2025-07-01,Johannes,Spinatspatzlen,Schweinsfilet,Kroketten,0,0,xlsx
+2025-07-01,Noah,Lasagne,Champignonschnitzel,Reis,0,0,xlsx
+2025-07-02,Andreas,Spinatspatzlen,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-07-02,Johannes,Pizzastrudel,Rindsbraten,Salzkartoffeln,0,0,xlsx
+2025-07-02,Noah,Griechischer Salat,Truthahngeschnetzeltes,Püree,0.5,0.5,xlsx
+2025-07-03,Andreas,Pizzastrudel,Currywurst,Kroketten,0,0,xlsx
+2025-07-03,Johannes,Melone mit Rohschinken,Hühnerbrust,Reis,0,0,xlsx
+2025-07-03,Noah,Lasagne,Truthahnschnitzel,Reis,0.5,0.5,xlsx
+2025-07-04,Andreas,Nudel Mammarosa,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2025-07-04,Johannes,Nudel mit Käsesoße,Sparerips,Ofenkartoffeln,0,0,xlsx
+2025-07-04,Noah,Arrabbiata,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-07-07,Andreas,Carbonara,Schweinsfilet,Kroketten,0.5,0.5,xlsx
+2025-07-07,Johannes,Nudel mit Käsesoße,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2025-07-08,Andreas,Nudel mit Käsesoße,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-07-08,Johannes,Carbonara,Schweinskotelett,Kartoffelgratin,0,0,xlsx
+2025-07-08,Noah,Spinatknödel mit Käsesoße,Truthahnschnitzel,Püree,0,0,xlsx
+2025-07-09,Noah,Lasagne,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2025-07-10,Andreas,Spinatspatzlen,Leberkas,Röstkartoffeln,1,1,xlsx
+2025-07-10,Johannes,Carbonara,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2025-07-10,Noah,Spinatknödel mit Käsesoße,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-07-11,Andreas,Carbonara,Hühnerbrust,Kroketten,0,0,xlsx
+2025-07-11,Noah,Nudel mit Käsesoße,Truthahngeschnetzeltes,Püree,1,1,xlsx
+2025-07-14,Andreas,Hirten,Champignonschnitzel,Reis,0,0,xlsx
+2025-07-14,Johannes,Arrabbiata,Schweinskotelett,Kartoffelgratin,1,1,xlsx
+2025-07-15,Andreas,Nudel mit Pesto,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-07-16,Andreas,Ravioli mit Butter + Parmesan,Schweinsschopfbraten,Spatzlen,0,0,xlsx
+2025-07-16,Johannes,Carbonara,Truthahnschnitzel,Kartoffelgratin,0,0,xlsx
+2025-07-17,Andreas,Reissalat,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-07-17,Johannes,Spinatknödel,Champignonschnitzel,Kroketten,0,0,xlsx
+2025-07-18,Andreas,Carbonara,Truthahnschnitzel,Reis,0,0,xlsx
+2025-07-18,Johannes,Nudel mit Ragu,Fisch,Salzkartoffeln,0,0,xlsx
+2025-07-18,Noah,Carbonara,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-07-21,Andreas,Nudel Mammarosa,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-07-21,Noah,Hirten,Champignonschnitzel,Reis,0,0,xlsx
+2025-07-22,Andreas,Nudel mit Pesto,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2025-07-22,Johannes,Nudel mit Thunfischsoße,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-07-22,Noah,Schlutzer,Truthahnbraten,Spatzlen,1,1,xlsx
+2025-07-23,Andreas,Hirten,Sparerips,Ofenkartoffeln,1.5,1.5,xlsx
+2025-07-23,Noah,Lasagne,Hühnerbrust,Kroketten,0,0,xlsx
+2025-07-24,Andreas,Tortellini mit Schinken-Rahm,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-07-24,Johannes,Carbonara,Truthahnbraten,Kartoffelgratin,0,0,xlsx
+2025-07-24,Noah,Aglio olio,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-07-25,Andreas,Pizzastrudel,Fleischkrapfln,Püree,0,0,xlsx
+2025-07-25,Johannes,Nudel mit Thunfischsoße,Sparerips,Kroketten,0,0,xlsx
+2025-07-25,Noah,Carbonara,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-07-28,Andreas,Putanesca,Pizzaioloschnitzel,Pommes,0,0,xlsx
+2025-07-28,Johannes,Nudel mit Käsesoße,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-07-28,Noah,Aglio olio,Champignonschnitzel,Reis,1,1,xlsx
+2025-07-29,Andreas,Hirten,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-07-29,Johannes,Käseknödel,Schweinsschnitzel,Kroketten,0,0,xlsx
+2025-07-29,Noah,Lasagne,Hauswurst,Plent,0,0,xlsx
+2025-07-30,Andreas,Pizzastrudel,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-07-30,Johannes,Nudel Mammarosa,Sparerips,Ofenkartoffeln,0,0,xlsx
+2025-07-30,Noah,Nudel mit Ragu,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2025-07-31,Andreas,Lasagne,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2025-07-31,Johannes,Pizzastrudel,Leberkas,Pommes,0,0,xlsx
+2025-07-31,Noah,Lasagne,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-08-01,Andreas,Hirten,Hühnerbrust,Ofenkartoffeln,0,0,xlsx
+2025-08-01,Johannes,Carbonara,Hühnerhaxlen,Kroketten,0,0,xlsx
+2025-08-01,Noah,Spinatcannelloni,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2025-08-04,Andreas,Putanesca,Schweinsschopfbraten,Püree,0,0,xlsx
+2025-08-04,Johannes,Hirten,Truthahngeschnetzeltes,Reis,0,0,xlsx
+2025-08-04,Noah,Aglio olio,Pizzaioloschnitzel,Reis,0,0,xlsx
+2025-08-05,Andreas,Hirten,Hühnerbrust,Kartoffelgratin,1,1,xlsx
+2025-08-05,Johannes,Aglio olio,Truthahnbraten,Püree,0,0,xlsx
+2025-08-05,Noah,Schlutzer,Hauswurst,Plent,0,0,xlsx
+2025-08-06,Andreas,Ravioli mit Butter + Parmesan,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-08-06,Johannes,Carbonara,Truthahngeschnetzeltes,Reis,0.5,0.5,xlsx
+2025-08-06,Noah,Spinatspatzlen,Truthahnschnitzel,Reis,0.5,0.5,xlsx
+2025-08-07,Andreas,Pizzastrudel,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-08-07,Johannes,Aglio olio,Hühnerbrust,Püree,0,0,xlsx
+2025-08-07,Noah,Nudel mit Ragu,Rindsschnitzel,Kartoffelgratin,0,0,xlsx
+2025-08-08,Andreas,Carbonara,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-08-08,Johannes,Carbonara,Sparerips,Ofenkartoffeln,0,0,xlsx
+2025-08-08,Noah,Lasagne,Hühnerhaxl,Kroketten,0.5,0.5,xlsx
+2025-08-25,Andreas,Putanesca,Schweinsschopfbraten,Spatzlen,0,0,xlsx
+2025-08-25,Johannes,Hirten,Truthahnbraten,Reis,0.5,0.5,xlsx
+2025-08-25,Noah,Amatriciana,Champignonschnitzel,Reis,1,1,xlsx
+2025-08-26,Andreas,Hirten,Truthahnschnitzel,Pommes,0.5,0.5,xlsx
+2025-08-26,Johannes,Schlutzer,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-08-26,Noah,Aglio olio,Truthahngeschnetzeltes,Püree,1,1,xlsx
+2025-08-27,Andreas,Pizzastrudel,Truthahnbraten,Spatzlen,0,0,xlsx
+2025-08-27,Johannes,Nudel Mammarosa,Schweinsschnitzel,Kroketten,0,0,xlsx
+2025-08-27,Noah,Hirten,Truthahnschnitzel,Kartoffelgratin,0,0,xlsx
+2025-08-28,Andreas,Lasagne,Hühnerbrust,Kroketten,0,0,xlsx
+2025-08-28,Johannes,Nudel mit Thunfischsoße,Wienerschnitzel,Kartoffelsalat,1,1,xlsx
+2025-08-28,Noah,Pizzastrudel,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-08-29,Andreas,Nudel mit Käsesoße,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-08-29,Johannes,Pizzastrudel,Cordon Bleu,Pommes,0,0,xlsx
+2025-08-29,Noah,Lasagne,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-09-01,Andreas,Putanesca,Hühnerbrust,Kroketten,0,0,xlsx
+2025-09-01,Johannes,Nudel Mammarosa,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-09-01,Noah,Hirten,Pizzaioloschnitzel,Reis,1,1,xlsx
+2025-09-02,Andreas,Ravioli mit Butter + Parmesan,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-09-02,Johannes,Pizzastrudel,Schweinskotelett,Reis,0,0,xlsx
+2025-09-02,Noah,Nudel mit Käsesoße,Hauswurst,Plent,0,0,xlsx
+2025-09-03,Andreas,Spinatspatzlen,Fleischkrapfln,Püree,0,0,xlsx
+2025-09-03,Johannes,Nudel mit Käsesoße,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-09-03,Noah,Aglio olio,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-09-04,Andreas,Amatriciana,Wienerschnitzel,Pommes,0,0,xlsx
+2025-09-04,Johannes,Aglio olio,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-09-04,Noah,Arrabbiata,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-09-05,Johannes,Nudel mit Käsesoße,Sparerips,Ofenkartoffeln,0,0,xlsx
+2025-09-05,Noah,Nudel mit Lachs,Chilli con carne,Reis,0.5,0.5,xlsx
+2025-09-08,Andreas,Nudel mit Käsesoße,Champignonschnitzel,Reis,1,1,xlsx
+2025-09-08,Johannes,Amatriciana,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-09-08,Noah,Arrabbiata,Champignonschnitzel,Reis,0,0,xlsx
+2025-09-09,Andreas,Tortellini mit Schinken-Rahm,Schweinsschopfbraten,Kroketten,0.5,0.5,xlsx
+2025-09-09,Johannes,Arrabbiata,Champignonschnitzel,Reis,1,1,xlsx
+2025-09-09,Noah,Spinatspatzlen,Knödel,Gulasch,0,0,xlsx
+2025-09-10,Johannes,Gnocchi mit Tomatensoße,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-09-10,Noah,Aglio olio,Chilli con carne,Reis,0,0,xlsx
+2025-09-11,Andreas,Pizzastrudel,Chilli con carne,Reis,1,1,xlsx
+2025-09-11,Johannes,Aglio olio,Schweinsfilet,Reis,0.5,0.5,xlsx
+2025-09-11,Noah,Carbonara,Schweinsschopfbraten,Spatzlen,0,0,xlsx
+2025-09-12,Andreas,Nudel Mammarosa,Truthahnschnitzel,Pommes,1,1,xlsx
+2025-09-12,Johannes,Carbonara,Sparerips,Röstkartoffeln,0,0,xlsx
+2025-09-12,Noah,Spinatcannelloni,Truthahnbraten,Püree,0,0,xlsx
+2025-09-15,Andreas,Putanesca,Champignonschnitzel,Reis,1,1,xlsx
+2025-09-15,Johannes,Aglio olio,Schweinsschopfbraten,Püree,0,0,xlsx
+2025-09-15,Noah,Hirten,Champignonschnitzel,Reis,1,1,xlsx
+2025-09-16,Andreas,Tortellini mit Schinken-Rahm,Hühnerhaxlen,Ofenkartoffeln,0.5,0.5,xlsx
+2025-09-16,Johannes,Carbonara,Hühnerbrust,Kroketten,0,0,xlsx
+2025-09-16,Noah,Lasagne,Truthahnbraten,Spatzlen,0,0,xlsx
+2025-09-17,Andreas,Nudel mit Käsesoße,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-09-17,Johannes,Aglio olio,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-09-17,Noah,Hirten,Hühnerhaxlen,Kroketten,0,0,xlsx
+2025-09-18,Johannes,Hirten,Hühnerbrust,Kroketten,0,0,xlsx
+2025-09-18,Noah,Carbonara,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-09-19,Andreas,Carbonara,Currywurst,Pommes,0,0,xlsx
+2025-09-19,Johannes,Carbonara,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-09-19,Noah,Amatriciana,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-09-22,Andreas,Nudel mit Thunfischsoße,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-09-22,Johannes,Hirten,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-09-22,Noah,Lasagne,Hühnerbrust,Spatzlen,0.5,0.5,xlsx
+2025-09-23,Andreas,Tortellini mit Schinken-Rahm,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-09-23,Johannes,Lasagne,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-09-23,Noah,Hirten,Hauswurst,Plent,1,1,xlsx
+2025-09-24,Andreas,Ravioli mit Butter + Parmesan,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-09-24,Johannes,Spinatknödel,Hauswurst,Plent,0,0,xlsx
+2025-09-24,Noah,Nudel mit Käsesoße,Knödel,Gulasch,1,1,xlsx
+2025-09-25,Andreas,Tortellini mit Schinken-Rahm,Knödel,Gulasch,0,0,xlsx
+2025-09-25,Johannes,Spinatcanneloni,Hühnerbrust,Reis,0,0,xlsx
+2025-09-25,Noah,Lasagne,Truthahnschnitzel,Püree,0,0,xlsx
+2025-09-26,Andreas,Spinatknödel,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-09-26,Johannes,Carbonara,Hauswurst,Plent,0,0,xlsx
+2025-09-26,Noah,Carbonara,Truthahnbraten,Kartoffelstampf,0,0,xlsx
+2025-09-29,Andreas,Spinatcannelloni,Truthahngeschnetzeltes,Reis,0,0,xlsx
+2025-09-29,Johannes,Carbonara,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-09-29,Noah,Lasagne,Truthahnbraten,Kartoffelstampf,0,0,xlsx
+2025-09-30,Andreas,Hirten,Currywurst,Pommes,0,0,xlsx
+2025-09-30,Johannes,Lasagne,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-09-30,Noah,Carbonara,Schweinsschnitzel,Reis,0.5,0.5,xlsx
+2025-10-01,Andreas,Spinatspatzlen,Truthahnschnitzel,Kartoffelgratin,0.5,0.5,xlsx
+2025-10-01,Johannes,Carbonara,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-10-01,Noah,Lasagne,Hauswurst,Plent,0,0,xlsx
+2025-10-02,Andreas,Nudel mit Käsesoße,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2025-10-02,Johannes,Lasagne,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2025-10-02,Noah,Carbonara,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-10-03,Andreas,Spinatspatzlen,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-10-03,Johannes,Nudel mit Thunfischsoße,Chilli con carne,Reis,0,0,xlsx
+2025-10-06,Andreas,Nudel mit Thunfischsoße,Truthahngeschnetzeltes,Reis,1.5,1.5,xlsx
+2025-10-06,Noah,Nudel mit Käsesoße,Champignonschnitzel,Reis,1,1,xlsx
+2025-10-07,Andreas,Tortellini mit Schinken-Rahm,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-10-07,Johannes,Carbonara,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-10-07,Noah,Spinatspatzlen,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-10-08,Andreas,Nudel mit Käsesoße,Currywurst,Kartoffelsalat / Pommes,0.5,0.5,xlsx
+2025-10-08,Johannes,Spinatspatzlen,Wienerschnitzel,Kartoffelsalat / Pommes,0.5,0.5,xlsx
+2025-10-08,Noah,Aglio olio,Leberkas,Röstkartoffeln,1,1,xlsx
+2025-10-09,Andreas,Spinatknödel,Schweinsschopfbraten,Spatzlen,0.5,0,xlsx
+2025-10-09,Johannes,Schlutzer,Gulasch,Spatzlen,0,3,xlsx
+2025-10-09,Noah,Spinatspatzlen,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2025-10-10,Andreas,Spinatspatzlen,Gulasch,Plent,0.5,0.5,xlsx
+2025-10-10,Johannes,Carbonara,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-10-10,Noah,Nudel mit Käsesoße,Truthahngeschnetzeltes,Püree,1,1,xlsx
+2025-10-13,Andreas,Nudel mit Ragu,Truthahngeschnetzeltes,Reis,0.5,0.5,xlsx
+2025-10-13,Johannes,Amatriciana,Schweinsschnitzel mit Kräuterrahmsoße,Kartoffelgratin,0.5,0.5,xlsx
+2025-10-13,Noah,Arrabbiata,Schweinsschnitzel mit Kräuterrahmsoße,Spatzlen,0.5,0.5,xlsx
+2025-10-14,Andreas,Putanesca,Currywurst,Pommes,0,0,xlsx
+2025-10-14,Johannes,Carbonara,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-10-14,Noah,Spinatspatzlen,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-10-15,Andreas,Schlutzer,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2025-10-15,Johannes,Spinatspatzlen,Currywurst,Pommes,0.5,0.5,xlsx
+2025-10-15,Noah,Spinatknödel mit Käsesoße,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2025-10-16,Andreas,Aglio olio,Chilli con carne,Reis,3,3,xlsx
+2025-10-16,Johannes,Aglio olio,Chilli con carne,Reis,3,3,xlsx
+2025-10-16,Noah,Aglio olio,Chilli con carne,Reis,3,3,xlsx
+2025-10-17,Johannes,Nudel mit Meeresfrüchte,Hühnerhaxlen,Ofenkartoffeln,0.5,0.5,xlsx
+2025-10-17,Noah,Spinatspatzlen,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2025-10-20,Andreas,Nudel mit Thunfischsoße,Champignonschnitzel,Püree,0.5,0.5,xlsx
+2025-10-20,Johannes,Amatriciana,Truthahnschnitzel,Pommes,1,1,xlsx
+2025-10-20,Noah,Arrabbiata,Champignonschnitzel,Reis,0,0,xlsx
+2025-10-21,Andreas,Spinatspatzlen,Truthahnschnitzel,Reis,1,1,xlsx
+2025-10-21,Johannes,Tortellini mit Schinken-Rahm,Truthahngeschnetzeltes,Reis,0,0,xlsx
+2025-10-21,Noah,Pizzastrudel,Truthahngeschnetzeltes,Ofenkartoffeln,0,0,xlsx
+2025-10-22,Andreas,Pizzastrudel,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-10-22,Johannes,Lasagne,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-10-22,Noah,Carbonara,Hauswurst,Plent,0,0,xlsx
+2025-10-23,Andreas,Lasagne,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-10-23,Johannes,Carbonara,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-10-23,Noah,Aglio olio,Truthahnschnitzel,Spatzlen,0.5,0.5,xlsx
+2025-10-24,Andreas,Nudel mit Käsesoße,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-10-24,Johannes,Lasagne,Wienerschnitzel,Pommes,1,1,xlsx
+2025-10-24,Noah,Hirten,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2025-10-27,Andreas,Schlutzer,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2025-10-27,Johannes,Hirten,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2025-10-27,Noah,Putanesca,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2025-10-28,Andreas,Tortellini mit Schinken-Rahm,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-10-28,Johannes,Carbonara,Schweinsschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-10-28,Noah,Arrabbiata,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-10-29,Andreas,Spinatcannelloni,Wienerschnitzel,Püree,0,0,xlsx
+2025-10-29,Johannes,Arrabbiata,Cordon Bleu,Pommes,0,0,xlsx
+2025-10-29,Noah,Lasagne,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-10-30,Andreas,Käseknödel,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-10-30,Johannes,Aglio olio,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-10-30,Noah,Spinatspatzlen,Hühnerbrust,Kroketten,0,0,xlsx
+2025-10-31,Andreas,Plentauflauf,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-10-31,Johannes,Lasagne,Cordon Bleu,Pommes,0,0,xlsx
+2025-10-31,Noah,Lasagne,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-11-03,Andreas,Nudel mit Thunfischsoße,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2025-11-03,Johannes,Arrabbiata,Champignonschnitzel,Reis,1.5,1.5,xlsx
+2025-11-03,Noah,Amatriciana,Schweinsschnitzel mit Kräuterrahmsoße,Reis,0.5,0.5,xlsx
+2025-11-04,Andreas,Tortellini mit Schinken-Rahm,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-11-04,Johannes,Lasagne,Leberkas,Röstkartoffeln,1,1,xlsx
+2025-11-04,Noah,Spinatspatzlen,Hauswurst,Plent,0,0,xlsx
+2025-11-05,Andreas,Spinatspatzlen,Knödel,Gulasch,0,0,xlsx
+2025-11-05,Johannes,Tortellini mit Schinken-Rahm,Truthahngeschnetzeltes,Püree,0.5,0.5,xlsx
+2025-11-05,Noah,Aglio olio,Schweinsschnitzel mit Kräuterrahmsoße,Spatzlen,1,1,xlsx
+2025-11-06,Johannes,Nudel mit Lachs,Knödel,Kraut,1,1,xlsx
+2025-11-06,Noah,Plentauflauf,Hauswurst,Kraut,0,0,xlsx
+2025-11-07,Andreas,Spinatknödel,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-11-07,Johannes,Carbonara,Hauswurst,Plent,1,1,xlsx
+2025-11-07,Noah,Spinatspatzlen,Chilli con carne,Reis,0,0,xlsx
+2025-11-10,Andreas,Putanesca,Schweinsschnitzel mit Kräuterrahmsoße,Reis,0,0,xlsx
+2025-11-10,Johannes,Nudel Mammarosa,Champignonschnitzel,Reis,1,1,xlsx
+2025-11-10,Noah,Amatriciana,Champignonschnitzel,Reis,0,0,xlsx
+2025-11-11,Andreas,Tortellini mit Schinken-Rahm,Fleischkrapfln,Püree,0,0,xlsx
+2025-11-11,Johannes,Schlutzer,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-11-11,Noah,Aglio olio,Speckknödel,Kraut,0,0,xlsx
+2025-11-12,Andreas,Hirten,Wienerschnitzel,Pommes,0,0,xlsx
+2025-11-12,Johannes,Spinatspatzlen,Gulasch,Reis,0,0,xlsx
+2025-11-12,Noah,Amatriciana,Chilli con carne,Reis,0,0,xlsx
+2025-11-13,Andreas,Putanesca,Gulasch,Reis,0.5,0.5,xlsx
+2025-11-13,Johannes,Schlutzer,Knödel,Kraut,0,0,xlsx
+2025-11-13,Noah,Hirten,Hauswurst,Kraut,0,0,xlsx
+2025-11-14,Andreas,Tortellini mit Schinken-Rahm,Wienerschnitzel,Pommes,0,0,xlsx
+2025-11-14,Johannes,Tortellini mit Schinken-Rahm,Schweinsschnitzel,v,0,0,xlsx
+2025-11-14,Noah,Aglio olio,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2025-11-17,Andreas,Nudel mit Käsesoße,Schweinsfilet,Kroketten,0,0,xlsx
+2025-11-17,Johannes,Hirten,Truthahnbraten,Reis,0,0,xlsx
+2025-11-17,Noah,Amatriciana,Schweinsschnitzel,Reis,1.5,1.5,xlsx
+2025-11-18,Andreas,Tortellini mit Schinken-Rahm,Currywurst,Pommes,1,1,xlsx
+2025-11-18,Johannes,Spinatspatzlen,Wienerschnitzel,Pommes,0,0,xlsx
+2025-11-18,Noah,Aglio olio,Truthahngeschnetzeltes,Püree,1,1,xlsx
+2025-11-19,Andreas,Aglio olio,Wienerschnitzel,Kartoffelsalat,0.5,0.5,xlsx
+2025-11-19,Johannes,Aglio olio,Fleischkrapflen,Reis,0,0,xlsx
+2025-11-19,Noah,Lasagne,Hauswurst,Plent,0,0,xlsx
+2025-11-20,Andreas,Lasagne,Champignonschnitzel,Reis,0,0,xlsx
+2025-11-20,Johannes,Lasagne,Hauswurst,Plent,0,0,xlsx
+2025-11-20,Noah,Aglio olio,Champignonschnitzel,Reis,0,0,xlsx
+2025-11-21,Andreas,Plentauflauf,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-11-21,Johannes,Aglio olio,Hühnerhaxlen,Pommes,1,1,xlsx
+2025-11-21,Noah,Hirten,Hauswurst,Plent,0,0,xlsx
+2025-11-24,Andreas,Nudel mit Thunfischsoße,Hühnerbrust,Kroketten,1,1,xlsx
+2025-11-24,Johannes,Hirten,Hackbraten,Reis,0.5,0.5,xlsx
+2025-11-24,Noah,Arrabbiata,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2025-11-25,Andreas,Spinatspatzlen,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2025-11-25,Johannes,Lasagne,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-11-25,Noah,Hirten,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2025-11-26,Andreas,Hirten,Wienerschnitzel,Pommes,0,0,xlsx
+2025-11-26,Johannes,Carbonara,Hauswurst,Plent,0,0,xlsx
+2025-11-26,Noah,Lasagne,Hauswurst,Plent,0,0,xlsx
+2025-11-27,Andreas,Lasagne,Truthahnschnitzel,Kartoffelsalat,0,0,xlsx
+2025-11-27,Johannes,Lasagne,Wienerschnitzel,Pommes,0,0,xlsx
+2025-11-27,Noah,Hirten,Currywurst,Pommes,0,0,xlsx
+2025-11-28,Andreas,Omelett mit Schinken und Käse,Sparerips,Pommes,0.5,0.5,xlsx
+2025-11-28,Noah,Spinatspatzlen,Hauswurst,Kraut,0,0,xlsx
+2025-12-01,Andreas,Nudel Mammarosa,Schweinsschopfbraten,Kroketten,0,0,xlsx
+2025-12-01,Johannes,Hirten,Champignonschnitzel,Reis,0,0,xlsx
+2025-12-01,Noah,Amatriciana,Schweinsschnitzel,Reis,0.5,0.5,xlsx
+2025-12-02,Andreas,Spinatspatzlen,Truthahnschnitzel,Reis,0.5,0.5,xlsx
+2025-12-02,Johannes,Arrabbiata,Wienerschnitzel,Pommes,0,0,xlsx
+2025-12-02,Noah,Hirten,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-12-03,Andreas,Nudel mit Käsesoße,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2025-12-03,Johannes,Hirten,Hauswurst,Plent,0,0,xlsx
+2025-12-03,Noah,Spinatspatzlen,Hauswurst,Plent,0,0,xlsx
+2025-12-04,Andreas,Hirten,Schweinsfilet,Spatzlen,1.5,1.5,xlsx
+2025-12-04,Johannes,Arrabbiata,Chilli con carne,Reis,0,0,xlsx
+2025-12-04,Noah,Aglio olio,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-12-05,Andreas,Nudel mit Käsesoße,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-12-05,Johannes,Aglio olio / Nudel mit Ragu,Hauswurst,Plent,1,1,xlsx
+2025-12-05,Noah,Spinatspatzlen,Hauswurst,Plent,0,0,xlsx
+2025-12-09,Andreas,Schlutzer,Schweinsfilet,Kroketten,0,0,xlsx
+2025-12-09,Johannes,Hirten,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2025-12-09,Noah,Amatriciana,Champignonschnitzel,Reis,1.5,1.5,xlsx
+2025-12-10,Andreas,Spinatravioli,Wienerschnitzel,Pommes,0,0,xlsx
+2025-12-10,Johannes,Tortellini mit Schinken-Rahm,Schweinsschnitzel,Spatzlen,0,0,xlsx
+2025-12-10,Noah,Aglio olio,Schweinsschnitzel,Kartoffelgratin,0,0,xlsx
+2025-12-11,Andreas,Nudel mit Thunfischsoße,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-12-11,Johannes,Nudel mit Käsesoße,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2025-12-11,Noah,Nudel mit Ragu,Gekochtes Rindfleisch,Salzkartoffeln,0,0,xlsx
+2025-12-12,Andreas,Nudel mit Käsesoße,Schweinsfilet,Kroketten,1,1,xlsx
+2025-12-12,Johannes,Nudel mit Thunfischsoße,Chilli con carne,Reis,0.5,0.5,xlsx
+2025-12-12,Noah,Aglio olio,Champignonschnitzel,Kartoffelgratin,0,0,xlsx
+2025-12-15,Andreas,Nudel mit Thunfischsoße,Champignonschnitzel,Kartoffelgratin,0,0,xlsx
+2025-12-15,Johannes,Arrabbiata,Schweinsschnitzel,Spatzlen,0,0,xlsx
+2025-12-15,Noah,Omelett mit Schinken und Käse,Schweinsschnitzel,Kartoffelgratin,0,0,xlsx
+2025-12-16,Andreas,Nudel mit Ragu,Truthahnschnitzel,Pommes,0,0,xlsx
+2025-12-16,Johannes,Spinatknödel,Hühnerhaxlen,Pommes,0,0,xlsx
+2025-12-16,Noah,Arrabbiata,Truthahngeschnetzeltes,Püree,1,1,xlsx
+2025-12-17,Andreas,Hirten,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2025-12-17,Johannes,Nudel mit Thunfischsoße,Schweinsschnitzel,Ofenkartoffeln,0,0,xlsx
+2025-12-17,Noah,Aglio olio,Champignonschnitzel,Kartoffelgratin,1,1,xlsx
+2025-12-18,Andreas,Tortellini mit Schinken-Rahm,Schweinsfilet,Kroketten,0,0,xlsx
+2025-12-18,Johannes,Hirten,Hauswurst,Kraut,0,0,xlsx
+2025-12-18,Noah,Lasagne,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2025-12-19,Andreas,Hirten,Leberkas,Röstkartoffeln,0,0,xlsx
+2025-12-19,Johannes,Carbonara,Cordon Bleu,Pommes,0.5,1,xlsx
+2025-12-19,Noah,Spinatspatzlen,Rindsschnitzel,Spatzlen,0,0,xlsx
+2026-01-12,Andreas,Nudel mit Käsesoße,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-01-12,Johannes,Hirten,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-01-13,Andreas,Tortellini mit Schinken-Rahm,Schweinsfilet,Kroketten,0,0,xlsx
+2026-01-13,Johannes,Tortellini mit Schinken-Rahm,Schweinsschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-01-13,Noah,Amatriciana,Schweinskotelett,Ofenkartoffeln,0,0,xlsx
+2026-01-14,Andreas,Nudel mit Käsesoße,Schweinsschopfbraten,Spatzlen,1,1,xlsx
+2026-01-14,Johannes,Amatriciana,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-01-14,Noah,Hirten,Truthahnbraten,Kartoffelgratin,0,0,xlsx
+2026-01-15,Andreas,Lasagne,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2026-01-15,Johannes,Hirten,Rindsschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-01-15,Johannes Paul III,Spinatcannelloni,,,1,1,xlsx
+2026-01-15,Noah,Aglio Olio,Truthahnschnitzel,Ofenkartoffeln,0.5,0.5,xlsx
+2026-01-16,Andreas,Aglio Olio,Schweinsschopf,Spatzlen,1.5,1.5,xlsx
+2026-01-16,Noah,Nudel Mammarosa,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-01-19,Andreas,Arrabbiata,Champignonschnitzel,Kartoffelgratin,0.5,0.5,xlsx
+2026-01-19,Johannes,Amatriciana,Champignonschnitzel,Reis,1,1,xlsx
+2026-01-19,Noah,Amatriciana,Champignonschnitzel,Reis,1,1,xlsx
+2026-01-20,Andreas,Spinatspatzlen,Hühnerhaxlen,Pommes,1,1,xlsx
+2026-01-20,Johannes,Tortellini mit Schinken-Rahm,Hühnerhaxlen,Pommes,1,1,xlsx
+2026-01-20,Johannes Paul III,Käseknödel,,,1,1,xlsx
+2026-01-20,Noah,Spinatspatzlen,Hühnerbrust,Kroketten,0,0,xlsx
+2026-01-21,Andreas,Lasagne,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2026-01-21,Johannes,Nudel Mammarosa,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-01-21,Noah,Lasagne,Truthahngeschnetzeltes,Püree,0.5,0.5,xlsx
+2026-01-22,Andreas,Nudel Mammarosa,Leberkas,Röstkartoffeln,1,1,xlsx
+2026-01-22,Johannes,Amatriciana,Truthahngeschnetzeltes,Reis,1,1,xlsx
+2026-01-22,Johannes Paul III,Ravioli mit Parmesan + Butter,Truthahnschnitzel,Reis,0,0,xlsx
+2026-01-22,Noah,Arrabbiata,Schweinskotelett,Ofenkartoffeln,0,0,xlsx
+2026-01-23,Andreas,Ravioli mit Parmesan-Butter,Pizzalioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-01-23,Johannes,Hirten,Wienerschnitzel,Pommes,0,0,xlsx
+2026-01-23,Johannes Paul III,Tortellini mit Schinken-Rahm,Schweinsfilet,Kroketten,0,0,xlsx
+2026-01-23,Noah,Aglio Olio,Hühnerbrust,Spatzlen,0,0,xlsx
+2026-01-26,Andreas,Nudel mit Käsesoße,Schweinsschopfbraten,Kroketten,0,0,xlsx
+2026-01-26,Johannes Paul III,Nudel mit Tomatensoße,Hauswurst,Plent,0,0,xlsx
+2026-01-26,Noah,Arrabbiata,Schweinsschnitzel mit Kräuterrahmsoße,Reis,1.5,1.5,xlsx
+2026-01-27,Andreas,Tortellini mit Schinken-Rahm,Truthahnschnitzel,Pommes,0,0,xlsx
+2026-01-27,Johannes,Tortellini mit Schinken-Rahm,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-01-27,Johannes Paul III,Aglio Olio,Truthahnschnitzel,Kartoffelstampf,0,0,xlsx
+2026-01-27,Noah,Nudel mit Käsesoße,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-01-28,Andreas,Käseknödel,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-01-28,Johannes,Schlutzer,Pizzaioloschnitzel,Kartoffelgratin,0,0,xlsx
+2026-01-28,Johannes Paul III,Griesscheiben mit Schinken/Käse und Tomatensoße,Schweinskotelett,Kartoffelgratin,0,0,xlsx
+2026-01-28,Noah,Aglio Olio,Truthahnschnitzel,Pommes,0,0,xlsx
+2026-01-29,Andreas,Hirten,Truthahnschnitzel,Pommes,0,0,xlsx
+2026-01-29,Johannes,Nudel mit Käsesoße,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-01-29,Johannes Paul III,Spinatcannelloni,Truthahnbraten,Reis,0,0,xlsx
+2026-01-29,Noah,Nudel mit Käsesoße,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-01-30,Andreas,Aglio Olio,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-01-30,Johannes,Hirten,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2026-01-30,Johannes Paul III,Hirten,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2026-01-30,Noah,Lasagne,Truthahnschnitzel,Pommes,0.5,0.5,xlsx
+2026-02-02,Andreas,Nudel Mammarosa,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-02-02,Johannes,Putanesca,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-02-02,Johannes Paul III,Hirten,Truthahnbraten,Reis,1.5,1.5,xlsx
+2026-02-02,Noah,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-02-03,Andreas,Spinatspatzlen,Wienerschnitzel,Pommes,0,0,xlsx
+2026-02-03,Johannes,Aglio Olio,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-02-03,Johannes Paul III,Spinatspatzlen,Schweinsgulasch,Püree,0,0,xlsx
+2026-02-03,Noah,Nudel mit Käsesoße,Schweinsschnitzel mit Kräuterrahmsoße,Püree,1,1,xlsx
+2026-02-04,Andreas,Ravioli mit Parmesan-Butter,Cordon Bleu,Kartoffelsalat,0,0,xlsx
+2026-02-04,Johannes,Spinatknödel,Cordon Bleu,Kartoffelsalat,0,0,xlsx
+2026-02-04,Johannes Paul III,Nudel mit Ragu,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-02-04,Noah,Spinatspatzlen,Hühnerbrust,Ofenkartoffeln,0.5,0.5,xlsx
+2026-02-05,Andreas,Nudel mit Thunfischsoße,Wienerschnitzel,Pommes,0,0,xlsx
+2026-02-05,Johannes,Putanesca,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-02-05,Johannes Paul III,Aglio Olio,Schweinsschnitzel,Spatzlen,0.5,0.5,xlsx
+2026-02-05,Noah,Amatriciana,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2026-02-06,Andreas,Aglio Olio,Leberkas,Reis,0,0,xlsx
+2026-02-06,Johannes,Hirten,Wienerschnitzel,Pommes,0,0,xlsx
+2026-02-06,Johannes Paul III,Ravioli mit Parmesan + Butter,Leberkas,Reis,0,0,xlsx
+2026-02-06,Noah,Pizzastrudel,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-02-09,Andreas,Arrabbiata,Champignonschnitzel,Reis,0,0,xlsx
+2026-02-09,Johannes,Arrabbiata,Champignonschnitzel,Reis,0,0,xlsx
+2026-02-09,Noah,Amatriciana,Champignonschnitzel,Reis,0,0,xlsx
+2026-02-10,Andreas,Schlutzer,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-02-10,Johannes,Spinatspatzlen,Pizzaioloschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-02-10,Noah,Spinatspatzlen,Schweinsschnitzel mit Kräuterrahmsoße,Kartoffelgratin,0,0,xlsx
+2026-02-11,Andreas,Spinatspatzlen,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-02-11,Johannes,Ravioli mit Parmesan+Butter,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-02-11,Noah,Carbonara,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-02-12,Andreas,Lasagne,Truthahngeschnetzeltes,Püree,0.5,0.5,xlsx
+2026-02-12,Johannes,Spinatspatzlen,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-02-12,Noah,Pizzastrudel,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2026-02-13,Andreas,Spinatspatzlen,Hühnerbrust,Reis,0,0,xlsx
+2026-02-13,Johannes,Hirten,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2026-02-13,Johannes Paul III,Pizzastrudel,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-02-13,Noah,Carbonara,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-02-16,Andreas,Nudel mit Käsesoße,Champignonschnitzel,Reis,0,0,xlsx
+2026-02-16,Johannes,Nudel mit Ragu,Champignonschnitzel,Reis,0,0,xlsx
+2026-02-16,Johannes Paul III,Nudel Mammarosa,Cordon Bleu,Reis,0,0,xlsx
+2026-02-16,Noah,Amatriciana,Champignonschnitzel,Reis,1,1,xlsx
+2026-02-17,Andreas,Lasagne,Hühnerbrust,Kroketten,0,0,xlsx
+2026-02-17,Johannes,Nudel mit Käsesoße,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-02-17,Johannes Paul III,Nudel mit Käsesoße,Champignonschnitzel,Pommes,0.5,0.5,xlsx
+2026-02-17,Noah,Pizzastrudel,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-02-18,Andreas,Nudel mit Thunfischsoße,Paniertes Schollenfilet,Salzkartoffeln,0,0,xlsx
+2026-02-18,Johannes,Nudel mit Ragu,Scombri,Plent,0,0,xlsx
+2026-02-18,Johannes Paul III,Nudel mit Ragu,Panierter Pengasius / Wienerschnitzel,Kartoffelstampf,0.5,0.5,xlsx
+2026-02-18,Noah,Aglio Olio,Paniertes Schollenfilet,Salzkartoffeln,0,0,xlsx
+2026-02-19,Andreas,Lasagne,Pizzalioloschnitzel,Röstkartoffeln,0,0,xlsx
+2026-02-19,Johannes,Hirten,Leberkas,Röstkartoffeln,1,1,xlsx
+2026-02-19,Johannes Paul III,Nudel mit Käsesoße,Hühnerbrust,Plent,0,0,xlsx
+2026-02-19,Noah,Lasagne,Truthahngeschnetzeltes,Püree,1,1,xlsx
+2026-02-20,Andreas,Ravioli mit Parmesan-Butter,Rotbarsch,Salzkartoffeln,0,0,xlsx
+2026-02-20,Johannes,Nudel mit Ragu,Scombri,Plent,0,0,xlsx
+2026-02-20,Johannes Paul III,Nudel mit Pesto,Schweinsfilet,Spatzlen,0,0,xlsx
+2026-02-20,Noah,Aglio Olio,Scombri,Plent,0,0,xlsx
+2026-02-23,Andreas,Nudel mit Käsesoße,Schweinsfilet,Kroketten,0,0,xlsx
+2026-02-23,Johannes,Nudel Mammarosa,Zigeunerschnitzel,Reis,1,1,xlsx
+2026-02-23,Johannes Paul III,Hirten,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-02-23,Noah,Lasagne,Schweinsschnitzel mit Kräuterrahmsoße,Reis,0.5,0.5,xlsx
+2026-02-24,Andreas,Tortellini mit Schinken-Rahm,Hühnerbrust,Pommes,0,0,xlsx
+2026-02-24,Johannes,Carbonara,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-02-24,Johannes Paul III,Carbonara,Truthahngeschnetzeltes,Spatzlen,0,0,xlsx
+2026-02-24,Noah,Arrabbiata,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-02-25,Andreas,Pizzastrudel,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-02-25,Johannes Paul III,Nudel mit Käsesoße,Truthahnschnitzel,Ofenkartoffeln,1,1,xlsx
+2026-02-25,Noah,Käseknödel,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2026-02-26,Andreas,Nudel Mammarosa,Hühnerbrust,Kartoffelgratin,0.5,0.5,xlsx
+2026-02-26,Johannes Paul III,Nudel Mammarosa,Hühnerbrust,Kartoffelgratin,0.5,0.5,xlsx
+2026-02-26,Noah,Carbonara,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-02-27,Andreas,Nudel mit Meeresfrüchte,Rotbarschfilet,Salzkartoffeln,0,0,xlsx
+2026-02-27,Johannes,Gnocchi mit Tomatensoße,Paniertes Schollenfilet,Salzkartoffeln,0,0,xlsx
+2026-02-27,Johannes Paul III,Ravioli mit Parmesan + Butter,Schweinsfilet,Spatzlen,0,0,xlsx
+2026-02-27,Noah,Tomatenrisotto,Scombri / Hauswurst,Plent,1,1,xlsx
+2026-03-02,Andreas,Nudel mit Thunfischsoße,Chilli con carne,Reis,0,0,xlsx
+2026-03-02,Johannes,Amatriciana,Champignonschnitzel,Reis,0,0,xlsx
+2026-03-02,Johannes Paul III,Nudel mit Thunfischsoße,Chilli con carne,Reis,0,0,xlsx
+2026-03-02,Noah,Carbonara,Champignonschnitzel,Reis,0,0,xlsx
+2026-03-03,Andreas,Ravioli mit Parmesan-Butter,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-03-03,Johannes Paul III,Ravioli mit Parmesan + Butter,Champignonschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-03-03,Noah,Nudel mit Käsesoße,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-03-04,Andreas,Hirten,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-03-04,Johannes Paul III,Amatriciana,Wienerschnitzel,Reis,0.5,0.5,xlsx
+2026-03-04,Noah,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-03-05,Andreas,Lasagne,Currywurst,Pommes,1,1,xlsx
+2026-03-05,Johannes,Aglio Olio,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-03-05,Johannes Paul III,Lasagne,Currywurst,Pommes,1,1,xlsx
+2026-03-05,Noah,Hirten,Truthahngeschnetzeltes,Püree,0.5,0.5,xlsx
+2026-03-06,Andreas,Nudel mit Meeresfrüchte,Lachsfilet,Salzkartoffeln,0.5,0.5,xlsx
+2026-03-06,Johannes,Nudel mit Ragu,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-03-06,Johannes Paul III,Tortellini mit Schinken-Rahm,Leberkas,Salzkartoffeln,0.5,0.5,xlsx
+2026-03-06,Noah,Tortellini mit Schinken-Rahm,Paniertes Schollenfilet,Salzkartoffeln,0.5,0.5,xlsx
+2026-03-09,Andreas,Nudel mit Käsesoße,Schweinsfilet,Reis,0.5,0.5,xlsx
+2026-03-09,Johannes,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-03-09,Johannes Paul III,Nudel mit Käsesoße,Schweinsfilet,Reis,0.5,0.5,xlsx
+2026-03-09,Noah,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-03-10,Andreas,Tortellini mit Schinken-Rahm,Hühnerhaxlen,Pommes,1,1,xlsx
+2026-03-10,Johannes,Putanesca,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2026-03-10,Johannes Paul III,Pizzastrudel,Hühnerbrust,Kroketten,0,0,xlsx
+2026-03-10,Noah,Carbonara,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-03-11,Andreas,Ravioli mit Parmesan-Butter,Schweinsfilet,Kroketten,0,0,xlsx
+2026-03-11,Johannes,Käseknödel,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-03-11,Johannes Paul III,Nudel mit Käsesoße,Champignonschnitzel,Kartoffelgratin,0,0,xlsx
+2026-03-11,Noah,Nudel mit Käsesoße,Champignonschnitzel,Kartoffelgratin,0,0,xlsx
+2026-03-12,Andreas,Spinatspatzlen,Schweinsgulasch,Püree,0,0,xlsx
+2026-03-12,Johannes,Tortellini mit Schinken-Rahm,Champignonschnitzel,Reis,0,0,xlsx
+2026-03-12,Johannes Paul III,Arrabbiata,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-03-12,Noah,Arrabbiata,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-03-13,Andreas,Nudel mit Käsesoße,Rotbarschfilet,Kroketten,0,0,xlsx
+2026-03-13,Johannes,Nudel mit Thunfischsoße,Spiegelei,Röstkartoffeln,0,0,xlsx
+2026-03-13,Johannes Paul III,Aglio Olio,Scombri,Plent,0,0,xlsx
+2026-03-13,Noah,Aglio Olio,Scombri,Plent,0,0,xlsx
+2026-03-16,Andreas,Arrabbiata,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-03-16,Johannes,Amatriciana,Champignonschnitzel,Reis,3,3,xlsx
+2026-03-16,Johannes Paul III,Amatriciana,Champignonschnitzel,Reis,3,3,xlsx
+2026-03-16,Noah,Amatriciana,Champignonschnitzel,Reis,3,3,xlsx
+2026-03-17,Andreas,Tortellini mit Schinken-Rahm,Schweinsfilet,Kroketten,1,1,xlsx
+2026-03-17,Johannes,Tortellini mit Schinken-Rahm,Knödel,Gulasch,1,1,xlsx
+2026-03-17,Johannes Paul III,Tortellini mit Schinken-Rahm,Knödel,Gulasch,1,1,xlsx
+2026-03-17,Noah,Spinatspatzlen,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-03-18,Andreas,Hirten,Truthahngeschnetzeltes,Kartoffelgratin,0,0,xlsx
+2026-03-18,Johannes,Gnocchi mit Tomatensoße,Ossobuchi,Spatzlen,0,0,xlsx
+2026-03-18,Johannes Paul III,Gnocchi mit Tomatensoße,Ossobuchi,Spatzlen,0,0,xlsx
+2026-03-19,Andreas,Lasagne,Schweinsgulasch,Püree,0,0,xlsx
+2026-03-19,Johannes,Spinatspatzlen,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-03-19,Noah,Lasagne,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-03-20,Andreas,Nudel mit Meeresfrüchte,Spiegelei,Röstkartoffeln,0,0,xlsx
+2026-03-20,Johannes,Nudel mit Ragu,Wienerschnitzel,Pommes,0,0,xlsx
+2026-03-20,Noah,Spinatspatzlen,Scombri,Plent,0,0,xlsx
+2026-03-23,Andreas,Arrabbiata,Gulasch,Reis,0.5,0.5,xlsx
+2026-03-23,Johannes,Nudel mit Käsesoße,Zigeunerschnitzel,Reis,1.5,1.5,xlsx
+2026-03-23,Johannes Paul III,Nudel mit Käsesoße,Schweinsfilet,Reis,1.5,1.5,xlsx
+2026-03-23,Noah,Nudel mit Ragu,Truthahngeschnetzeltes,Reis,0.5,0.5,xlsx
+2026-03-24,Johannes,Spinatspatzlen,Hühnerbrust,Püree,0.5,0.5,xlsx
+2026-03-24,Johannes Paul III,Carbonara,Truthahnschnitzel,Kartoffelgratin,0,0,xlsx
+2026-03-24,Noah,Carbonara,Truthahnschnitzel,Kartoffelgratin,0,0,xlsx
+2026-03-25,Andreas,Spinatspatzlen,Wienerschnitzel,Pommes,0,0,xlsx
+2026-03-25,Johannes,Carbonara,Schweinsschopf,Ofenkartoffeln,0,0,xlsx
+2026-03-25,Johannes Paul III,Spinatspatzlen,Chilli con carne,Kartoffelsalat,0,0,xlsx
+2026-03-25,Noah,Schlutzer,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-03-26,Andreas,Ravioli mit Parmesan-Butter,Cordon Bleu,Kartoffelsalat,1,1,xlsx
+2026-03-26,Johannes,Spinatspatzlen,Wienerschnitzel,Kartoffelsalat,0.5,0.5,xlsx
+2026-03-26,Johannes Paul III,Ravioli mit Parmesan-Butter,Wienerschnitzel,Pommes,0,0,xlsx
+2026-03-26,Noah,Amatriciana,Chilli con carne,Reis,0,0,xlsx
+2026-03-27,Andreas,Nudel mit Meeresfrüchte,Spiegelei,Röstkartoffeln,0,0,xlsx
+2026-03-27,Johannes,Nudel mit Thunfischsoße,Forellenfilet,Salzkartoffeln,0,0,xlsx
+2026-03-27,Johannes Paul III,Spinatcannelloni,Scombri,Plent,0.5,0.5,xlsx
+2026-03-27,Noah,Spinatspatzlen,Scombri,Plent,0.5,0.5,xlsx
+2026-03-30,Andreas,Arrabbiata,Champignonschnitzel,Reis,1,1,xlsx
+2026-03-30,Johannes,Arrabbiata,Zigeunerschnitzel,Reis,1,1,xlsx
+2026-03-30,Johannes Paul III,Amatriciana,Champignonschnitzel,Reis,0,0,xlsx
+2026-03-30,Noah,Amatriciana,Champignonschnitzel,Reis,0,0,xlsx
+2026-03-31,Andreas,Schlutzer,Hühnerbrust,Pommes,1,1,xlsx
+2026-03-31,Johannes,Spinatspatzlen,Hühnerbrust,Ofenkartoffeln,0,0,xlsx
+2026-03-31,Johannes Paul III,Schlutzer,Hühnerbrust,Kartoffelsalat,1,1,xlsx
+2026-03-31,Noah,Spinatspatzlen,Hühnerbrust,Ofenkartoffeln,0,0,xlsx
+2026-04-01,Andreas,Carbonara,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-04-01,Johannes,Carbonara,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-04-01,Johannes Paul III,Spinatspatzlen,Chilli con carne,Reis,1,1,xlsx
+2026-04-01,Noah,Nudel mit Käsesoße,Champignonschnitzel,Reis,1.5,1.5,xlsx
+2026-04-02,Andreas,Lasagne,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-04-02,Johannes,Pizza,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-04-02,Johannes Paul III,Nudel mit Salsiccia-Ragu,Schweinsfilet,Pommes,0.5,0.5,xlsx
+2026-04-02,Noah,Pizzastrudel,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-04-03,Andreas,Nudel mit Meeresfrüchte,Frittiertes Pengasiusfilet,Salzkartoffeln,0.5,0.5,xlsx
+2026-04-03,Johannes,Nudel mit Meeresfrüchten,Forellenfilet,Salzkartoffeln,0,0,xlsx
+2026-04-03,Johannes Paul III,Nudel mit Thunfisch,Forellenfilet,Salzkartoffeln,0,0,xlsx
+2026-04-03,Noah,Nudel mit Thunfisch,Forellenfilet,Salzkartoffeln,0,0,xlsx
+2026-04-07,Andreas,Tortellini mit Schinken-Rahm,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-04-07,Johannes,Amatriciana,Champignonschnitzel,Reis,0,0,xlsx
+2026-04-07,Johannes Paul III,Arrabbiata,Champignonschnitzel,Reis,0,0,xlsx
+2026-04-07,Noah,Arrabbiata,Champignonschnitzel,Reis,0,0,xlsx
+2026-04-08,Andreas,Nudel mit Käsesoße,Chilli con carne,Reis,0.5,0.5,xlsx
+2026-04-08,Johannes,Carbonara,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-04-08,Johannes Paul III,Spinatspatzlen,Zwiebelrostbraten,Spatzlen,0,0,xlsx
+2026-04-08,Noah,Amatriciana,Zigeunerschnitzel,Püree,0,0,xlsx
+2026-04-09,Andreas,Aglio Olio,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-04-09,Johannes,Nudel Mammarosa,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-04-09,Johannes Paul III,Nudel mit Pesto,Gulasch,Plent,0,0,xlsx
+2026-04-09,Noah,Hirten,Chilli con carne,Reis,0,0,xlsx
+2026-04-10,Andreas,Carbonara,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-04-10,Johannes,Carbonara,Hühnerhaxlen,Pommes,1,1,xlsx
+2026-04-10,Johannes Paul III,Lasagne,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-04-10,Noah,Lasagne,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-04-13,Andreas,Amatriciana,Champignonschnitzel,Reis,1,1,xlsx
+2026-04-13,Johannes,Lasagne,Champignonschnitzel,Reis,1,1,xlsx
+2026-04-13,Johannes Paul III,Aglio Olio,Truthahnbraten,Reis,1.5,1.5,xlsx
+2026-04-13,Noah,Amatriciana,Champignonschnitzel,Reis,1,1,xlsx
+2026-04-14,Andreas,Spinatspatzlen,Hühnerbrust,Pommes,0,0,xlsx
+2026-04-14,Johannes,Hirten,Schweinsschopf,Ofenkartoffeln,0,0,xlsx
+2026-04-14,Johannes Paul III,Tortellini mit Schinken-Rahm,Schweinsschopf,Ofenkartoffeln,0,0,xlsx
+2026-04-14,Noah,Hirten,Hühnerbrust,Ofenkartoffeln,0,0,xlsx
+2026-04-15,Andreas,Hirten,Wienerschnitzel,Kartoffelsalat,1,1,xlsx
+2026-04-15,Johannes,Nudel Mammarosa,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2026-04-15,Johannes Paul III,Spinatspatzlen,Chilli con carne,Pommes,0.5,0.5,xlsx
+2026-04-15,Noah,Aglio Olio,Schweinsfilet,Püree,0,0,xlsx
+2026-04-16,Andreas,Nudel Mammarosa,Cordon Bleu,Kroketten,0,0,xlsx
+2026-04-16,Johannes,Carbonara,Knödel,Gulasch,0,0,xlsx
+2026-04-16,Johannes Paul III,Pizzastrudel,Knödel,Kroketten,0,0,xlsx
+2026-04-16,Noah,Arrabbiata,Hühnerbrust,Kartoffelsalat,0,0,xlsx
+2026-04-17,Andreas,Nudel mit Käsesoße,Gekochtes Rindfleisch,Röstkartoffeln,0.5,0.5,xlsx
+2026-04-17,Johannes,Pizzastrudel,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-04-17,Johannes Paul III,Arrabbiata,Leberkas,Kartoffelsalat,0.5,0.5,xlsx
+2026-04-17,Noah,Nudel mit Käsesoße,Wienerschnitzel,Kartoffelgratin,0,0,xlsx
+2026-04-20,Andreas,Nudel mit Thunfischsoße,Zigeunerschnitzel,Reis,0,0,xlsx
+2026-04-20,Johannes,Nudel Mammarosa,Zigeunerschnitzel,Reis,0,0,xlsx
+2026-04-20,Johannes Paul III,Aglio Olio,Truthahnschnitzel,Reis,0,0,xlsx
+2026-04-20,Noah,Amatriciana,Schweinsschnitzel mit Kräuterrahmsoße,Reis,0,0,xlsx
+2026-04-21,Andreas,Nudel mit Käsesoße,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2026-04-21,Johannes,Schlutzer,Currywurst,Pommes,0.5,0.5,xlsx
+2026-04-21,Johannes Paul III,Gnocchi mit Käsesoße,Truthahngeschnetzeltes,Spatzlen,0,0,xlsx
+2026-04-21,Noah,Schlutzer,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-04-22,Andreas,Carbonara,Chilli con carne,Reis,1,1,xlsx
+2026-04-22,Johannes,Nudel mit Käsesoße,Gulasch,Reis,0.5,0.5,xlsx
+2026-04-22,Johannes Paul III,Schlutzer,Chilli con carne,Reis,1,1,xlsx
+2026-04-22,Noah,Nudel mit Käsesoße,Chilli con carne,Reis,1,1,xlsx
+2026-04-23,Andreas,Nudel mit Ragu,Schweinsfilet,Kroketten,0,0,xlsx
+2026-04-23,Johannes,Nudel Mammarosa,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-04-23,Johannes Paul III,Nudel mit Ragu,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-04-23,Noah,Carbonara,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-04-24,Andreas,Aglio Olio,Wienerschnitzel,Pommes,0,0,xlsx
+2026-04-24,Johannes,Nudel mit Thunfischsoße,Cordon Bleu,Kartoffelsalat,0,0,xlsx
+2026-04-24,Johannes Paul III,Nudel mit Thunfischsoße,Schollenfilet,Röstkartoffeln,0,0,xlsx
+2026-04-24,Noah,Aglio Olio,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-04-27,Andreas,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-04-27,Johannes,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-04-27,Johannes Paul III,Amatriciana,Truthahngeschnetzeltes,Kartoffelsalat,0,0,xlsx
+2026-04-27,Noah,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-04-28,Andreas,Schlutzer,Currywurst,Pommes,0,0,xlsx
+2026-04-28,Johannes,Käseknödel,Wienerschnitzel,Pommes,0,0,xlsx
+2026-04-28,Johannes Paul III,Käseknödel,Truthahnbraten,Pommes,0,0,xlsx
+2026-04-28,Noah,Schlutzer,Truthahnbraten,Kartoffelgratin,0,0,xlsx
+2026-04-29,Andreas,Nudel mit Thunfischsoße,Wienerschnitzel,Kartoffelsalat,1,1,xlsx
+2026-04-29,Johannes,Amatriciana,Currywurst,Kartoffelsalat,0,0,xlsx
+2026-04-29,Johannes Paul III,Hirten,Schweinsfilet,Kartoffelsalat,0,0,xlsx
+2026-04-29,Noah,Hirten,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-04-30,Andreas,Lasagne,Schweinsschopfbraten,Spatzlen,0,0,xlsx
+2026-04-30,Johannes,Spinatspatzlen,Wienerschnitzel,Pommes,0,0,xlsx
+2026-04-30,Johannes Paul III,Lasagne,Wienerschnitzel,Spatzlen,0,0,xlsx
+2026-04-30,Noah,Lasagne,Leberkas,Kartoffelsalat,0,0,xlsx
+2026-05-04,Andreas,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-05-04,Johannes,Hirten,Zigeunerschnitzel,Reis,0.5,0.5,xlsx
+2026-05-04,Johannes Paul III,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-05-04,Noah,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-05-05,Andreas,Ravioli mit Parmesan-Butter,Currywurst,Pommes,0,0,xlsx
+2026-05-05,Johannes,Spinatspatzlen,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2026-05-05,Johannes Paul III,Lasagne,Schweinsfilet,Püree,0,0,xlsx
+2026-05-05,Noah,Schlutzer,Truthahnbraten,Püree,0,0,xlsx
+2026-05-06,Andreas,Gnocchi mit Tomatensoße,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2026-05-06,Johannes,Käseknödel,1/2 Brathuhn,Ofenkartoffeln,1,1,xlsx
+2026-05-06,Johannes Paul III,Aglio Olio,Schweinskotelett,Spatzlen,0.5,0.5,xlsx
+2026-05-06,Noah,Ravioli mit Parmesan-Butter,Schweinsfilet,Spatzlen,0.5,0.5,xlsx
+2026-05-07,Andreas,Lasagne,Hühnnerhaxlen,Kroketten,1,1,xlsx
+2026-05-07,Johannes,Lasagne,Leberkas,Röstkartoffeln,1,1,xlsx
+2026-05-07,Johannes Paul III,Amatriciana,Schweinsschopf,Ofenkartoffeln,0,0,xlsx
+2026-05-07,Noah,Amatriciana,Truthahnbraten,Kartoffelgratin,0,0,xlsx
+2026-05-08,Andreas,Ravioli mit Parmesan-Butter,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-05-08,Johannes,Nudel mit Lachs,Currywurst,Pommes,0,0,xlsx
+2026-05-08,Johannes Paul III,Nudel mit Thunfischsoße,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2026-05-08,Noah,Aglio Olio,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-05-11,Andreas,Nudel Mammarosa,Champignonschnitzel,Reis,0,0,xlsx
+2026-05-11,Johannes,Amatriciana,Champignonschnitzel,Reis,1,1,xlsx
+2026-05-11,Johannes Paul III,Arrabbiata,Hühnerbrust,Reis,0,0,xlsx
+2026-05-11,Noah,Amatriciana,Champignonschnitzel,Reis,1,1,xlsx
+2026-05-12,Andreas,Nudel mit Käsesoße,Chilli con carne,Pommes,0,0,xlsx
+2026-05-12,Johannes,Schlutzer,Truthahnbraten,Kartoffelgratin,0,0,xlsx
+2026-05-12,Johannes Paul III,Spinatspatzlen,Schweinsfilet,Kartoffelsalat,0,0,xlsx
+2026-05-12,Noah,Schlutzer,Chilli con carne,Püree,0.5,0.5,xlsx
+2026-05-13,Andreas,Spinatspatzlen,Wienerschnitzel,Reis,0,0,xlsx
+2026-05-13,Johannes,Spinatspatzlen,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-05-13,Johannes Paul III,Nudel mit Thunfischsoße,Champignonschnitzel,Reis,0,0,xlsx
+2026-05-13,Noah,Spinatspatzlen,Champignonschnitzel,Reis,0,0,xlsx
+2026-05-14,Andreas,Carbonara,Schweinsfilet,Kroketten,0,0,xlsx
+2026-05-14,Johannes,Nudel Mammarosa,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-05-14,Johannes Paul III,Lasagne,Truthahngeschnetzeltes,Ofenkartoffeln,0,0,xlsx
+2026-05-14,Noah,Carbonara,Truthahngeschnetzeltes,Kartoffelgratin,0,0,xlsx
+2026-05-15,Andreas,Gnocchi mit Tomatensoße,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-05-15,Johannes,Pizzastrudel,Hauswurst,Plent,0,0,xlsx
+2026-05-15,Johannes Paul III,Carbonara,Schweinsfilet,Salzkartoffeln,0,0,xlsx
+2026-05-15,Noah,Nudel mit Thunfisch,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-05-18,Andreas,Nudel mit Käsesoße,Hühnerbrust,Ofenkartoffeln,0,0,xlsx
+2026-05-18,Johannes,Hirten,Champignonschnitzel,Reis,0,0,xlsx
+2026-05-18,Johannes Paul III,Hirten,Champignonschnitzel,Reis,0,0,xlsx
+2026-05-18,Noah,Nudel mit Käsesoße,Champignonschnitzel,Reis,0,0,xlsx
+2026-05-19,Andreas,Hirten,Champignonschnitzel,Reis,0,0,xlsx
+2026-05-19,Johannes,Carbonara,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-05-19,Johannes Paul III,Lasagne,Wienerschnitzel,Püree,0,0,xlsx
+2026-05-19,Noah,Spinatspatzlen,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-05-20,Andreas,Nudel mit Ragu,Wienerschnitzel,Pommes,0,0,xlsx
+2026-05-20,Johannes,Hirten,Schweinsschopf,Ofenkartoffeln,0,0,xlsx
+2026-05-20,Johannes Paul III,Hirten,Champignonschnitzel,Kartoffelsalat,0,0,xlsx
+2026-05-20,Noah,Pizzastrudel,Champignonschnitzel,Reis,0,0,xlsx
+2026-05-21,Andreas,Lasagne,Schweinsgulasch,Reis,0.5,0.5,xlsx
+2026-05-21,Johannes,Carbonara,Schweinsschopfbraten,Reis,0.5,0.5,xlsx
+2026-05-21,Johannes Paul III,Schlutzer,Cordon Bleu,Reis,0.5,0.5,xlsx
+2026-05-21,Noah,Hirten,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-05-22,Andreas,Carbonara,Hauswurst,Plent,0,0,xlsx
+2026-05-22,Johannes,Nudel Mammarosa,Hauswurst,Plent,0,0,xlsx
+2026-05-22,Johannes Paul III,Nudel mit Thunfischsoße,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-05-22,Noah,Carbonara,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-05-26,Johannes,Amatriciana,Schweinschopf,Ofenkartoffeln,0,0,xlsx
+2026-05-26,Johannes Paul III,Hirten,Wienerschnitzel,Kartoffelsalat,1,1,xlsx
+2026-05-26,Noah,Amatriciana,Schweinschopf,Ofenkartoffeln,0,0,xlsx
+2026-05-27,Andreas,Ravioli mit Parmesan-Butter,Currywurst,Pommes,0.5,0.5,xlsx
+2026-05-27,Johannes,Lasagne,Zigeunerschnitzel,Reis,0,0,xlsx
+2026-05-27,Johannes Paul III,Käseknödel,Cordon Bleu,Reis,0,0,xlsx
+2026-05-27,Noah,Lasagne,Zigeunerschnitzel,Reis,0,0,xlsx
+2026-05-28,Andreas,Nudel Mammarosa,Truthahnschnitzel,Reis,0,0,xlsx
+2026-05-28,Johannes,Nudel mit Käsesoße,Vitello tonnato,Salzkartoffeln,0.5,0.5,xlsx
+2026-05-28,Johannes Paul III,Nudel Mammarosa,Truthahnschnitzel,Salzkartoffeln,0,0,xlsx
+2026-05-28,Noah,Nudel mit Käsesoße,Vitello tonnato,Salzkartoffeln,0.5,0.5,xlsx
+2026-05-29,Andreas,Pizzastrudel,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-05-29,Johannes,Nudel mit Thunfischsoße,Cordon Bleu,Pommes,0,0,xlsx
+2026-05-29,Noah,Nudel mit Thunfischsoße,Cordon Bleu,Pommes,0,0,xlsx
+2026-06-03,Andreas,Amatriciana,Wienerschnitzel,Pommes,0,0,xlsx
+2026-06-03,Johannes,Amatriciana,Chmpignonschnitzel,Reis,0,0,xlsx
+2026-06-03,Noah,Amatriciana,Chmpignonschnitzel,Reis,0,0,xlsx
+2026-06-04,Andreas,Lasagne,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-06-05,Andreas,Nudel mit Thunfischsoße,Currywurst,Pommes,1.5,1.5,xlsx
+2026-06-05,Johannes,Nudel mit Lachssoße,Cordon Bleu,Pommes,0.5,0.5,xlsx
+2026-06-05,Johannes Paul III,Aglio olio,Hauswurst,Plent,0,0,xlsx
+2026-06-05,Noah,Nudel mit Lachssoße,Cordon Bleu,Pommes,0.5,0.5,xlsx
+2026-06-08,Andreas,Arrabbiata,Hühnerbrust,Kroketten,1,1,xlsx
+2026-06-08,Johannes,Nudelsalat,Truthahngeschnetzeltes,Reis,0.5,0.5,xlsx
+2026-06-08,Johannes Paul III,Nudelsalat,Truthahngeschnetzeltes,Reis,0.5,0.5,xlsx
+2026-06-08,Noah,Arrabbiata,Hühnerbrust,Kroketten,1,1,xlsx
+2026-06-09,Andreas,Tortellini mit Schinken-Rahm,Currywurst,Pommes,1,1,xlsx
+2026-06-09,Johannes,Carbonara,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2026-06-09,Johannes Paul III,Hirten,Hühnerbrust,Püree,0.5,0.5,xlsx
+2026-06-09,Noah,Lasagne,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-06-10,Andreas,Gnocchi mit Tomatensoße,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-06-10,Johannes,Hirten,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-06-10,Johannes Paul III,Käseknödel,Truthahnschnitzel,Bratkartoffel,0,0,xlsx
+2026-06-10,Noah,Carbonara,Schweinsfilet,Ofenkaroffel,0,0,xlsx
+2026-06-11,Andreas,Lasagne,Currywurst,Pommes,1,1,xlsx
+2026-06-11,Johannes,Käseknödel,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-06-11,Johannes Paul III,Lasagne,Currywurst,Pommes,1,1,xlsx
+2026-06-11,Noah,Hirten,Wienerschnitzel,Püree,0,0,xlsx
+2026-06-12,Andreas,Schlutzer,Schweinsschopfbraten,Kroketten,0.5,0.5,xlsx
+2026-06-12,Johannes,Lasagne,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-06-12,Johannes Paul III,Nudel mit Thunfischsoße,Truthahnschnitzel,Plent,0.5,0.5,xlsx
+2026-06-12,Noah,Lasagne,Truthahngeschnetzeltes,Salzkartoffeln,0,0,xlsx
+2026-06-15,Andreas,Nudel mit Salsiccia-Ragu,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-06-15,Johannes,Reissalat,Schweinsfilet,Reis,0.5,0.5,xlsx
+2026-06-15,Johannes Paul III,Nudel mit Thunfischsoße,Schweinsschnitzel,Reis,0.5,0.5,xlsx
+2026-06-15,Noah,Hirten,Schweinsfilet,Reis,0.5,0.5,xlsx
+2026-06-16,Andreas,Spinatspatzlen,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-06-16,Johannes,Lasagne,Wienerschnitzel,Pommes,1,1,xlsx
+2026-06-16,Johannes Paul III,Hirten,Hühnerbrust,Spatzlen,0,0,xlsx
+2026-06-16,Noah,Carbonara,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-06-17,Andreas,Ravioli mit Parmesan-Butter,Cordon Bleu,Kartoffelsalat,1,1,xlsx
+2026-06-17,Johannes,Schlutzer,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-06-17,Johannes Paul III,Schlutzer,Chilli con carne,Pommes,0,0,xlsx
+2026-06-17,Noah,Schlutzer,Leberkas,Kartoffelgratin,0,0,xlsx
+2026-06-18,Andreas,Schlutzer,Schweinsfilet,Kroketten,0.5,0.5,xlsx
+2026-06-18,Johannes,Reissalat,Schweinsfilet,Püree,0.5,0.5,xlsx
+2026-06-18,Johannes Paul III,Hirten,Hühnerbrust,Reis,0,0,xlsx
+2026-06-18,Noah,Hirten,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-06-19,Andreas,Carbonara,Hühnerhaxlen,Kartoffelgratin,0,0,xlsx
+2026-06-19,Johannes,Hirten,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-06-19,Johannes Paul III,Schlutzer,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-06-19,Noah,Carbonara,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-06-22,Andreas,Nudel mit Käsesoße,Champignonschnitzel,Reis,0,0,xlsx
+2026-06-22,Johannes,Nudel mit Käsesoße,Champignonschnitzel,Reis,0,0,xlsx
+2026-06-22,Johannes Paul III,Arrabbiata,Chilli con carne,Reis,0,0,xlsx
+2026-06-22,Noah,Amatriciana,Champignonschnitzel,Reis,0,0,xlsx
+2026-06-23,Andreas,Amatriciana,Schweinschopf,Spatzlen,0,0,xlsx
+2026-06-23,Johannes,Amatriciana,Schweinschopf,Spatzlen,0,0,xlsx
+2026-06-23,Johannes Paul III,Lasagne,Currywurst,Bratkartoffeln,0.5,0.5,xlsx
+2026-06-23,Noah,Amatriciana,Schweinschopf,Spatzlen,0,0,xlsx
+2026-06-24,Andreas,Ravioli mit Parmesan-Butter,Chilli con carne,Reis,0.5,0.5,xlsx
+2026-06-24,Johannes,Ravioli mit Parmesan-Butter,Chilli con carne,Reis,0.5,0.5,xlsx
+2026-06-24,Johannes Paul III,Ravioli mit Parmesan-Butter,Pizzaioloschnitzel,Kartoffelsalat,0,0,xlsx
+2026-06-24,Noah,Ravioli mit Parmesan-Butter,Chilli con carne,Reis,0.5,0.5,xlsx
+2026-06-25,Andreas,Nudel mit Käsesoße,Schweinsfilet,Kroketten,0,0,xlsx
+2026-06-25,Johannes,Nudel mit Käsesoße,Schweinsfilet,Kroketten,0,0,xlsx
+2026-06-25,Johannes Paul III,Nudel Mammarosa,Hühnerbrust,Spatzlen,0,0,xlsx
+2026-06-25,Noah,Nudel mit Käsesoße,Schweinsfilet,Kroketten,0,0,xlsx
+2026-06-26,Andreas,Algio Olio,Wienerschnitzel,Kartoffelsalat,0.5,0.5,xlsx
+2026-06-26,Johannes,Algio Olio,Wienerschnitzel,Kartoffelsalat,0.5,0.5,xlsx
+2026-06-26,Johannes Paul III,Nudel mit Thunfischsoße,Spareribs,Pommes,0,0,xlsx
+2026-06-26,Noah,Algio Olio,Wienerschnitzel,Kartoffelsalat,0.5,0.5,xlsx
+2026-06-29,Andreas,Nudel mit Thunfischsoße,Champignonschnitzel,Kartoffelgratin,0,0,xlsx
+2026-06-29,Johannes,Nudel mit Thunfischsoße,Champignonschnitzel,Kartoffelgratin,0,0,xlsx
+2026-06-29,Johannes Paul III,Nudel mit Käsesoße,Champignonschnitzel,Reis,1,1,xlsx
+2026-06-29,Noah,Nudel mit Thunfischsoße,Champignonschnitzel,Kartoffelgratin,0,0,xlsx
+2026-06-30,Andreas,Nudel mit Ragu,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-06-30,Johannes,Nudel mit Ragu,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-06-30,Johannes Paul III,Tortellini mit Schinken-Rahm,Hühnerbrust,Ofenkartoffeln,0,0,xlsx
+2026-06-30,Noah,Nudel mit Ragu,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-07-01,Andreas,Nudel mit Thunfischsoße,Truthahnschnitzel,Kartoffelsalat,0,0,xlsx
+2026-07-01,Johannes,Nudel mit Thunfischsoße,Truthahnschnitzel,Kartoffelsalat,0,0,xlsx
+2026-07-01,Johannes Paul III,Hirten,Schweinskotelett,Reis,0,0,xlsx
+2026-07-01,Noah,Nudel mit Thunfischsoße,Truthahnschnitzel,Kartoffelsalat,0,0,xlsx
+2026-07-02,Andreas,Schlutzer,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2026-07-02,Johannes,Schlutzer,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2026-07-02,Johannes Paul III,Aglio Olio,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-07-02,Noah,Schlutzer,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2026-07-03,Andreas,Aglio Olio,Truthahngeschnetzeltes,Reis,0.5,0.5,xlsx
+2026-07-03,Johannes,Aglio Olio,Truthahngeschnetzeltes,Reis,0.5,0.5,xlsx
+2026-07-03,Johannes Paul III,Carbonara,Truthahnschnitzel,Reis,0.5,0.5,xlsx
+2026-07-03,Noah,Aglio Olio,Truthahngeschnetzeltes,Reis,0.5,0.5,xlsx
+2026-07-06,Andreas,Hirten,Champignonschnitzel,Kartoffelgratin,0,0,xlsx
+2026-07-06,Johannes,Hirten,Champignonschnitzel,Kartoffelgratin,0,0,xlsx
+2026-07-06,Johannes Paul III,Amatriciana,Champignonschnitzel,Reis,0,0,xlsx
+2026-07-06,Noah,Arrabbiata,Champignonschnitzel,Reis,1,1,xlsx
+2026-07-07,Andreas,Tortellini mit Schinken-Rahm,Hühnerbrust,Reis,0.5,0.5,xlsx
+2026-07-07,Johannes,Carbonara,Zigeunerschnitzel,Reis,0.5,0.5,xlsx
+2026-07-07,Johannes Paul III,Schlutzer,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-07-07,Noah,Nudel mit Käsesoße,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-07-08,Andreas,Spinatspatzlen,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-07-08,Johannes,Tortellini mit Schinken-Rahm,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-07-08,Johannes Paul III,Nudel mit Käsesoße,Schweinsschopf,Kartoffegratin,0,0,xlsx
+2026-07-08,Noah,Tortellini mit Schinken-Rahm,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2026-07-09,Andreas,Ravioli mit Parmesan-Butter,Currywurst,Wedges,0,0,xlsx
+2026-07-09,Johannes,Carbonara,Hühnerbrust,Spatzlen,0.5,0.5,xlsx
+2026-07-09,Johannes Paul III,Nudel mit Schinken-Rahm,Chilli con carne,Reis,0,0,xlsx
+2026-07-09,Noah,Schlutzer,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-07-10,Andreas,Gnocchi mit Käsesoße,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-07-10,Johannes,Nudel mit Thunfischsoße,Sparerips,Pommes,0.5,0.5,xlsx
+2026-07-10,Johannes Paul III,Spinatspatzlen,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-07-10,Noah,Spinatspatzlen,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-07-13,Andreas,Nudel mit Thunfischsoße,Chilli con carne,Reis,0,0,xlsx
+2026-07-13,Johannes,Amatriciana,Zigeunerschnitzel,Reis,0,0,xlsx
+2026-07-13,Johannes Paul III,Arrabbiata,Wienerschnitzel,Reis,0,0,xlsx
+2026-07-13,Noah,Amatriciana,Zigeunerschnitzel,Kartoffelgratin,0,0,xlsx
+2026-07-14,Andreas,Spinatspatzlen,Currywurst,Pommes,0,0,xlsx
+2026-07-14,Johannes,Gnocchi mit Käsesoße,Schweinsfilet,Kroketten,0,0,xlsx
+2026-07-14,Johannes Paul III,Lasagne,Champignonschnitzel,Kartoffelsalat,0,0,xlsx
+2026-07-14,Noah,Spinatspatzlen,Hühnerbrust,Reis,0,0,xlsx
+2026-07-15,Andreas,Nudel mit Ragu,Cordon Bleu,Kartoffelsalat,0,0,xlsx
+2026-07-15,Johannes,Carbonara,Chilli con carne,Reis,1,1,xlsx
+2026-07-15,Johannes Paul III,Nudel mit Ragu,Truthahngeschnetzeltes,Reis,0.5,0.5,xlsx
+2026-07-15,Noah,Carbonara,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-07-16,Andreas,Lasagne,Currywurst,Pommes,0.5,0.5,xlsx
+2026-07-16,Johannes,Gnocchi mit Käsesoße,Cordon Bleu,Pommes,0.5,0.5,xlsx
+2026-07-16,Johannes Paul III,Nudel mit Pesto,Hamburger,Pommes,0.5,0.5,xlsx
+2026-07-16,Noah,Amatriciana,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2026-07-17,Andreas,Spinatspatzlen,Hühnerbrust,Wedges,0,0,xlsx
+2026-07-17,Johannes,Nudel mit Thunfischsoße,Truthahnschnitzel,Kroketten,0,0,xlsx
+2026-07-17,Johannes Paul III,Tortellini mit Schinken-Rahm,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2026-07-17,Noah,Carbonara,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-07-20,Andreas,Nudel mit Käsesoße,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-07-20,Johannes,Nudel mit Käsesoße,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-07-20,Johannes Paul III,Arrabbiata,Schweinsschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-07-20,Noah,Arrabbiata,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-07-21,Andreas,Pizza,Hühnerbrust,Kroketten,0,0,xlsx
+2026-07-21,Johannes,Pizza,Hühnerbrust,Kroketten,0,0,xlsx
+2026-07-21,Johannes Paul III,Lasagne,Truthahnschnitzel,Bratkartoffeln,0,0,xlsx
+2026-07-21,Noah,Nudel mit Käsesoße,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-07-22,Andreas,Nudel mit Käsesoße,Currywurst,Pommes,0,0,xlsx
+2026-07-22,Johannes,Nudel mit Käsesoße,Currywurst,Pommes,0,0,xlsx
+2026-07-22,Johannes Paul III,Nudel mit Käsesoße,Currywurst,Pommes,0,0,xlsx
+2026-07-22,Noah,Nudel mit Ragu,Schweinsschopf,Kartoffelsalat,0.5,0.5,xlsx
+2026-07-23,Andreas,Pizza,Hühnerbrust,Kroketten,1,1,xlsx
+2026-07-23,Johannes,Pizza,Hühnerbrust,Kroketten,1,1,xlsx
+2026-07-23,Johannes Paul III,Hirten,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-07-23,Noah,Spinatspatzlen,Wienerschnitzel,Kroketten,0.5,0.5,xlsx
+2026-07-24,Andreas,Nudel mit Käsesoße,Currywurst,Pommes,0,0,xlsx
+2026-07-24,Johannes,Nudel mit Käsesoße,Currywurst,Pommes,0,0,xlsx
+2026-07-24,Johannes Paul III,Amatriciana,Cordon Bleu,Pommes,0,0,xlsx
+2026-07-24,Noah,Tortellini mit Schinken-Rahm,Leberkas,Kartoffelsalat,0,0,xlsx
+2026-07-27,Johannes Paul III,Arrabbiata,Schweinsschnitzel,Reis,0,0,xlsx
+2026-07-28,Johannes Paul III,Lasagne,Truthahngeschnetzeltes,Spatzlen,0,0,xlsx
+2026-07-28,Noah,Nudel mit Pesto,Schweinsfilet,Reis,1.5,1.5,xlsx
+2026-07-29,Johannes Paul III,Hirten,Schweinskotelett,Ofenkartoffeln,0,0,xlsx
+2026-07-29,Noah,Hirten,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2026-07-30,Andreas,Arrabbiata,Truthahnschnitzel,Pommes,1,1,xlsx
+2026-07-30,Johannes,Arrabbiata,Truthahnschnitzel,Pommes,1,1,xlsx
+2026-07-30,Johannes Paul III,Aglio olio,Schweinsfilet,Spatzlen,0,0,xlsx
+2026-07-30,Noah,Arrabbiata,Truthahnschnitzel,Pommes,1,1,xlsx
+2026-07-31,Andreas,Aglio Olio,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2026-07-31,Johannes,Aglio Olio,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2026-07-31,Noah,Aglio Olio,Hühnerhaxlen,Ofenkartoffeln,0,0,xlsx
+2026-08-03,Andreas,Nudel mit Käsesoße,Truthahngeschnetzeltes,Spatzlen / Reis,0.5,0.5,xlsx
+2026-08-03,Johannes,Arrabbiata,Champignonschnitzel,Spatzlen / Reis,0.5,0.5,xlsx
+2026-08-03,Johannes Paul III,Arrabbiata,Schweinsschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-08-03,Noah,Amatriciana,Champignonschnitzel,Spatzlen / Reis,0.5,0.5,xlsx
+2026-08-04,Andreas,Nudel Mammarosa,Currywurst,Pommes,0,0,xlsx
+2026-08-04,Johannes,Amatriciana,Vitello tonnato,Salzkartoffeln,0,0,xlsx
+2026-08-04,Johannes Paul III,Hirten,Truthahngeschnetzeltes,Püree,0.5,0.5,xlsx
+2026-08-04,Noah,Hirten,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2026-08-05,Johannes,Nudelsalat,Hühnerhaxlen,Pommes,0.5,0.5,xlsx
+2026-08-05,Johannes Paul III,Amatriciana,Chilli con carne,Reis,0,0,xlsx
+2026-08-05,Noah,Carbonara,Champignonschnitzel,Pommes,0.5,0.5,xlsx
+2026-08-06,Andreas,Lasagne,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-08-06,Johannes,Amatriciana,Chilli con carne,Reis,0,0,xlsx
+2026-08-06,Johannes Paul III,Hirten,Hühnerbrust,Kartoffelsalat,0,0,xlsx
+2026-08-06,Noah,Lasagne,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2026-08-07,Andreas,Tortellini mit Schinken-Rahm,Hühnerhaxlen,Wedges,0,0,xlsx
+2026-08-07,Johannes Paul III,Nudel mit Käsesoße,Wienerschnitzel,Reis,0,0,xlsx
+2026-08-07,Noah,Hirten,Chilli con carne,Kartoffelsalat,1,1,xlsx
+2026-08-24,Andreas,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-08-24,Johannes,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-08-24,Johannes Paul III,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-08-24,Noah,Amatriciana,Champignonschnitzel,Reis,0.5,0.5,xlsx
+2026-08-25,Andreas,Tortellini mit Schinken-Rahm,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-08-25,Johannes,Spinatspatzlen,Wienerschnitzel,Pommes,0,0,xlsx
+2026-08-25,Johannes Paul III,Lasagne,Truthahngeschnetzeltes,Püree,0.5,0.5,xlsx
+2026-08-25,Noah,Hirten,Truthahngeschnetzeltes,Püree,0.5,0.5,xlsx
+2026-08-26,Andreas,Schlutzer,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-08-26,Johannes,Lasagne,Hühnerbrust,Kroketten,0,0,xlsx
+2026-08-26,Johannes Paul III,Schlutzer,Schweinsschopf,Pommes,0.5,0.5,xlsx
+2026-08-26,Noah,Spinatspatzlen,Schweinsschopf,Spatzlen,0,0,xlsx
+2026-08-27,Andreas,Lasagne,Schweinsfilet,Kroketten,0,0,xlsx
+2026-08-27,Johannes,Carbonara,Schweinsschopf,Ofenkartoffeln,0,0,xlsx
+2026-08-27,Johannes Paul III,Nudel mit Ragu,Hühnerbrust,Kartoffelgratin,0,0,xlsx
+2026-08-27,Noah,Aglio Olio,Wienerschnitzel,Kartoffelgratin,1.5,1.5,xlsx
+2026-08-28,Andreas,Hirten,Truthahngeschnetzeltes,Kartoffelgratin,1,1,xlsx
+2026-08-28,Johannes,Lasagne,Schweinsfilet,Spatzlen,0.5,0.5,xlsx
+2026-08-28,Johannes Paul III,Nudel mit Thunfischsoße,Hauswurst,Spatzlen,0.5,0.5,xlsx
+2026-08-28,Noah,Hirten,Schweinsschopf,Spatzlen,1.5,1.5,xlsx
+2026-08-31,Andreas,Tortellini mit Schinken-Rahm,Champignonschnitzel,Spatzlen,0.5,0.5,xlsx
+2026-08-31,Johannes,Amatriciana,Champignonschnitzel,Reis,1,1,xlsx
+2026-08-31,Johannes Paul III,Nudel Mammarosa,Kräuterrahmschnitzel,Reis,1.5,1.5,xlsx
+2026-08-31,Noah,Amatriciana,Champignonschnitzel,Reis,1,1,xlsx
+2026-09-01,Andreas,Spinatspatzlen,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-09-01,Johannes,Gnocchi mit Käsesoße,Hühnerhaxlen,Pommes,0,0,xlsx
+2026-09-01,Johannes Paul III,Tortellini mit Schinken-Rahm,Hühnerbrust,Püree,1.5,1.5,xlsx
+2026-09-01,Noah,Carbonara,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-09-02,Andreas,Nudel mit Ragu,Wienerschnitzel,Kartoffelsalat,0.5,0.5,xlsx
+2026-09-02,Johannes,Lasagne,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-09-02,Johannes Paul III,Nudel mit Thunfischsoße,Schweinsschopf,Pommes,0,0,xlsx
+2026-09-02,Noah,Lasagne,Leberkas,Pommes,0,0,xlsx
+2026-09-03,Andreas,Lasagne,Schweinsfilet,Kroketten,0,0,xlsx
+2026-09-03,Johannes,Carbonara,Schweinsfilet,Püree,0,0,xlsx
+2026-09-03,Johannes Paul III,Lasagne,Truthahngeschnetzeltes,Spatzlen,0,0,xlsx
+2026-09-03,Noah,Hirten,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-09-04,Andreas,Carbonara,Leberkas,Püree,0,0,xlsx
+2026-09-04,Johannes,Lasagne,Truthahngeschnetzeltes,Ofenkartoffeln,0,0,xlsx
+2026-09-04,Johannes Paul III,Spinatcannelloni,Hauswurst,Plent,0,0,xlsx
+2026-09-04,Noah,Lasagne,Truthahnschnitzel,Kartoffelgratin,0,0,xlsx
+2026-09-07,Andreas,Nudel mit Käsesoße,Chilli con carne,Reis,0,0,xlsx
+2026-09-07,Johannes,Amatriciana,Schweinsfilet,Reis,0,0,xlsx
+2026-09-07,Johannes Paul III,Arrabbiata,Champignonschnitzel,Reis,0,0,xlsx
+2026-09-07,Noah,Amatriciana,Schweinsschnitzel mit Kräuterrahmsoße,Reis,0,0,xlsx
+2026-09-08,Andreas,Amatriciana,Champignonschnitzel,Spatzlen,0.5,0.5,xlsx
+2026-09-08,Johannes,Lasagne,Truthahnbraten,Püree,1,1,xlsx
+2026-09-08,Johannes Paul III,Lasagne,Truthahngeschnetzeltes,Spatzlen,3,3,xlsx
+2026-09-08,Noah,Hirten,Chili con carne,Püree,0,0,xlsx
+2026-09-09,Andreas,Nudel Mammarosa,Wienerschnitzel,Kartoffelsalat,1,1,xlsx
+2026-09-09,Johannes,Carbonara,Hauswurst,Plent,1,1,xlsx
+2026-09-09,Johannes Paul III,Nudel mit Käsesoße,Schweinskotelett,Reis,0,0,xlsx
+2026-09-09,Noah,Nudel mit Käsesoße,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-09-10,Andreas,Aglio Olio,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-09-10,Johannes,Aglio Olio,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-09-10,Johannes Paul III,Aglio Olio,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-09-10,Noah,Hirten,Truthahnschnitzel,Pommes,0,0,xlsx
+2026-09-11,Andreas,Carbonara,Schweinsfilet,Kroketten,0,0,xlsx
+2026-09-11,Johannes,Nudel mit Thunfischsoße,Wienerschnitzel,Kartoffelsalat,1,1,xlsx
+2026-09-11,Johannes Paul III,Spinatcannelloni,Cordon Bleu,Kroketten,0,0,xlsx
+2026-09-11,Noah,Carbonara,Schweinsschnitzel mit Kräuterrahmsoße,Kartoffelgratin,0,0,xlsx
+2026-09-14,Andreas,Amatriciana,Champignonschnitzel,Reis,0,0,xlsx
+2026-09-14,Johannes,Arrabbiata,Schweinsfilet,Reis,0,0,xlsx
+2026-09-14,Johannes Paul III,Carbonara,Champignonschnitzel,Reis,0,0,xlsx
+2026-09-14,Noah,Amatriciana,Champignonschnitzel,Reis,0,0,xlsx
+2026-09-15,Andreas,Tortellini mit Schinken-Rahm,Currywurst,Pommes,0,0,xlsx
+2026-09-15,Johannes,Schlutzer,Leberkas,Pommes,0,0,xlsx
+2026-09-15,Johannes Paul III,Tortellini mit Schinken-Rahm,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-09-15,Noah,Aglio Olio,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-09-16,Andreas,Spinatspatzlen,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-09-16,Johannes,Pilzrisotto,Sparerips,Röstinchen,0,0,xlsx
+2026-09-16,Johannes Paul III,Pizzastrudel,Lammbraten / Truthahnbraten,Püree,0.5,0.5,xlsx
+2026-09-16,Noah,Nudel mit Käsesoße,Leberkas,Pommes,0,0,xlsx
+2026-09-17,Andreas,Käseknödel,Cordon Bleu,Pommes,0,0,xlsx
+2026-09-17,Johannes Paul III,Aglio olio,Leberkas,Kartoffelsalat,0,0,xlsx
+2026-09-17,Noah,Aglio Olio,Currywurst,Kartoffelsalat,0,0,xlsx
+2026-09-18,Andreas,Nudel mit Salsiccia-Ragu,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-09-18,Johannes,Pilzrisotto,Sparerips,Pommes,0,0,xlsx
+2026-09-18,Johannes Paul III,Nudel mt Ragu,Currywurst,Pommes,0,0,xlsx
+2026-09-18,Noah,Tortellini mit Schinken-Rahm,Leberkas,Pommes,0,0,xlsx
+2026-09-21,Andreas,Amatriciana,Truthahnschnitzel,Pommes,0,0,xlsx
+2026-09-21,Johannes,Nudel mit Käsesoße,Schweinsschopf,Pommes,0,0,xlsx
+2026-09-21,Johannes Paul III,Nudel mit Käsesoße,Chilli con carne,Reis,0.5,0.5,xlsx
+2026-09-21,Noah,Nudel mit Käsesoße,Champignonschnitzel,Reis,1,1,xlsx
+2026-09-22,Andreas,Nudel mit Ragu,Currywurst,Kartoffelsalat,0,0,xlsx
+2026-09-22,Johannes,Amatriciana,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-09-22,Johannes Paul III,Tortellini mit Schinken-Rahm,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-09-22,Noah,Tortellini mit Schinken-Rahm,Hühnerbrust,Ofenkartoffeln,0,0,xlsx
+2026-09-23,Andreas,Spinatspatzlen,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2026-09-23,Johannes,Tortellini mit Schinken-Rahm,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-09-23,Johannes Paul III,Nudel mit Käsesoße,Currywurst,Röstkartoffeln,0,0,xlsx
+2026-09-23,Noah,Schlutzer,Cordon Bleu,Kartoffelsalat,0,0,xlsx
+2026-09-24,Andreas,Lasagne,Hauswurst,Plent,0,0,xlsx
+2026-09-24,Johannes,Spinatspatzlen,Schweinsschopf,Ofenkartoffeln,0,0,xlsx
+2026-09-24,Johannes Paul III,Schlutzer,Truthahngeschnetzeltes,Spatzlen (und Blaukraut),0.5,0.5,xlsx
+2026-09-24,Noah,Spinatspatzlen,Wienerschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-09-25,Andreas,Nudel mit Käsesoße,Cordon Bleu,Kartoffelsalat,0,0,xlsx
+2026-09-25,Johannes,Pilzrisotto,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
+2026-09-25,Johannes Paul III,Tortellini mit Schinken-Rahm,Truthahnschnitzel,Ofenkartoffeln,0,0,xlsx
+2026-09-25,Noah,Nudel mit Thunfischsoße,Cordon Bleu,Kartoffelsalat,0,0,xlsx
+2026-09-28,Andreas,Nudel mit Käsesoße,Truthahnschnitzel,Reis,0,0,xlsx
+2026-09-28,Johannes,Amatriciana,Wienerschnitzel,Pommes / Kartoffelsalat,1,1,xlsx
+2026-09-28,Johannes Paul III,Nudel mit Käsesoße,Schweinsschnitzel,Reis,0,0,xlsx
+2026-09-28,Noah,Spinatspatzlen,Schweinsschnitzel mit Kräuterrahmsoße,Ofenkartoffeln,0,0,xlsx
+2026-09-29,Andreas,Hirten,Champignonschnitzel,Püree,0,0,xlsx
+2026-09-29,Johannes,Hirten,Zigeunerschnitzel,Reis,0.5,0.5,xlsx
+2026-09-29,Johannes Paul III,Lasagne,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-09-29,Noah,Amatriciana,Truthahngeschnetzeltes,Spatzlen,0,0,xlsx
+2026-09-30,Andreas,Nudel mit Käsesoße,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2026-09-30,Johannes,Nudel mit Käsesoße,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2026-09-30,Johannes Paul III,Amatriciana,Schweinsfilet,Kartoffelgratin,0,0,xlsx
+2026-09-30,Noah,Lasagne,Champignonschnitzel,Püree,0,0,xlsx
+2026-10-01,Andreas,Nudel mit Thunfischsoße,Hühnerhaxlen,Pommes,1.5,1.5,xlsx
+2026-10-01,Johannes,Nudel mit Thunfischsoße,Hühnerhaxlen,Pommes,1.5,1.5,xlsx
+2026-10-01,Johannes Paul III,Aglio olio,Leberkas,Röstkartoffeln,0,0,xlsx
+2026-10-01,Noah,Aglio Olio,Hauswurst,Kraut,0,0,xlsx
+2026-10-02,Andreas,Ravioli mit Parmesan-Butter,Leberkas,Plent,0,0,xlsx
+2026-10-02,Johannes,Pizza,Hauswurst,Plent,0,0,xlsx
+2026-10-02,Johannes Paul III,Spinatcannelloni,Schweinsschnitzel,Kartoffelgratin,0,0,xlsx
+2026-10-02,Noah,Amatriciana,Knödel,Plent,0,0,xlsx
+2026-10-05,Andreas,Nudel mit Salsiccia-Ragu,Champignonschnitzel,Reis,1,1,xlsx
+2026-10-05,Johannes,Amatriciana,Zigeunerschnitzel,Reis,0.5,0.5,xlsx
+2026-10-05,Johannes Paul III,Amatriciana,Champignonschnitzel,Reis,1,1,xlsx
+2026-10-05,Noah,Amatriciana,Champignonschnitzel,Reis,1,1,xlsx
+2026-10-06,Andreas,Tortellini mit Schinken-Rahm,Currywurst,Pommes,1,1,xlsx
+2026-10-06,Johannes,Tortellini mit Schinken-Rahm,Truthahngeschnetzeltes,Spatzlen,1,1,xlsx
+2026-10-06,Johannes Paul III,Spinatcannelloni,Truthahngeschnetzeltes,Püree,0,0,xlsx
+2026-10-06,Noah,Schlutzer,Hühnerbrust,Ofenkartoffeln,0,0,xlsx
+2026-10-07,Andreas,Nudel Mammarosa,Hühnerbrust,Püree,0.5,0.5,xlsx
+2026-10-07,Johannes,Aglio Olio,Hauswurst,Plent,0,0,xlsx
+2026-10-07,Johannes Paul III,Amatriciana,Schweinsschnitzel,Kartoffelgratin,0,0,xlsx
+2026-10-07,Noah,Lasagne,Truthahngeschnetzeltes,Püree,1,1,xlsx
+2026-10-08,Andreas,Hirten,Currywurst,Pommes,0,0,xlsx
+2026-10-08,Johannes,Nudel Mammarosa,Leberkas,Pommes,0,0,xlsx
+2026-10-08,Johannes Paul III,Spinatcannelloni,Currywurst,Pommes,0,0,xlsx
+2026-10-08,Noah,Aglio Olio,Hauswurst,Kraut,0,0,xlsx
+2026-10-09,Noah,Nudel mit Pesto,Leberkas,Pommes,,,xlsx

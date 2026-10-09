@@ -1,0 +1,37 @@
+{
+  "me": "Johannes Paul III",
+  "player_aliases": {"Hannes": "Johannes"},
+  "timezone": "Europe/Rome",
+  "deadline": "12:00",
+  "season_end_mmdd": "12-23",
+
+  "scoring": {
+    "vorspeise": 1.0,
+    "hauptspeise": 0.5,
+    "beilage": 0.5,
+    "full_menu_total": 3.0,
+    "alt_options_count": true,
+    "_alt_options_count_doc": "true = jede angesagte Option zählt ('Pommes / Kartoffelsalat' -> Pommes ODER Kartoffelsalat richtig). So wird es im Excel gehandhabt (Regel 9.1/9.5). false = nur die erste Option."
+  },
+
+  "r4": {
+    "max_per_week": 2,
+    "consecutive_mode": "workday_adjacent_same_week",
+    "_consecutive_mode_doc": "workday_adjacent_same_week | calendar_adjacent | workday_adjacent_any",
+    "player": "me"
+  },
+
+  "fish": {
+    "group_outside_lent": true
+  },
+
+  "model": {
+    "default": "heuristic",
+    "half_life_days": 90,
+    "candidates_top_k": 15
+  },
+
+  "github": {
+    "branch": "main"
+  }
+}
