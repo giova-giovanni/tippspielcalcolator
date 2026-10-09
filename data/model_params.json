@@ -1,0 +1,150 @@
+{
+  "best_model": "ensemble",
+  "params": {
+    "half_life": {
+      "vorspeise": 1000.0,
+      "hauptspeise": 1000.0,
+      "beilage": 400.0
+    },
+    "alpha": {
+      "vorspeise": 0.5,
+      "hauptspeise": 0.5,
+      "beilage": 0.5
+    },
+    "hazard_mode": {
+      "vorspeise": "rel",
+      "hauptspeise": "rel",
+      "beilage": "rel"
+    },
+    "hazard_kappa": {
+      "vorspeise": 0.3,
+      "hauptspeise": 1.0,
+      "beilage": 3.0
+    },
+    "hazard_smooth": {
+      "vorspeise": 0.25,
+      "hauptspeise": 0.25,
+      "beilage": 0.25
+    },
+    "weekday_beta": {
+      "vorspeise": 12.0,
+      "hauptspeise": 12.0,
+      "beilage": 80.0
+    },
+    "season_beta": {
+      "vorspeise": 0.0,
+      "hauptspeise": 40.0,
+      "beilage": 40.0
+    },
+    "week_kappa": {
+      "vorspeise": 0.5,
+      "hauptspeise": 0.5,
+      "beilage": 2.0
+    },
+    "temperature": {
+      "vorspeise": 1.4,
+      "hauptspeise": 1.0,
+      "beilage": 1.4
+    },
+    "fish_kappa": 1.0,
+    "family_kappa": 0.0,
+    "new_half_life": 150.0,
+    "freq_half_life": 0.0,
+    "short_half_life": 15.0,
+    "pair_half_life": 500.0,
+    "pair_gamma": 0.3,
+    "beilage_mix": 0.3,
+    "ml_C": 0.03,
+    "ml_kind": "clogit",
+    "ml_refit_every": 5,
+    "ml_min_day": 20,
+    "ensemble_w": 0.7
+  },
+  "selection": {
+    "frequency": {
+      "tune_wll": 3.1556513427157755,
+      "val_wll": 3.229533822423363,
+      "tune_points": 20.5,
+      "val_points": 15.5,
+      "val_ppd": 0.1962
+    },
+    "heuristic": {
+      "tune_wll": 2.943818208455362,
+      "val_wll": 2.9575242400692794,
+      "tune_points": 41.0,
+      "val_points": 23.5,
+      "val_ppd": 0.2975
+    },
+    "ml": {
+      "tune_wll": 2.998472897229943,
+      "val_wll": 2.9429080660892284,
+      "tune_points": 29.0,
+      "val_points": 26.5,
+      "val_ppd": 0.3354
+    },
+    "ensemble": {
+      "tune_wll": 2.959738401275211,
+      "val_wll": 2.931144394059959,
+      "tune_points": 37.5,
+      "val_points": 28.0,
+      "val_ppd": 0.3544
+    }
+  },
+  "selection_rule": "heuristic: coordinate descent per category on tune-split log-loss, number of sweeps (0/1/2) chosen per category on validation log-loss; B|H mixing, ML regularisation and ensemble weight chosen on validation; model = lowest validation weighted log-loss (V 1, H 0.5, B 0.5). 2026 never used.",
+  "splits": {
+    "tune": "2025-01-13..2025-08-31",
+    "validation": "2025-09-01..2025-12-19",
+    "test": "2026-01-12..2026-12-23"
+  },
+  "n_configs": 68,
+  "tuned_at": "2026-10-09T09:53:04+00:00",
+  "tuning_seconds": 60.3,
+  "log": [
+    "sweep 1 half_life: v=1000.0, h=1000.0, b=1000.0  tune ll v=3.3071, h=3.1302, b=2.4884",
+    "sweep 1 hazard_mode: v=rel, h=rel, b=rel  tune ll v=3.2991, h=3.0758, b=2.4337",
+    "sweep 1 hazard_kappa: v=0.3, h=1.0, b=3.0  tune ll v=3.2886, h=3.0632, b=2.4337",
+    "sweep 1 hazard_smooth: v=0.25, h=0.25, b=0.25  tune ll v=3.2886, h=3.0632, b=2.4337",
+    "sweep 1 weekday_beta: v=12.0, h=12.0, b=30.0  tune ll v=3.2639, h=3.0360, b=2.3773",
+    "sweep 1 season_beta: v=0.0, h=40.0, b=40.0  tune ll v=3.2311, h=3.0268, b=2.3675",
+    "sweep 1 week_kappa: v=0.5, h=0.5, b=0.5  tune ll v=3.2296, h=3.0245, b=2.3673",
+    "sweep 1 temperature: v=1.4, h=1.0, b=1.4  tune ll v=3.2078, h=3.0245, b=2.3326",
+    "sweep 2 half_life: v=1000.0, h=1000.0, b=400.0  tune ll v=3.2078, h=3.0245, b=2.3324",
+    "sweep 2 hazard_mode: v=rel, h=rel, b=rel  tune ll v=3.2078, h=3.0245, b=2.3324",
+    "sweep 2 hazard_kappa: v=3.0, h=1.0, b=3.0  tune ll v=3.1922, h=3.0245, b=2.3324",
+    "sweep 2 hazard_smooth: v=0.25, h=0.25, b=0.25  tune ll v=3.1922, h=3.0245, b=2.3324",
+    "sweep 2 weekday_beta: v=12.0, h=12.0, b=80.0  tune ll v=3.1922, h=3.0245, b=2.3277",
+    "sweep 2 season_beta: v=0.0, h=40.0, b=40.0  tune ll v=3.1922, h=3.0245, b=2.3277",
+    "sweep 2 week_kappa: v=0.5, h=0.5, b=2.0  tune ll v=3.1922, h=3.0245, b=2.3275",
+    "sweep 2 temperature: v=1.4, h=1.0, b=1.4  tune ll v=3.1922, h=3.0245, b=2.3275",
+    "heuristic vorspeise: 1 sweeps chosen on validation (val ll 3.3826, 3.2250, 3.2280)",
+    "heuristic hauptspeise: 1 sweeps chosen on validation (val ll 3.3367, 3.1387, 3.1387)",
+    "heuristic beilage: 2 sweeps chosen on validation (val ll 2.4445, 2.2616, 2.2498)",
+    "beilage_mix=0.0 gamma=1.0 pair_hl=250.0: tune 2.3275 val 2.2498",
+    "beilage_mix=0.3 gamma=1.0 pair_hl=250.0: tune 2.3384 val 2.2466",
+    "beilage_mix=0.3 gamma=0.3 pair_hl=500.0: tune 2.3351 val 2.2415",
+    "beilage_mix=0.3 gamma=3.0 pair_hl=120.0: tune 2.3436 val 2.2536",
+    "beilage_mix=0.6 gamma=1.0 pair_hl=250.0: tune 2.3660 val 2.2684",
+    "beilage_mix=0.6 gamma=0.3 pair_hl=500.0: tune 2.3608 val 2.2595",
+    "beilage_mix=0.6 gamma=3.0 pair_hl=120.0: tune 2.3755 val 2.2813",
+    "beilage_mix=0.9 gamma=1.0 pair_hl=250.0: tune 2.4088 val 2.3116",
+    "beilage_mix=0.9 gamma=0.3 pair_hl=500.0: tune 2.4031 val 2.2998",
+    "beilage_mix=0.9 gamma=3.0 pair_hl=120.0: tune 2.4218 val 2.3300",
+    "frequency half_life=inf: val wll 3.2295",
+    "frequency half_life=100.0: val wll 3.2536",
+    "frequency half_life=250.0: val wll 3.2363",
+    "frequency half_life=500.0: val wll 3.2324",
+    "ml lr C=0.01: tune wll 3.0244 val wll 2.9599",
+    "ml lr C=0.03: tune wll 2.9979 val wll 2.9466",
+    "ml lr C=0.1: tune wll 3.0235 val wll 2.9577",
+    "ml clogit C=0.03: tune wll 2.9985 val wll 2.9429",
+    "ml clogit C=0.1: tune wll 3.0219 val wll 2.9541",
+    "ensemble w=0.3: val wll 2.9379",
+    "ensemble w=0.5: val wll 2.9316",
+    "ensemble w=0.7: val wll 2.9311",
+    "model frequency: val wll 3.2295 val points 15.5 (tune points 20.5)",
+    "model heuristic: val wll 2.9575 val points 23.5 (tune points 41.0)",
+    "model ml: val wll 2.9429 val points 26.5 (tune points 29.0)",
+    "model ensemble: val wll 2.9311 val points 28.0 (tune points 37.5)",
+    "best model (validation log-loss): ensemble"
+  ]
+}

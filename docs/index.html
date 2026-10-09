@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.github.com; font-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f6f5f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121211" media="(prefers-color-scheme: dark)">
+<meta name="description" content="Privates Tippspiel-Dashboard">
+<title>Tippspiel Essen</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="style.css">
+<script src="i18n.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#/heute" aria-label="Tippspiel">
+    <img src="icon.svg" alt="" width="28" height="28">
+    <span class="brand-text">Tippspiel</span>
+  </a>
+  <div class="top-actions">
+    <button type="button" class="icon-btn" id="btn-refresh" aria-label="Aktualisieren" title="Aktualisieren">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7"/></svg>
+    </button>
+    <button type="button" class="icon-btn" id="btn-theme" aria-label="Design" title="Design">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+    </button>
+    <button type="button" class="lang-btn" id="btn-lang" aria-label="Sprache / Lingua">
+      <span data-l="de">DE</span><span data-l="it">IT</span>
+    </button>
+  </div>
+</header>
+
+<div id="banner" class="banner-area" aria-live="polite"></div>
+<main id="view" class="view" tabindex="-1">
+  <div class="card loading-card"><div class="spinner" aria-hidden="true"></div><p>Lade …</p></div>
+  <noscript><div class="card"><p>Diese Seite braucht JavaScript. / Questa pagina richiede JavaScript.</p></div></noscript>
+</main>
+
+<nav class="tabbar" id="tabbar" aria-label="Navigation"></nav>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<div id="modal-root"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
