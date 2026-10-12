@@ -2079,6 +2079,22 @@
       function dishInput(c, id, val) {
         return h('input', { type: 'text', id: id, list: 'dl-' + c, value: val || '', autocomplete: 'off', autocapitalize: 'sentences', enterkeyhint: 'next', maxlength: '120' });
       }
+      // default dates are working days: on Sat/Sun the forms used to start on a (blocked) weekend date
+      var lastWorkday = function (iso) {
+        var x = iso, g = 0;
+        while (!ctx.r4.isWorkday(x) && g++ < 21) x = addDays(x, -1);
+        return x;
+      };
+      // menu: latest working day whose menu is still missing (today only once its deadline is over)
+      var defaultMenuDate = function () {
+        var x = ctx.r4.isWorkday(todayR) && Date.now() < deadlineFor(todayR, meta.deadline || '12:00') ? addDays(todayR, -1) : todayR;
+        for (var i = 0; i < 10; i++, x = addDays(x, -1)) {
+          if (!ctx.r4.isWorkday(x)) continue;
+          var m = menuOf(ctx, x);
+          if (!m || m.status === 'pending') return x;
+        }
+        return lastWorkday(todayR);
+      };
       function weekdayHint(dateInput, el) {
         var upd = function () {
           var d = dateInput.value;
@@ -2092,7 +2108,7 @@
       }
 
       // ---------------- (b) menu form
-      var mDate = h('input', { type: 'date', id: 'menu-date', value: todayR, required: true });
+      var mDate = h('input', { type: 'date', id: 'menu-date', value: defaultMenuDate(), required: true });
       var mWd = h('span', { class: 'muted small' });
       var mIn = {};
       CATS.forEach(function (c) { mIn[c] = dishInput(c, 'menu-' + SHORT[c]); });
@@ -2137,7 +2153,7 @@
       var pre = null;
       try { pre = JSON.parse(session.get('prefill') || 'null'); } catch (e) { pre = null; }
       session.set('prefill', null);
-      var tDate = h('input', { type: 'date', id: 'tip-date', value: (pre && isISO(pre.date)) ? pre.date : todayR, required: true });
+      var tDate = h('input', { type: 'date', id: 'tip-date', value: (pre && isISO(pre.date)) ? pre.date : lastWorkday(todayR), required: true });
       var tWd = h('span', { class: 'muted small' });
       var tPlayer = h('input', { type: 'text', id: 'tip-player', list: 'dl-players', value: cfg.player || ctx.me, autocomplete: 'off' });
       var tIn = {};
