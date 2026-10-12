@@ -151,7 +151,7 @@ Kandidaten: max(rapidfuzz `ratio`, `token_sort_ratio`) ≥ 88 auf kleingeschrieb
 
 | A | B | Score | Lev. | Hinweis | n(A) | n(B) |
 |---|---|---|---|---|---|---|
-| Truthahnschnitzel | Truthahnschnitzel vom Grill | 77.3 | 10 | Variante? | 121 | 3 |
+| Truthahnschnitzel | Truthahnschnitzel vom Grill | 77.3 | 10 | Variante? | 122 | 3 |
 | Schweinsschnitzel | Schweinsschnitzel mit Kräuterrahmsoße | 63.0 | 20 | Variante? | 45 | 19 |
 | Pangasiusfilet | Pangasiusfilet mit Kräuterrahmsoße | 58.3 | 20 | Variante? | 1 | 1 |
 

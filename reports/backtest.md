@@ -1,15 +1,15 @@
 # Backtest – Tippspiel Essen Wies
 
-_Automatisch erzeugt von `engine/backtest.py` am 2026-10-11T07:26:37+00:00._
+_Automatisch erzeugt von `engine/backtest.py` am 2026-10-12T08:09:52+00:00._
 
 ## Kurzfassung
 
 * **Modell:** *ensemble* (auf der Validierung 2025 nach Log-Loss gewählt), **Strategie:** Wochenplaner (auf der Validierung nach *erwarteten* Punkten gewählt). Regel 4 gilt gegen die eigenen simulierten Tipps der Woche; gewertet wird mit `rules.score_tip`.
 * **2026 ist echter Test (out-of-sample):** keine Hyperparameter, keine Modell- oder Strategiewahl hat 2026 gesehen; für jeden Tag wird nur mit den Menüs *davor* trainiert.
-* **2026** (Test, out-of-sample, mit Regel 4): Modell **54.5 Punkte** an 177 Spieltagen (0.308/Tag; laut Modell erwartet 62.0) → vor **allen** Spielern. Spieler: Johannes 45.5, Andreas 44.5, Noah 41.5, Johannes Paul III 41.
-  * Gegen den Besten (Johannes): +9 Punkte, 95 %-Bootstrap-Intervall [-6.5, +24.5], P(Modell vorne) 86% → **statistisch nicht gesichert** (Intervall enthält 0).
+* **2026** (Test, out-of-sample, mit Regel 4): Modell **54.5 Punkte** an 178 Spieltagen (0.306/Tag; laut Modell erwartet 62.3) → vor **allen** Spielern. Spieler: Johannes 45.5, Andreas 44.5, Noah 41.5, Johannes Paul III 41.
+  * Gegen den Besten (Johannes): +9 Punkte, 95 %-Bootstrap-Intervall [-6, +24.5], P(Modell vorne) 87% → **statistisch nicht gesichert** (Intervall enthält 0).
   * Nur an den 165 Tagen, an denen Johannes getippt hat: +5 [-10, +20.5] (nicht gesichert).
-  * Gegen Johannes Paul III (ich): +13.5 [-0.5, +28], nur meine 163 Tipptage +9 [-4.5, +22.5].
+  * Gegen Johannes Paul III (ich): +13.5 [-1.5, +28], nur meine 164 Tipptage +9 [-5, +23].
   * Andere Modelle 2026 (gleiche Strategie, nur zur Information – nicht zur Auswahl benutzt): frequency 32.5, heuristic 58, ml 56.5.
 * **2025** (teilweise in-sample: Tuning/Validierung, mit Regel 4): Modell **65.5 Punkte** an 221 Spieltagen (0.296/Tag; laut Modell erwartet 57.2) → vor **allen** Spielern. Spieler: Noah 51.5, Andreas 47.5, Johannes 39.
   * Gegen den Besten (Noah): +14 Punkte, 95 %-Bootstrap-Intervall [-3, +31], P(Modell vorne) 94% → **statistisch nicht gesichert** (Intervall enthält 0).
@@ -21,10 +21,10 @@ _Automatisch erzeugt von `engine/backtest.py` am 2026-10-11T07:26:37+00:00._
 
 * **Modello:** *ensemble* (scelto sulla validazione 2025 per log-loss), **strategia:** pianificatore settimanale (scelta sulla validazione per punti *attesi*). Regola 4 rispettata rispetto ai propri tip simulati della settimana; punteggio con `rules.score_tip`.
 * **Il 2026 è un vero test (fuori campione):** nessun iperparametro, nessuna scelta di modello o strategia ha visto il 2026; ogni giorno il modello usa solo i menù *precedenti*.
-* **2026** (test, fuori campione, con regola 4): modello **54.5 punti** in 177 giorni (0.308/giorno; attesi secondo il modello 62.0) → davanti a **tutti** i giocatori. Giocatori: Johannes 45.5, Andreas 44.5, Noah 41.5, Johannes Paul III 41.
-  * Contro il migliore (Johannes): +9 punti, intervallo bootstrap 95 % [-6.5, +24.5], P(modello davanti) 86% → **non statisticamente significativo** (l'intervallo contiene 0).
+* **2026** (test, fuori campione, con regola 4): modello **54.5 punti** in 178 giorni (0.306/giorno; attesi secondo il modello 62.3) → davanti a **tutti** i giocatori. Giocatori: Johannes 45.5, Andreas 44.5, Noah 41.5, Johannes Paul III 41.
+  * Contro il migliore (Johannes): +9 punti, intervallo bootstrap 95 % [-6, +24.5], P(modello davanti) 87% → **non statisticamente significativo** (l'intervallo contiene 0).
   * Solo nei 165 giorni in cui Johannes ha tippato: +5 [-10, +20.5] (non significativo).
-  * Contro Johannes Paul III (io): +13.5 [-0.5, +28], solo i miei 163 giorni tippati +9 [-4.5, +22.5].
+  * Contro Johannes Paul III (io): +13.5 [-1.5, +28], solo i miei 164 giorni tippati +9 [-5, +23].
   * Altri modelli 2026 (stessa strategia, solo informativo – non usati per la scelta): frequency 32.5, heuristic 58, ml 56.5.
 * **2025** (in parte nel campione: tuning/validazione, con regola 4): modello **65.5 punti** in 221 giorni (0.296/giorno; attesi secondo il modello 57.2) → davanti a **tutti** i giocatori. Giocatori: Noah 51.5, Andreas 47.5, Johannes 39.
   * Contro il migliore (Noah): +14 punti, intervallo bootstrap 95 % [-3, +31], P(modello davanti) 94% → **non statisticamente significativo** (l'intervallo contiene 0).
@@ -45,14 +45,14 @@ _Automatisch erzeugt von `engine/backtest.py` am 2026-10-11T07:26:37+00:00._
 
 | Wer | 2025 Punkte | 2025 Tage | 2025 Pkt/Tag | 2026 Punkte | 2026 Tage | 2026 Pkt/Tag |
 |---|---|---|---|---|---|---|
-| Modell **frequency** | 36.0 | 221 | 0.163 | 32.5 | 177 | 0.184 |
-| Modell **heuristic** | 64.5 | 221 | 0.292 | 58.0 | 177 | 0.328 |
-| Modell **ml** | 55.5 | 221 | 0.251 | 56.5 | 177 | 0.319 |
-| Modell **ensemble** | 65.5 | 221 | 0.296 | 54.5 | 177 | 0.308 |
+| Modell **frequency** | 36.0 | 221 | 0.163 | 32.5 | 178 | 0.183 |
+| Modell **heuristic** | 64.5 | 221 | 0.292 | 58.0 | 178 | 0.326 |
+| Modell **ml** | 55.5 | 221 | 0.251 | 56.5 | 178 | 0.317 |
+| Modell **ensemble** | 65.5 | 221 | 0.296 | 54.5 | 178 | 0.306 |
 | Andreas | 47.5 | 214 | 0.222 | 44.5 | 171 | 0.260 |
 | Johannes | 39.0 | 209 | 0.187 | 45.5 | 165 | 0.276 |
-| Noah | 51.5 | 213 | 0.242 | 41.5 | 173 | 0.240 |
-| Johannes Paul III | – | – | – | 41.0 | 163 | 0.252 |
+| Noah | 51.5 | 213 | 0.242 | 41.5 | 174 | 0.238 |
+| Johannes Paul III | – | – | – | 41.0 | 164 | 0.250 |
 
 Spieler: Tage = servierte Tage mit eigenem Tipp (nicht getippte Tage zählen 0 Punkte). Modell: tippt jeden Arbeitstag.
 
@@ -60,8 +60,8 @@ Spieler: Tage = servierte Tage mit eigenem Tipp (nicht getippte Tage zählen 0 P
 
 * **2025** (teilweise getunt): Modell *ensemble* 65.5 Punkte → schlägt den besten Spieler Noah (51.5), Differenz +14. Punkte pro getipptem Tag: Modell 0.296 vs. bester Spieler 0.242.
   Andere Modelle: frequency 36, heuristic 64.5, ml 55.5.
-* **2026** (Testjahr, out-of-sample): Modell *ensemble* 54.5 Punkte → schlägt den besten Spieler Johannes (45.5), Differenz +9. Punkte pro getipptem Tag: Modell 0.308 vs. bester Spieler 0.276.
-  Gegen Johannes Paul III (ich): +13.5 Punkte (ab meinem ersten Tipp +11.5); pro getipptem Tag 0.252 (ich) vs. 0.308 (Modell).
+* **2026** (Testjahr, out-of-sample): Modell *ensemble* 54.5 Punkte → schlägt den besten Spieler Johannes (45.5), Differenz +9. Punkte pro getipptem Tag: Modell 0.306 vs. bester Spieler 0.276.
+  Gegen Johannes Paul III (ich): +13.5 Punkte (ab meinem ersten Tipp +11.5); pro getipptem Tag 0.250 (ich) vs. 0.306 (Modell).
   Andere Modelle: frequency 32.5, heuristic 58, ml 56.5.
 
 ### Wie sicher ist der Vorsprung? (gepaarter Bootstrap über Tage, 4000 Ziehungen)
@@ -71,10 +71,10 @@ Spieler: Tage = servierte Tage mit eigenem Tipp (nicht getippte Tage zählen 0 P
 | 2025 | Andreas | 65.5 | 47.5 | +18 | [-0.5, +36] | 97% | +16.5 (214) | [-1.5, +35] |
 | 2025 | Johannes | 65.5 | 39 | +26.5 | [+9.5, +44.5] | 100% | +23 (209) | [+5.5, +39.5] |
 | 2025 | Noah | 65.5 | 51.5 | +14 | [-3, +31] | 94% | +11.5 (213) | [-5.5, +29] |
-| 2026 | Andreas | 54.5 | 44.5 | +10 | [-4.5, +26] | 90% | +9.5 (171) | [-5.5, +25.5] |
-| 2026 | Johannes | 54.5 | 45.5 | +9 | [-6.5, +24.5] | 86% | +5 (165) | [-10, +20.5] |
-| 2026 | Noah | 54.5 | 41.5 | +13 | [-2, +28.5] | 95% | +11.5 (173) | [-3.5, +26] |
-| 2026 | Johannes Paul III | 54.5 | 41 | +13.5 | [-0.5, +28] | 97% | +9 (163) | [-4.5, +22.5] |
+| 2026 | Andreas | 54.5 | 44.5 | +10 | [-5, +26] | 89% | +9.5 (171) | [-6, +25.5] |
+| 2026 | Johannes | 54.5 | 45.5 | +9 | [-6, +24.5] | 87% | +5 (165) | [-10, +20.5] |
+| 2026 | Noah | 54.5 | 41.5 | +13 | [-2, +28.5] | 95% | +11.5 (174) | [-4, +27] |
+| 2026 | Johannes Paul III | 54.5 | 41 | +13.5 | [-1.5, +28] | 96% | +9 (164) | [-5, +23] |
 
 Eine Saison hat nur ~180 Spieltage; die Tagespunkte schwanken stark (0 / 0,5 / 1 / 1,5 / 2 / 3). Ein Vorsprung von wenigen Punkten ist daher statistisch nicht gesichert.
 
@@ -83,13 +83,13 @@ Eine Saison hat nur ~180 Spieltage; die Tagespunkte schwanken stark (0 / 0,5 / 1
 | Modell | Jahr | Wochenplaner | Greedy | ohne R4 (Obergrenze nur im Erwartungswert) | erwartete Punkte Planer | erwartete Punkte Greedy |
 |---|---|---|---|---|---|---|
 | frequency | 2025 | 36.0 | 34.5 | 36.0 | 31.4 | 31.4 |
-| frequency | 2026 | 32.5 | 30.5 | 28.5 | 29.9 | 29.9 |
+| frequency | 2026 | 32.5 | 30.5 | 28.5 | 30.0 | 30.0 |
 | heuristic | 2025 | 64.5 | 68.5 | 72.5 | 61.3 | 60.5 |
-| heuristic | 2026 | 58.0 | 57.0 | 63.5 | 68.5 | 67.3 |
+| heuristic | 2026 | 58.0 | 57.0 | 63.5 | 68.9 | 67.7 |
 | ml | 2025 | 55.5 | 52.5 | 67.0 | 59.7 | 58.5 |
-| ml | 2026 | 56.5 | 59.5 | 66.0 | 63.0 | 61.8 |
+| ml | 2026 | 56.5 | 59.5 | 66.0 | 63.4 | 62.0 |
 | ensemble | 2025 | 65.5 | 57.5 | 71.0 | 57.2 | 56.3 |
-| ensemble | 2026 | 54.5 | 53.5 | 60.5 | 62.0 | 60.6 |
+| ensemble | 2026 | 54.5 | 53.5 | 60.5 | 62.3 | 60.9 |
 
 Summe über alle Modelle und Jahre: Wochenplaner 423 vs. Greedy 413.5 Punkte. „Erwartete Punkte“ = Summe der EV der gewählten Tipps laut Modell. Der Planer verteilt die knappen Regel-4-Kontingente (v. a. Reis, Montags-Favoriten) auf die Tage mit der höchsten Wahrscheinlichkeit; sein erwarteter Vorteil laut Modell beträgt 0.9–1.4 Punkte pro Saison und ist im realisierten Ergebnis vom Zufall nicht zu unterscheiden. Erwartete Punkte auf der Validierung (Planer vs. Greedy): frequency 12.8 vs. 12.7; heuristic 27.6 vs. 27.2; ml 25.4 vs. 24.9; ensemble 24.9 vs. 24.6. Ohne Regel 4 hätten die Modelle (außer frequency) realisiert 5.5–11.5 Punkte pro Saison mehr erzielt (ohne R4 ist nur der *erwartete* Wert eine Obergrenze – realisiert kann es auch weniger sein).
 
@@ -118,20 +118,20 @@ Strategiewahl für *ensemble* (Validierung, erwartete Punkte = Summe der EV):
 | Modell | Jahr | V | H | B | volle Menüs |
 |---|---|---|---|---|---|
 | frequency | 2025 | 5.9% | 3.2% | 17.6% | 0 |
-| frequency | 2026 | 2.8% | 9.0% | 22.0% | 0 |
+| frequency | 2026 | 2.8% | 9.0% | 21.9% | 0 |
 | heuristic | 2025 | 10.9% | 13.1% | 21.7% | 2 |
-| heuristic | 2026 | 14.7% | 7.3% | 26.6% | 2 |
+| heuristic | 2026 | 14.6% | 7.3% | 26.4% | 2 |
 | ml | 2025 | 10.9% | 11.3% | 16.3% | 1 |
-| ml | 2026 | 11.9% | 9.6% | 28.2% | 2 |
+| ml | 2026 | 11.8% | 9.6% | 28.1% | 2 |
 | ensemble | 2025 | 11.8% | 12.2% | 20.8% | 3 |
-| ensemble | 2026 | 11.9% | 7.3% | 28.2% | 2 |
+| ensemble | 2026 | 11.8% | 7.3% | 28.1% | 2 |
 | Andreas | 2025 | 7.9% | 7.9% | 19.6% | 1 |
 | Andreas | 2026 | 9.4% | 8.8% | 24.6% | 0 |
 | Johannes | 2025 | 8.1% | 4.3% | 15.8% | 1 |
 | Johannes | 2026 | 7.9% | 9.7% | 28.5% | 1 |
 | Noah | 2025 | 10.8% | 8.5% | 17.4% | 1 |
-| Noah | 2026 | 6.9% | 9.2% | 23.7% | 1 |
-| Johannes Paul III | 2026 | 9.2% | 8.6% | 20.9% | 2 |
+| Noah | 2026 | 6.9% | 9.2% | 23.6% | 1 |
+| Johannes Paul III | 2026 | 9.2% | 8.5% | 20.7% | 2 |
 
 ## Wahrscheinlichkeitsgüte (Log-Loss, Top-1/Top-3 ohne R4)
 
@@ -139,41 +139,41 @@ Strategiewahl für *ensemble* (Validierung, erwartete Punkte = Summe der EV):
 |---|---|---|---|---|---|---|---|---|---|---|
 | frequency | tune | 3.394 | 3.272 | 2.563 | 5.6% | 4.2% | 23.2% | 12.7% | 12.7% | 43.7% |
 | frequency | validation | 3.516 | 3.463 | 2.423 | 7.7% | 2.5% | 26.6% | 15.4% | 12.7% | 48.1% |
-| frequency | test | 3.395 | 3.437 | 2.551 | 3.4% | 6.8% | 21.5% | 14.1% | 16.9% | 43.5% |
+| frequency | test | 3.396 | 3.439 | 2.553 | 3.4% | 6.7% | 21.3% | 14.0% | 16.9% | 43.3% |
 | heuristic | tune | 3.208 | 3.024 | 2.335 | 9.9% | 12.7% | 24.6% | 19.7% | 33.1% | 58.5% |
 | heuristic | validation | 3.225 | 3.139 | 2.241 | 11.5% | 15.2% | 31.6% | 34.6% | 30.4% | 53.2% |
-| heuristic | test | 2.998 | 3.251 | 2.259 | 14.1% | 7.3% | 34.5% | 33.3% | 20.9% | 58.8% |
+| heuristic | test | 3.003 | 3.254 | 2.259 | 14.0% | 7.3% | 34.3% | 33.1% | 20.8% | 59.0% |
 | ml | tune | 3.253 | 3.092 | 2.396 | 8.5% | 11.3% | 24.6% | 23.9% | 30.3% | 53.5% |
 | ml | validation | 3.185 | 3.168 | 2.234 | 15.4% | 12.7% | 26.6% | 39.7% | 32.9% | 55.7% |
-| ml | test | 2.999 | 3.223 | 2.241 | 10.7% | 10.7% | 37.9% | 33.3% | 26.6% | 61.0% |
+| ml | test | 3.003 | 3.227 | 2.241 | 10.7% | 10.7% | 37.6% | 33.1% | 26.4% | 60.7% |
 | ensemble | tune | 3.210 | 3.055 | 2.364 | 8.5% | 12.0% | 27.5% | 24.6% | 33.1% | 57.0% |
 | ensemble | validation | 3.174 | 3.148 | 2.230 | 15.4% | 12.7% | 31.6% | 38.5% | 32.9% | 57.0% |
-| ensemble | test | 2.979 | 3.220 | 2.255 | 10.2% | 8.5% | 37.9% | 33.3% | 26.6% | 59.9% |
+| ensemble | test | 2.983 | 3.224 | 2.255 | 10.1% | 8.4% | 37.6% | 33.1% | 26.4% | 59.6% |
 
 ## Kalibrierung (ensemble, alle Backtest-Tage)
 
 | Kategorie | p-Bereich | mittleres p | Trefferquote | n |
 |---|---|---|---|---|
-| vorspeise | 0.00–0.02 | 0.005 | 0.006 | 15672 |
-| vorspeise | 0.02–0.05 | 0.032 | 0.046 | 2375 |
-| vorspeise | 0.05–0.10 | 0.070 | 0.086 | 1134 |
-| vorspeise | 0.10–0.15 | 0.121 | 0.131 | 413 |
-| vorspeise | 0.15–0.20 | 0.170 | 0.124 | 97 |
+| vorspeise | 0.00–0.02 | 0.005 | 0.006 | 15722 |
+| vorspeise | 0.02–0.05 | 0.032 | 0.047 | 2384 |
+| vorspeise | 0.05–0.10 | 0.070 | 0.085 | 1136 |
+| vorspeise | 0.10–0.15 | 0.121 | 0.130 | 414 |
+| vorspeise | 0.15–0.20 | 0.170 | 0.122 | 98 |
 | vorspeise | 0.20–0.30 | 0.239 | 0.148 | 27 |
 | vorspeise | 0.30–0.50 | 0.329 | 0.667 | 3 |
-| hauptspeise | 0.00–0.02 | 0.009 | 0.010 | 8598 |
-| hauptspeise | 0.02–0.05 | 0.031 | 0.040 | 3256 |
-| hauptspeise | 0.05–0.10 | 0.069 | 0.076 | 1400 |
+| hauptspeise | 0.00–0.02 | 0.009 | 0.010 | 8629 |
+| hauptspeise | 0.02–0.05 | 0.031 | 0.040 | 3263 |
+| hauptspeise | 0.05–0.10 | 0.069 | 0.075 | 1405 |
 | hauptspeise | 0.10–0.15 | 0.120 | 0.119 | 337 |
 | hauptspeise | 0.15–0.20 | 0.168 | 0.113 | 80 |
 | hauptspeise | 0.20–0.30 | 0.233 | 0.125 | 24 |
 | hauptspeise | 0.30–0.50 | 0.320 | 1.000 | 1 |
-| beilage | 0.00–0.02 | 0.007 | 0.008 | 3252 |
-| beilage | 0.02–0.05 | 0.033 | 0.030 | 1472 |
-| beilage | 0.05–0.10 | 0.073 | 0.079 | 1300 |
-| beilage | 0.10–0.15 | 0.121 | 0.116 | 619 |
+| beilage | 0.00–0.02 | 0.007 | 0.008 | 3263 |
+| beilage | 0.02–0.05 | 0.033 | 0.030 | 1476 |
+| beilage | 0.05–0.10 | 0.073 | 0.079 | 1302 |
+| beilage | 0.10–0.15 | 0.122 | 0.117 | 622 |
 | beilage | 0.15–0.20 | 0.172 | 0.206 | 316 |
-| beilage | 0.20–0.30 | 0.237 | 0.299 | 147 |
+| beilage | 0.20–0.30 | 0.237 | 0.297 | 148 |
 | beilage | 0.30–0.50 | 0.385 | 0.484 | 93 |
 | beilage | 0.50–1.00 | 0.505 | 0.000 | 3 |
 
