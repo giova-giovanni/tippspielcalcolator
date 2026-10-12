@@ -35,7 +35,7 @@ piatto principale (Hauptspeise) e contorno (Beilage)**, da inviare entro le **12
  │  "Tippspiel Essen.xlsx"  │  │ data/tips.csv             │  │  token personale)           │
  └────────────┬─────────────┘  └────────────┬─────────────┘  └──────────────┬──────────────┘
               └──────────── push su main ───┴───────────────────────────────┘
-                                            │            + cron lun–ven 05:00 UTC (daily.yml)
+                                            │            + cron lun–ven 05:17 UTC (daily.yml)
                                             ▼
               ┌──────────────────────────────────────────────────────────────┐
               │ GitHub Actions (on-data.yml / daily.yml), Python 3.11        │
@@ -59,13 +59,16 @@ Workflow in `.github/workflows/`:
 
 | File | Quando | Cosa fa |
 |---|---|---|
-| `daily.yml` | lun–ven 05:00 UTC (06:00 CET / 07:00 CEST) + manuale | `python -m engine.pipeline --daily` (salta il backtest se esiste già), commit + push |
-| `on-data.yml` | push su `main` che tocca `data/**`, `engine/**`, `requirements.txt` o il workflow stesso + manuale (opzioni *tune*, *force_ingest*) | pipeline completa, `pytest`, commit + push |
+| `daily.yml` | lun–ven 05:17 UTC (06:17 CET / 07:17 CEST) + run di riserva 07:47 UTC + manuale | `python -m engine.pipeline --daily` (salta il backtest se esiste già), commit + push; il run di riserva non fa niente se `today.json` è già stato aggiornato oggi |
+| `on-data.yml` | push su `main` che tocca `data/**`, `engine/**`, `requirements.txt` o il workflow stesso + manuale (opzioni *tune*, *force_ingest*) | pipeline completa, commit + push; `pytest` in un job separato, in parallelo |
 | `tests.yml` | pull request e push su branch diversi da `main` | `pytest` |
 
 I due workflow della pipeline condividono il gruppo di concorrenza `pipeline` (mai due esecuzioni
-in parallelo). I push fatti dal bot con il `GITHUB_TOKEN` **non** riattivano nessun workflow, quindi
-non ci sono cicli; i push fatti dal sito con il token personale invece sì (ed è voluto).
+in parallelo). In `on-data` i test girano in un job a parte: se un test fallisce il run diventa rosso
+(e GitHub manda un'e-mail), ma i nuovi menù/tipp arrivano comunque sul sito. Prima `pytest` girava
+prima del commit, e un test legato ai dati del 09.10.2026 bloccava ogni inserimento dal sito; ora i
+test che usano i dati reali lavorano su uno snapshot fisso (`SNAPSHOT_DAY` / `SNAPSHOT_LAST_SERVED`).
+I push fatti dal bot con il `GITHUB_TOKEN` **non** riattivano nessun workflow, quindi non ci sono cicli; i push fatti dal sito con il token personale invece sì (ed è voluto).
 
 ## Prima configurazione
 
@@ -221,8 +224,10 @@ Dettagli, calibrazione e intervalli: [`reports/backtest.md`](reports/backtest.md
   (account Free). Un run completo dura ~1–2 minuti.
 - **Workflow pianificati**: nei repository pubblici GitHub li **disattiva dopo 60 giorni senza attività**
   nel repository (i commit giornalieri del bot di solito bastano; se il sito smette di aggiornarsi:
-  *Actions → daily → Enable workflow*). Il cron può partire con ritardo (anche decine di minuti) nei
-  momenti di carico: per questo gira alle 05:00 UTC, molto prima delle 12:00.
+  *Actions → daily → Enable workflow*). Il cron può partire con ritardo (anche decine di minuti) o
+  saltare del tutto nei momenti di carico (soprattutto allo scoccare dell'ora): per questo gira alle
+  05:17 UTC, molto prima delle 12:00, con un run di riserva alle 07:47 UTC. Se serve subito:
+  *Actions → daily → Run workflow*.
 - Limiti di Pages (soft): sito ≤ 1 GB, 100 GB/mese di traffico, ~10 build/ora – ampiamente sufficienti.
 
 ## Uso in locale

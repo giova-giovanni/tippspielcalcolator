@@ -18,11 +18,17 @@ from engine.rules import R4
 
 MON = dt.date(2026, 9, 28)   # an ordinary week (Mon..Fri all working days)
 WEEK = [MON + dt.timedelta(days=i) for i in range(5)]
+# Data snapshot the expectations refer to: the morning of Friday 09.10.2026 (its menu not known yet).
+# Menus/tips entered later (website, Excel) are hidden, so a regular data update can never make the
+# on-data workflow fail.
+SNAPSHOT_DAY = dt.date(2026, 10, 9)
 
 
 @pytest.fixture(scope="module")
 def ds():
-    return load_dataset()
+    from engine.recommend import as_of
+
+    return as_of(load_dataset(), SNAPSHOT_DAY)
 
 
 def _probs(top: dict[str, str] | None = None, seed: int = 0) -> dict:

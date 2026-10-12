@@ -1,11 +1,14 @@
 # Tägliche Empfehlung / raccomandazione giornaliera.
-# Läuft Mo–Fr um 05:00 UTC (= 06:00 MEZ / 07:00 MESZ), also lange vor dem Tipp-Schluss um 12:00.
-# Cron-Läufe können sich bei GitHub verspäten – deshalb so früh.
+# Läuft Mo–Fr um 05:17 UTC (= 06:17 MEZ / 07:17 MESZ), also lange vor dem Tipp-Schluss um 12:00.
+# Cron-Läufe können sich bei GitHub verspäten oder bei hoher Last ganz ausfallen (besonders zur
+# vollen Stunde) – deshalb eine krumme Minute und ein Ersatzlauf um 07:47 UTC (08:47 MEZ /
+# 09:47 MESZ), der nur rechnet, wenn heute noch kein Lauf die Empfehlung aktualisiert hat.
 name: daily
 
 on:
   schedule:
-    - cron: '0 5 * * 1-5'
+    - cron: '17 5 * * 1-5'
+    - cron: '47 7 * * 1-5'   # Ersatzlauf (siehe Schritt "Schon aktuell?")
   workflow_dispatch:
 
 permissions:
@@ -28,15 +31,32 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Ersatzlauf: nichts tun, wenn today.json heute (Europe/Rome) schon neu geschrieben wurde –
+      # vom Frühlauf oder von on-data nach einer Eingabe. Geprüft wird das Commit-Datum (klappt
+      # auch mit verschlüsselten Daten).
+      - name: Schon aktuell?
+        id: fresh
+        if: github.event_name == 'schedule' && github.event.schedule == '47 7 * * 1-5'
+        run: |
+          last=$(TZ=Europe/Rome git log -1 --format=%cd --date=format-local:%F -- docs/data/today.json)
+          today=$(TZ=Europe/Rome date +%F)
+          if [ "$last" = "$today" ]; then
+            echo "today.json wurde heute schon aktualisiert ($last) – Ersatzlauf nicht nötig."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: actions/setup-python@v5
+        if: steps.fresh.outputs.skip != 'true'
         with:
           python-version: '3.11'
           cache: pip
 
       - name: Install dependencies
+        if: steps.fresh.outputs.skip != 'true'
         run: python -m pip install -r requirements.txt
 
       - name: Pipeline (--daily)
+        if: steps.fresh.outputs.skip != 'true'
         env:
           # optional: verschlüsselt docs/data/*.json (AES-GCM); leer = unverschlüsselt
           SITE_PASSPHRASE: ${{ secrets.SITE_PASSPHRASE }}
@@ -44,6 +64,7 @@ jobs:
 
       - name: Commit & push
         id: push
+        if: steps.fresh.outputs.skip != 'true'
         env:
           BRANCH: ${{ github.ref_name }}
         run: |
@@ -82,7 +103,7 @@ jobs:
   # Standard ist "Deploy from a branch: main /docs" – dann baut GitHub Pages selbst nach jedem Push.
   deploy:
     needs: build
-    if: vars.PAGES_MODE == 'actions' && github.ref == 'refs/heads/main'
+    if: vars.PAGES_MODE == 'actions' && github.ref == 'refs/heads/main' && needs.build.outputs.sha != ''
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

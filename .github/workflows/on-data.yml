@@ -64,9 +64,6 @@ jobs:
           echo "python -m engine.pipeline ${args[*]}"
           python -m engine.pipeline "${args[@]}"
 
-      - name: Tests
-        run: python -m pytest -q
-
       - name: Commit & push
         id: push
         env:
@@ -103,6 +100,28 @@ jobs:
           done
           echo "::error::Push nach 3 Wiederholungen fehlgeschlagen"
           exit 1
+
+  # Tests als eigener Job, parallel zum Build: ein roter Test meldet sich (roter Lauf, E-Mail),
+  # verhindert aber nie, dass neue Menüs/Tipps auf der Website landen. Früher lief pytest vor dem
+  # Commit – ein Test, der vom Datenstand abhing, hat so jede Eingabe über die Website blockiert.
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: pytest
+        run: python -m pytest -q
 
   # Nur wenn Settings → Pages → Source = "GitHub Actions" und Repo-Variable PAGES_MODE=actions.
   # Standard ist "Deploy from a branch: main /docs" – dann baut GitHub Pages selbst nach jedem Push.
