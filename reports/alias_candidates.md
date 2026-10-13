@@ -27,7 +27,7 @@ Diese Paare erscheinen nicht unter den Fuzzy-Vorschlägen. „unklar“ = Entsch
 | Paprika-Schweinegulasch | Schweinsgulasch | 1 | 15 | unklar, bleibt getrennt. |
 | Schweinsfilet mit Pfeffersoße | Schweinsfilet | 2 | 101 | eigene Variante. |
 | Spinatknödel mit Käsesoße | Spinatknödel | 5 | 17 | eigene Variante. |
-| Schlutzer Schinken-Rahm | Schlutzer | 1 | 72 | eigene Variante. |
+| Schlutzer Schinken-Rahm | Schlutzer | 1 | 73 | eigene Variante. |
 
 ## Auffälligkeiten
 

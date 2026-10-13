@@ -1,6 +1,6 @@
 # Backtest – Tippspiel Essen Wies
 
-_Automatisch erzeugt von `engine/backtest.py` am 2026-10-12T12:17:50+00:00._
+_Automatisch erzeugt von `engine/backtest.py` am 2026-10-13T06:38:44+00:00._
 
 ## Kurzfassung
 
