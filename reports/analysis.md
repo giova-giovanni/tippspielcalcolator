@@ -1,6 +1,6 @@
 # Analyse Tippspiel Essen Wies
 
-_Automatisch erzeugt von `engine/analyze.py` am 2026-10-13 12:42 UTC (Stichtag 2026-10-13). Datenstand: 434 servierte Menüs (2024: 34, 2025: 221, 2026: 179), letztes Menü 2026-10-12._
+_Automatisch erzeugt von `engine/analyze.py` am 2026-10-14 10:12 UTC (Stichtag 2026-10-14). Datenstand: 434 servierte Menüs (2024: 34, 2025: 221, 2026: 179), letztes Menü 2026-10-12._
 
 ## Riassunto (IT)
 
@@ -773,7 +773,7 @@ Punkte = Neuberechnung der Engine (`tips.points`; identisch mit dem Excel bis au
 |---|---|---|---|---|
 | 2026 | Johannes | Amatriciana 22, Carbonara 15, Hirten 15 | Wienerschnitzel 25, Champignonschnitzel 22, Hühnerhaxlen 16 | Pommes 41, Reis 41, Ofenkartoffeln 17 |
 | 2026 | Andreas | Nudel mit Käsesoße 22, Lasagne 18, Spinatspatzlen 15 | Champignonschnitzel 22, Wienerschnitzel 22, Currywurst 17 | Pommes 45, Reis 34, Kartoffelsalat 20 |
-| 2026 | Johannes Paul III | Hirten 15, Lasagne 15, Nudel mit Käsesoße 14 | Champignonschnitzel 17, Truthahngeschnetzeltes 15, Truthahnschnitzel 15 | Reis 44, Kartoffelsalat 18, Pommes 17 |
+| 2026 | Johannes Paul III | Hirten 15, Lasagne 15, Nudel mit Käsesoße 14 | Champignonschnitzel 17, Truthahngeschnetzeltes 15, Truthahnschnitzel 15 | Reis 44, Kartoffelsalat 18, Pommes 18 |
 | 2026 | Noah | Amatriciana 32, Aglio olio 17, Carbonara 17 | Truthahngeschnetzeltes 36, Champignonschnitzel 32, Hühnerbrust 17 | Reis 42, Püree 39, Kartoffelgratin 22 |
 | 2025 | Noah | Hirten 39, Lasagne 34, Aglio olio 23 | Truthahnschnitzel 24, Champignonschnitzel 22, Schweinsfilet 22 | Reis 51, Püree 27, Kartoffelgratin 23 |
 | 2025 | Andreas | Tortellini mit Schinken-Rahm 24, Hirten 21, Nudel mit Käsesoße 21 | Leberkas 23, Wienerschnitzel 21, Champignonschnitzel 18 | Pommes 47, Reis 32, Püree 25 |
