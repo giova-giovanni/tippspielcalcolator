@@ -1,15 +1,15 @@
 # Backtest – Tippspiel Essen Wies
 
-_Automatisch erzeugt von `engine/backtest.py` am 2026-10-27T12:49:46+00:00._
+_Automatisch erzeugt von `engine/backtest.py` am 2026-10-27T14:14:29+00:00._
 
 ## Kurzfassung
 
 * **Modell:** *ensemble* (auf der Validierung 2025 nach Log-Loss gewählt), **Strategie:** Wochenplaner (auf der Validierung nach *erwarteten* Punkten gewählt). Regel 4 gilt gegen die eigenen simulierten Tipps der Woche; gewertet wird mit `rules.score_tip`.
 * **2026 ist echter Test (out-of-sample):** keine Hyperparameter, keine Modell- oder Strategiewahl hat 2026 gesehen; für jeden Tag wird nur mit den Menüs *davor* trainiert.
-* **2026** (Test, out-of-sample, mit Regel 4): Modell **58.5 Punkte** an 189 Spieltagen (0.309/Tag; laut Modell erwartet 66.2) → vor **allen** Spielern. Spieler: Johannes 45.5, Andreas 44.5, Noah 41.5, Johannes Paul III 41.
+* **2026** (Test, out-of-sample, mit Regel 4): Modell **58.5 Punkte** an 189 Spieltagen (0.309/Tag; laut Modell erwartet 66.2) → vor **allen** Spielern. Spieler: Johannes 45.5, Andreas 44.5, Noah 41.5, Johannes Paul III 41.5.
   * Gegen den Besten (Johannes): +13 Punkte, 95 %-Bootstrap-Intervall [-2.5, +28.5], P(Modell vorne) 94% → **statistisch nicht gesichert** (Intervall enthält 0).
   * Nur an den 165 Tagen, an denen Johannes getippt hat: +5 [-9.5, +20.5] (nicht gesichert).
-  * Gegen Johannes Paul III (ich): +17.5 [+2.5, +32.5], nur meine 165 Tipptage +9 [-4, +22.5].
+  * Gegen Johannes Paul III (ich): +17 [+1.5, +32], nur meine 166 Tipptage +8.5 [-5.5, +22.5].
   * Andere Modelle 2026 (gleiche Strategie, nur zur Information – nicht zur Auswahl benutzt): frequency 36, heuristic 62, ml 61.5.
 * **2025** (teilweise in-sample: Tuning/Validierung, mit Regel 4): Modell **65.5 Punkte** an 221 Spieltagen (0.296/Tag; laut Modell erwartet 57.2) → vor **allen** Spielern. Spieler: Noah 51.5, Andreas 47.5, Johannes 39.
   * Gegen den Besten (Noah): +14 Punkte, 95 %-Bootstrap-Intervall [-3, +31], P(Modell vorne) 94% → **statistisch nicht gesichert** (Intervall enthält 0).
@@ -21,10 +21,10 @@ _Automatisch erzeugt von `engine/backtest.py` am 2026-10-27T12:49:46+00:00._
 
 * **Modello:** *ensemble* (scelto sulla validazione 2025 per log-loss), **strategia:** pianificatore settimanale (scelta sulla validazione per punti *attesi*). Regola 4 rispettata rispetto ai propri tip simulati della settimana; punteggio con `rules.score_tip`.
 * **Il 2026 è un vero test (fuori campione):** nessun iperparametro, nessuna scelta di modello o strategia ha visto il 2026; ogni giorno il modello usa solo i menù *precedenti*.
-* **2026** (test, fuori campione, con regola 4): modello **58.5 punti** in 189 giorni (0.309/giorno; attesi secondo il modello 66.2) → davanti a **tutti** i giocatori. Giocatori: Johannes 45.5, Andreas 44.5, Noah 41.5, Johannes Paul III 41.
+* **2026** (test, fuori campione, con regola 4): modello **58.5 punti** in 189 giorni (0.309/giorno; attesi secondo il modello 66.2) → davanti a **tutti** i giocatori. Giocatori: Johannes 45.5, Andreas 44.5, Noah 41.5, Johannes Paul III 41.5.
   * Contro il migliore (Johannes): +13 punti, intervallo bootstrap 95 % [-2.5, +28.5], P(modello davanti) 94% → **non statisticamente significativo** (l'intervallo contiene 0).
   * Solo nei 165 giorni in cui Johannes ha tippato: +5 [-9.5, +20.5] (non significativo).
-  * Contro Johannes Paul III (io): +17.5 [+2.5, +32.5], solo i miei 165 giorni tippati +9 [-4, +22.5].
+  * Contro Johannes Paul III (io): +17 [+1.5, +32], solo i miei 166 giorni tippati +8.5 [-5.5, +22.5].
   * Altri modelli 2026 (stessa strategia, solo informativo – non usati per la scelta): frequency 36, heuristic 62, ml 61.5.
 * **2025** (in parte nel campione: tuning/validazione, con regola 4): modello **65.5 punti** in 221 giorni (0.296/giorno; attesi secondo il modello 57.2) → davanti a **tutti** i giocatori. Giocatori: Noah 51.5, Andreas 47.5, Johannes 39.
   * Contro il migliore (Noah): +14 punti, intervallo bootstrap 95 % [-3, +31], P(modello davanti) 94% → **non statisticamente significativo** (l'intervallo contiene 0).
@@ -52,7 +52,7 @@ _Automatisch erzeugt von `engine/backtest.py` am 2026-10-27T12:49:46+00:00._
 | Andreas | 47.5 | 214 | 0.222 | 44.5 | 171 | 0.260 |
 | Johannes | 39.0 | 209 | 0.187 | 45.5 | 165 | 0.276 |
 | Noah | 51.5 | 213 | 0.242 | 41.5 | 174 | 0.238 |
-| Johannes Paul III | – | – | – | 41.0 | 165 | 0.248 |
+| Johannes Paul III | – | – | – | 41.5 | 166 | 0.250 |
 
 Spieler: Tage = servierte Tage mit eigenem Tipp (nicht getippte Tage zählen 0 Punkte). Modell: tippt jeden Arbeitstag.
 
@@ -61,7 +61,7 @@ Spieler: Tage = servierte Tage mit eigenem Tipp (nicht getippte Tage zählen 0 P
 * **2025** (teilweise getunt): Modell *ensemble* 65.5 Punkte → schlägt den besten Spieler Noah (51.5), Differenz +14. Punkte pro getipptem Tag: Modell 0.296 vs. bester Spieler 0.242.
   Andere Modelle: frequency 36, heuristic 64.5, ml 55.5.
 * **2026** (Testjahr, out-of-sample): Modell *ensemble* 58.5 Punkte → schlägt den besten Spieler Johannes (45.5), Differenz +13. Punkte pro getipptem Tag: Modell 0.309 vs. bester Spieler 0.276.
-  Gegen Johannes Paul III (ich): +17.5 Punkte (ab meinem ersten Tipp +15.5); pro getipptem Tag 0.248 (ich) vs. 0.309 (Modell).
+  Gegen Johannes Paul III (ich): +17 Punkte (ab meinem ersten Tipp +15); pro getipptem Tag 0.250 (ich) vs. 0.309 (Modell).
   Andere Modelle: frequency 36, heuristic 62, ml 61.5.
 
 ### Wie sicher ist der Vorsprung? (gepaarter Bootstrap über Tage, 4000 Ziehungen)
@@ -74,7 +74,7 @@ Spieler: Tage = servierte Tage mit eigenem Tipp (nicht getippte Tage zählen 0 P
 | 2026 | Andreas | 58.5 | 44.5 | +14 | [-1.5, +30.5] | 96% | +9.5 (171) | [-5.5, +25.5] |
 | 2026 | Johannes | 58.5 | 45.5 | +13 | [-2.5, +28.5] | 94% | +5 (165) | [-9.5, +20.5] |
 | 2026 | Noah | 58.5 | 41.5 | +17 | [+2, +33.5] | 98% | +11.5 (174) | [-3.5, +26.5] |
-| 2026 | Johannes Paul III | 58.5 | 41 | +17.5 | [+2.5, +32.5] | 99% | +9 (165) | [-4, +22.5] |
+| 2026 | Johannes Paul III | 58.5 | 41.5 | +17 | [+1.5, +32] | 98% | +8.5 (166) | [-5.5, +22.5] |
 
 Eine Saison hat nur ~180 Spieltage; die Tagespunkte schwanken stark (0 / 0,5 / 1 / 1,5 / 2 / 3). Ein Vorsprung von wenigen Punkten ist daher statistisch nicht gesichert.
 
@@ -131,7 +131,7 @@ Strategiewahl für *ensemble* (Validierung, erwartete Punkte = Summe der EV):
 | Johannes | 2026 | 7.9% | 9.7% | 28.5% | 1 |
 | Noah | 2025 | 10.8% | 8.5% | 17.4% | 1 |
 | Noah | 2026 | 6.9% | 9.2% | 23.6% | 1 |
-| Johannes Paul III | 2026 | 9.1% | 8.5% | 20.6% | 2 |
+| Johannes Paul III | 2026 | 9.0% | 8.4% | 21.1% | 2 |
 
 ## Wahrscheinlichkeitsgüte (Log-Loss, Top-1/Top-3 ohne R4)
 
