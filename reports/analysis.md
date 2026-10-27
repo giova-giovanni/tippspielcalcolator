@@ -1,38 +1,38 @@
 # Analyse Tippspiel Essen Wies
 
-_Automatisch erzeugt von `engine/analyze.py` am 2026-10-27 10:33 UTC (Stichtag 2026-10-27). Datenstand: 435 servierte Menüs (2024: 34, 2025: 221, 2026: 180), letztes Menü 2026-10-14._
+_Automatisch erzeugt von `engine/analyze.py` am 2026-10-27 10:43 UTC (Stichtag 2026-10-27). Datenstand: 443 servierte Menüs (2024: 34, 2025: 221, 2026: 188), letztes Menü 2026-10-26._
 
 ## Riassunto (IT)
 
-- **Dati**: 435 menù serviti (2024: 34, 2025: 221, 2026: 180); piatti distinti: primo 60, secondo 48, contorno 18.
-- **Primo più frequenti**: Arrabbiata (30), Nudel mit Käsesoße (29), Hirten (28); i primi 5 coprono 32 % dei giorni.
-- **Secondo più frequenti**: Hühnerbrust (32), Champignonschnitzel (28), Truthahngeschnetzeltes (26); i primi 5 coprono 31 % dei giorni.
-- **Contorno più frequenti**: Reis (98), Pommes (56), Spatzlen (44); i primi 5 coprono 64 % dei giorni.
-- **Ripetizioni**: la cucina evita le ripetizioni. Primo e secondo: mai due volte nella stessa settimana (0 e 0 coppie contro 37 e 37 attese per caso, p < 0,001); quasi nessuna ripetizione entro 5 (primo) / 3 (secondo) giorni lavorativi; intervallo mediano 18 / 19 giorni lavorativi. Il contorno si ripete molto di più (17 coppie nella stessa settimana, 97 attese per caso). → Non tippare primo/secondo serviti negli ultimi giorni o già serviti questa settimana.
-- **Giorno della settimana**: Reis (contorno) il lunedì 40/98 (atteso 19 %, p < 0,001); Schweinskotelett (secondo) il mercoledì 13/17 (atteso 21 %, p < 0,001); Arrabbiata (primo) il lunedì 17/30 (atteso 19 %, p < 0,001); Champignonschnitzel (secondo) il lunedì 15/28 (atteso 19 %, p < 0,001). 4 effetti restano significativi anche con correzione di Bonferroni: il giorno della settimana conta.
-- **Ipotesi confermate**: pesce (tutti) il venerdì 11/13; pesce fuori Quaresima il venerdì 3/3; Plent (polenta) il venerdì 9/19. Non confermate: Scombri, Leberkas.
-- **Contorno ↔ secondo**: conoscendo il secondo, il contorno più tipico è giusto nel 48 % dei casi (leave-one-out) contro 23 % tippando sempre Reis (es. Champignonschnitzel → Reis 75 %, Wienerschnitzel → Kartoffelsalat 82 %, Leberkas → Röstkartoffeln 63 %, Chilli con carne → Reis 100 %). Primo e secondo invece sono quasi indipendenti (MI 1,72 bit vs 1,68 per caso, p = 0,096).
+- **Dati**: 443 menù serviti (2024: 34, 2025: 221, 2026: 188); piatti distinti: primo 60, secondo 48, contorno 19.
+- **Primo più frequenti**: Arrabbiata (30), Nudel mit Käsesoße (30), Hirten (28); i primi 5 coprono 32 % dei giorni.
+- **Secondo più frequenti**: Hühnerbrust (32), Champignonschnitzel (29), Truthahngeschnetzeltes (26); i primi 5 coprono 31 % dei giorni.
+- **Contorno più frequenti**: Reis (100), Pommes (57), Spatzlen (45); i primi 5 coprono 64 % dei giorni.
+- **Ripetizioni**: la cucina evita le ripetizioni. Primo e secondo: mai due volte nella stessa settimana (0 e 0 coppie contro 38 e 38 attese per caso, p < 0,001); quasi nessuna ripetizione entro 5 (primo) / 3 (secondo) giorni lavorativi; intervallo mediano 17 / 19 giorni lavorativi. Il contorno si ripete molto di più (17 coppie nella stessa settimana, 99 attese per caso). → Non tippare primo/secondo serviti negli ultimi giorni o già serviti questa settimana.
+- **Giorno della settimana**: Reis (contorno) il lunedì 42/100 (atteso 19 %, p < 0,001); Schweinskotelett (secondo) il mercoledì 13/17 (atteso 21 %, p < 0,001); Arrabbiata (primo) il lunedì 17/30 (atteso 20 %, p < 0,001); Champignonschnitzel (secondo) il lunedì 16/29 (atteso 19 %, p < 0,001). 4 effetti restano significativi anche con correzione di Bonferroni: il giorno della settimana conta.
+- **Ipotesi confermate**: pesce (tutti) il venerdì 11/13; pesce fuori Quaresima il venerdì 3/3; Plent (polenta) il venerdì 10/20. Non confermate: Scombri, Leberkas.
+- **Contorno ↔ secondo**: conoscendo il secondo, il contorno più tipico è giusto nel 49 % dei casi (leave-one-out) contro 23 % tippando sempre Reis (es. Champignonschnitzel → Reis 76 %, Wienerschnitzel → Kartoffelsalat 83 %, Leberkas → Röstkartoffeln 63 %, Chilli con carne → Reis 100 %). Primo e secondo invece sono quasi indipendenti (MI 1,69 bit vs 1,65 per caso, p = 0,103).
 - **Quaresima / pesce**: pesce in Quaresima nel 16 % dei giorni contro 1 % fuori (10 vs 3 giorni). Nessuna differenza significativa estate/inverno.
-- **Trend 2026**: nuovi primi 10, nuovi secondi 13; spariti primi 27, secondi 7 (quasi tutti piatti rari, ≤ 3 volte). Pesatura per recenza (emivita migliore in giorni, log-loss): primo 365, secondo 180, contorno 180.
+- **Trend 2026**: nuovi primi 10, nuovi secondi 13; spariti primi 26, secondi 7 (quasi tutti piatti rari, ≤ 3 volte). Pesatura per recenza (emivita migliore in giorni, log-loss): primo 365, secondo 180, contorno 180.
 - **Giocatori 2026**: miglior media Johannes con 0,28 punti/giorno. Tipp (tutti i giocatori e anni) su piatti serviti negli ultimi 5 giorni lavorativi: primo centrato nel 2,9 % (n=68) contro 8,9 % per gli altri tipp; il momento migliore per tippare un primo è 21–40 giorni lavorativi dopo l'ultima volta (10,9 %).
 
 ## Kernaussagen
 
-- **Keine Wiederholung in derselben Woche**: Vorspeise nie zweimal in derselben Kalenderwoche (0 Paare, Zufall 37,1, p < 0,001), Hauptspeise nie zweimal in derselben Kalenderwoche (0 Paare, Zufall 37,3, p < 0,001). Beilage dagegen 17 Paare (Zufall 97,5), v. a. Reis.
-- **Mindestabstand**: Vorspeise frühestens wieder nach 3 Arbeitstagen, Hauptspeise nach 2; innerhalb von 5 bzw. 3 AT praktisch nie (< 25 % der Zufallsrate). Median-Abstand 18,0 (V), 19,0 (H), 8,0 (B) Arbeitstage.
-- **Wochenrhythmus**: Bei Abständen von 10, 15, … 30 AT (gleicher Wochentag) ist dieselbe Speise häufiger als bei anderen Abständen – V 4,9 % vs 4,1 % (p = 0,037), H 5,4 % vs 3,9 % (p < 0,001). Spitze Vorspeise L=30: 7,1 % vs 4,4 % (p = 0,018). Spitze Hauptspeise L=20: 8,1 % vs 4,4 % (p = 0,001).
-- **Wochentag**: Reis (Beilage) am Montag 40/98 (41 %, erwartet 19 %, Lift 2,1, p < 0,001, Bonferroni-signifikant).
+- **Keine Wiederholung in derselben Woche**: Vorspeise nie zweimal in derselben Kalenderwoche (0 Paare, Zufall 38,0, p < 0,001), Hauptspeise nie zweimal in derselben Kalenderwoche (0 Paare, Zufall 37,7, p < 0,001). Beilage dagegen 17 Paare (Zufall 99,3), v. a. Reis.
+- **Mindestabstand**: Vorspeise frühestens wieder nach 3 Arbeitstagen, Hauptspeise nach 2; innerhalb von 5 bzw. 3 AT praktisch nie (< 25 % der Zufallsrate). Median-Abstand 17,0 (V), 19,0 (H), 8,0 (B) Arbeitstage.
+- **Wochenrhythmus**: Bei Abständen von 10, 15, … 30 AT (gleicher Wochentag) ist dieselbe Speise nur bei H signifikant häufiger als bei anderen Abständen – V 4,9 % vs 4,1 % (p = 0,051), H 5,4 % vs 3,9 % (p < 0,001). Spitze Vorspeise L=30: 6,9 % vs 4,5 % (p = 0,024). Spitze Hauptspeise L=20: 7,9 % vs 4,3 % (p = 0,001).
+- **Wochentag**: Reis (Beilage) am Montag 42/100 (42 %, erwartet 19 %, Lift 2,2, p < 0,001, Bonferroni-signifikant).
 - **Wochentag**: Schweinskotelett (Hauptspeise) am Mittwoch 13/17 (76 %, erwartet 21 %, Lift 3,7, p < 0,001, Bonferroni-signifikant).
-- **Wochentag**: Arrabbiata (Vorspeise) am Montag 17/30 (57 %, erwartet 19 %, Lift 2,9, p < 0,001, Bonferroni-signifikant).
-- **Wochentag**: Champignonschnitzel (Hauptspeise) am Montag 15/28 (54 %, erwartet 19 %, Lift 2,8, p < 0,001, Bonferroni-signifikant).
+- **Wochentag**: Arrabbiata (Vorspeise) am Montag 17/30 (57 %, erwartet 20 %, Lift 2,9, p < 0,001, Bonferroni-signifikant).
+- **Wochentag**: Champignonschnitzel (Hauptspeise) am Montag 16/29 (55 %, erwartet 19 %, Lift 2,8, p < 0,001, Bonferroni-signifikant).
 - **Hypothese Fisch (alle Fischgerichte)**: häufigster Tag Freitag 11/13 (Mo–Fr: 0/0/2/0/11, p < 0,001) → bestätigt.
 - **Hypothese Fisch außerhalb Fastenzeit**: häufigster Tag Freitag 3/3 (Mo–Fr: 0/0/0/0/3, p = 0,007) → bestätigt.
-- **Hypothese Scombri**: häufigster Tag Freitag 2/3 (Mo–Fr: 0/0/1/0/2, p = 0,096) → nicht bestätigt.
-- **Hypothese Plent**: häufigster Tag Freitag 9/19 (Mo–Fr: 0/0/5/5/9, p = 0,005) → bestätigt.
-- **Hypothese Leberkas**: häufigster Tag Mittwoch 6/19 (Mo–Fr: 3/1/6/5/4, p = 0,185) → nicht bestätigt.
-- **Hypothese Hauswurst**: häufigster Tag Freitag 6/14 (Mo–Fr: 0/0/4/4/6, p = 0,036) → Tendenz.
-- **Beilage hängt an der Hauptspeise**: mit bekannter Hauptspeise trifft die typische Beilage in 48 % der Fälle (Leave-one-out), ohne nur 23 % (Reis); Entropie 3,50 → 1,44 bit. Feste Paare: Champignonschnitzel → Reis 75 % (21), Wienerschnitzel → Kartoffelsalat 82 % (18), Leberkas → Röstkartoffeln 63 % (12), Chilli con carne → Reis 100 % (17), Hühnerhaxlen → Pommes 71 % (12), Hauswurst → Plent 100 % (13), Cordon Bleu → Kartoffelsalat 100 % (12), Currywurst → Pommes 100 % (7), Gekochtes Rindfleisch → Salzkartoffeln 100 % (6), Sparerips → Pommes 67 % (4), Hackbraten → Püree 60 % (3), Pizzaiolaschnitzel → Ofenkartoffeln 60 % (3).
-- **Vorspeise ↔ Hauptspeise**: kaum Zusammenhang (MI 1,717 vs Zufall 1,676 bit, p = 0,096); einzelne Paare mit hohem Lift entstehen v. a. über den gemeinsamen Wochentag.
+- **Hypothese Scombri**: häufigster Tag Freitag 2/3 (Mo–Fr: 0/0/1/0/2, p = 0,097) → nicht bestätigt.
+- **Hypothese Plent**: häufigster Tag Freitag 10/20 (Mo–Fr: 0/0/5/5/10, p = 0,002) → bestätigt.
+- **Hypothese Leberkas**: häufigster Tag Mittwoch 6/19 (Mo–Fr: 3/1/6/5/4, p = 0,180) → nicht bestätigt.
+- **Hypothese Hauswurst**: häufigster Tag Freitag 7/15 (Mo–Fr: 0/0/4/4/7, p = 0,015) → Tendenz.
+- **Beilage hängt an der Hauptspeise**: mit bekannter Hauptspeise trifft die typische Beilage in 49 % der Fälle (Leave-one-out), ohne nur 23 % (Reis); Entropie 3,51 → 1,44 bit. Feste Paare: Champignonschnitzel → Reis 76 % (22), Wienerschnitzel → Kartoffelsalat 83 % (19), Leberkas → Röstkartoffeln 63 % (12), Chilli con carne → Reis 100 % (17), Hühnerhaxlen → Pommes 71 % (12), Hauswurst → Plent 100 % (14), Cordon Bleu → Kartoffelsalat 100 % (12), Currywurst → Pommes 100 % (7), Sparerips → Pommes 71 % (5), Gekochtes Rindfleisch → Salzkartoffeln 100 % (6), Hackbraten → Püree 60 % (3), Pizzaiolaschnitzel → Ofenkartoffeln 60 % (3).
+- **Vorspeise ↔ Hauptspeise**: kaum Zusammenhang (MI 1,694 vs Zufall 1,654 bit, p = 0,103); einzelne Paare mit hohem Lift entstehen v. a. über den gemeinsamen Wochentag.
 - **Fisch & Fastenzeit**: Fisch an 16 % der Fastentage (10) vs 1 % sonst (3; p < 0,001). Sommer/Winter: keine signifikanten Unterschiede.
 - Aktualitätsgewichtung: beste Halbwertszeit (Log-Loss, Tage) – Vorspeise 365, Hauptspeise 180, Beilage 180.
 - **Tipp-Timing (alle Spieler)**: Tipps auf Gerichte, die vor 1–5 AT serviert wurden, treffen bei V nur 2,9 % (sonst 8,9 %), bei H 4,0 % (sonst 8,3 %). Beste Abstandsklasse: Vorspeise 21–40 AT (10,9 %, n=285), Hauptspeise 11–20 AT (9,6 %, n=513), Beilage 3–5 AT (27,5 %, n=437).
@@ -44,33 +44,33 @@ Gezählt wird die erste angesagte Option (bei „A / B“ zählt A). „zuletzt�
 
 | Kategorie | verschiedene Gerichte | 2024 | 2025 | 2026 | Top-5-Anteil | Entropie (bit) |
 |---|---|---|---|---|---|---|
-| Vorspeise | 60 | 24 | 44 | 36 | 32 % | 4,96 |
-| Hauptspeise | 48 | 20 | 35 | 41 | 31 % | 4,90 |
-| Beilage | 18 | 13 | 14 | 16 | 64 % | 3,50 |
+| Vorspeise | 60 | 24 | 44 | 36 | 32 % | 4,95 |
+| Hauptspeise | 48 | 20 | 35 | 41 | 31 % | 4,91 |
+| Beilage | 19 | 13 | 14 | 17 | 64 % | 3,51 |
 
 ### Vorspeise – Top 20
 
 | # | Gericht | gesamt | Anteil | 2024 | 2025 | 2026 | zuletzt |
 |---|---|---|---|---|---|---|---|
-| 1 | Arrabbiata | 30 | 6,9 % | 2 | 16 | 12 | 2026-10-05 |
-| 2 | Nudel mit Käsesoße | 29 | 6,7 % | 1 | 15 | 13 | 2026-10-02 |
-| 3 | Hirten | 28 | 6,5 % | 2 | 13 | 13 | 2026-09-30 |
-| 4 | Aglio olio | 26 | 6,0 % | 1 | 15 | 10 | 2026-09-21 |
-| 5 | Nudel mit Ragu | 25 | 5,8 % | 3 | 14 | 8 | 2026-07-27 |
-| 6 | Nudel mit Thunfischsoße | 25 | 5,8 % | 2 | 14 | 9 | 2026-10-01 |
-| 7 | Schlutzer | 23 | 5,3 % | 1 | 12 | 10 | 2026-09-25 |
-| 8 | Nudel Mammarosa | 21 | 4,9 % | 2 | 11 | 8 | 2026-09-22 |
-| 9 | Lasagne | 20 | 4,6 % | 2 | 9 | 9 | 2026-10-08 |
-| 10 | Amatriciana | 19 | 4,4 % | 1 | 10 | 8 | 2026-10-12 |
-| 11 | Tortellini mit Schinken-Rahm | 18 | 4,2 % | 0 | 8 | 10 | 2026-10-06 |
-| 12 | Nudel mit Pesto | 16 | 3,7 % | 1 | 7 | 8 | 2026-09-10 |
-| 13 | Spinatspatzlen | 16 | 3,7 % | 1 | 10 | 5 | 2026-09-29 |
+| 1 | Arrabbiata | 30 | 6,8 % | 2 | 16 | 12 | 2026-10-05 |
+| 2 | Nudel mit Käsesoße | 30 | 6,8 % | 1 | 15 | 14 | 2026-10-22 |
+| 3 | Hirten | 28 | 6,3 % | 2 | 13 | 13 | 2026-09-30 |
+| 4 | Aglio olio | 27 | 6,1 % | 1 | 15 | 11 | 2026-10-26 |
+| 5 | Nudel mit Ragu | 26 | 5,9 % | 3 | 14 | 9 | 2026-10-15 |
+| 6 | Nudel mit Thunfischsoße | 25 | 5,7 % | 2 | 14 | 9 | 2026-10-01 |
+| 7 | Schlutzer | 24 | 5,4 % | 1 | 12 | 11 | 2026-10-20 |
+| 8 | Nudel Mammarosa | 22 | 5,0 % | 2 | 11 | 9 | 2026-10-19 |
+| 9 | Lasagne | 21 | 4,8 % | 2 | 9 | 10 | 2026-10-21 |
+| 10 | Amatriciana | 19 | 4,3 % | 1 | 10 | 8 | 2026-10-12 |
+| 11 | Tortellini mit Schinken-Rahm | 19 | 4,3 % | 0 | 8 | 11 | 2026-10-23 |
+| 12 | Nudel mit Pesto | 16 | 3,6 % | 1 | 7 | 8 | 2026-09-10 |
+| 13 | Spinatspatzlen | 16 | 3,6 % | 1 | 10 | 5 | 2026-09-29 |
 | 14 | Gnocchi mit Tomatensoße | 14 | 3,2 % | 0 | 6 | 8 | 2026-10-09 |
 | 15 | Käseknödel | 11 | 2,5 % | 2 | 4 | 5 | 2026-09-24 |
 | 16 | Pizzastrudel | 11 | 2,5 % | 1 | 5 | 5 | 2026-10-07 |
 | 17 | Carbonara | 10 | 2,3 % | 1 | 4 | 5 | 2026-09-18 |
 | 18 | Spinatcannelloni | 10 | 2,3 % | 1 | 4 | 5 | 2026-09-16 |
-| 19 | Nudel mit Lachs | 8 | 1,8 % | 0 | 5 | 3 | 2026-09-23 |
+| 19 | Nudel mit Lachs | 9 | 2,0 % | 0 | 5 | 4 | 2026-10-16 |
 | 20 | Nudel mit Salsiccia-Ragu | 5 | 1,1 % | 0 | 2 | 3 | 2026-09-03 |
 
 **Selten (n ≤ 2, 32 Gerichte):** Gnocchi mit Gorgonzolasoße, Gnocchi mit Käsesoße, Omelett mit Schinken und Käse, Plentauflauf, Ravioli, Spinatknödel mit Käsesoße, Spinatravioli, Gemüselasagne, Gerstsuppe, Gnocchi, Gnocchi mit Kräutersauce, Gnocchi mit Lachs, Gnocchi mit Ragu, Gulaschsuppe, Käse-Sofficini mit Tomantensoße, Kürbisrisotto, Nudel mit Lachs und Tomantensoße, Nudel mit Schinken-Rahm, Nudel mit Tomatensoße, Nudel mit Tomatensoße und Schinken, Pilzrisotto, Putanesca, Ravioli mit Käsesoße, Ravioli mit Tomantensoße, Schlutzer Schinken-Rahm, Schupfnudel mit Lachs, Schüttelbrot-Risotto mit Speckstreifen, Spargelrisotto, Speck-Zwiebel-Kuchen, Spinatknödel, Spinatknödel mit Gorgonzolasoße, Tomatenrisotto
@@ -81,26 +81,26 @@ Gezählt wird die erste angesagte Option (bei „A / B“ zählt A). „zuletzt�
 
 | # | Gericht | gesamt | Anteil | 2024 | 2025 | 2026 | zuletzt |
 |---|---|---|---|---|---|---|---|
-| 1 | Hühnerbrust | 32 | 7,4 % | 2 | 16 | 14 | 2026-10-12 |
-| 2 | Champignonschnitzel | 28 | 6,5 % | 2 | 16 | 10 | 2026-10-05 |
-| 3 | Truthahngeschnetzeltes | 26 | 6,0 % | 2 | 13 | 11 | 2026-10-07 |
-| 4 | Truthahnschnitzel | 26 | 6,0 % | 2 | 16 | 8 | 2026-09-14 |
-| 5 | Schweinsschopf | 24 | 5,5 % | 3 | 11 | 10 | 2026-10-14 |
-| 6 | Truthahnbraten | 23 | 5,3 % | 4 | 11 | 8 | 2026-09-30 |
-| 7 | Wienerschnitzel | 22 | 5,1 % | 1 | 12 | 9 | 2026-09-28 |
-| 8 | Schweinsschnitzel | 21 | 4,8 % | 1 | 13 | 7 | 2026-08-24 |
-| 9 | Schweinsfilet | 20 | 4,6 % | 2 | 12 | 6 | 2026-09-18 |
-| 10 | Leberkas | 19 | 4,4 % | 2 | 10 | 7 | 2026-09-23 |
+| 1 | Hühnerbrust | 32 | 7,2 % | 2 | 16 | 14 | 2026-10-12 |
+| 2 | Champignonschnitzel | 29 | 6,6 % | 2 | 16 | 11 | 2026-10-26 |
+| 3 | Truthahngeschnetzeltes | 26 | 5,9 % | 2 | 13 | 11 | 2026-10-07 |
+| 4 | Truthahnschnitzel | 26 | 5,9 % | 2 | 16 | 8 | 2026-09-14 |
+| 5 | Schweinsschopf | 24 | 5,4 % | 3 | 11 | 10 | 2026-10-14 |
+| 6 | Truthahnbraten | 24 | 5,4 % | 4 | 11 | 9 | 2026-10-19 |
+| 7 | Wienerschnitzel | 23 | 5,2 % | 1 | 12 | 10 | 2026-10-21 |
+| 8 | Schweinsfilet | 21 | 4,8 % | 2 | 12 | 7 | 2026-10-20 |
+| 9 | Schweinsschnitzel | 21 | 4,8 % | 1 | 13 | 7 | 2026-08-24 |
+| 10 | Leberkas | 19 | 4,3 % | 2 | 10 | 7 | 2026-09-23 |
 | 11 | Chilli con carne | 17 | 3,9 % | 0 | 10 | 7 | 2026-09-29 |
 | 12 | Hühnerhaxlen | 17 | 3,9 % | 2 | 7 | 8 | 2026-10-02 |
 | 13 | Schweinskotelett | 17 | 3,9 % | 2 | 12 | 3 | 2026-06-10 |
-| 14 | Hauswurst | 13 | 3,0 % | 1 | 7 | 5 | 2026-09-09 |
-| 15 | Cordon Bleu | 12 | 2,8 % | 0 | 5 | 7 | 2026-10-06 |
-| 16 | Zwiebelrostbraten | 12 | 2,8 % | 1 | 5 | 6 | 2026-09-22 |
+| 14 | Hauswurst | 14 | 3,2 % | 1 | 7 | 6 | 2026-10-16 |
+| 15 | Cordon Bleu | 12 | 2,7 % | 0 | 5 | 7 | 2026-10-06 |
+| 16 | Zwiebelrostbraten | 12 | 2,7 % | 1 | 5 | 6 | 2026-09-22 |
 | 17 | Schweinsgulasch | 11 | 2,5 % | 0 | 5 | 6 | 2026-10-09 |
 | 18 | Zigeunerschnitzel | 10 | 2,3 % | 0 | 5 | 5 | 2026-08-03 |
 | 19 | Currywurst | 7 | 1,6 % | 0 | 3 | 4 | 2026-08-26 |
-| 20 | Gekochtes Rindfleisch | 6 | 1,4 % | 1 | 2 | 3 | 2026-09-04 |
+| 20 | Ossobuchi | 7 | 1,6 % | 1 | 2 | 4 | 2026-10-15 |
 
 **Selten (n ≤ 2, 16 Gerichte):** Forelle, Frittiertes Pangasiusfilet, Hamburger, Kalbsgulasch, Rotbarschfilet, Schweinsfilet mit Pfeffersoße, 1/2 Brathuhn, Frittiertes Schollenfilet, Hirschgulasch, Lammbraten, Pangasiusfilet, Pangasiusfilet mit Kräuterrahmsoße, Panierter Pangasius, Paprika-Schweinegulasch, Saures Rindfleisch, Spiegelei
 
@@ -110,26 +110,27 @@ Gezählt wird die erste angesagte Option (bei „A / B“ zählt A). „zuletzt�
 
 | # | Gericht | gesamt | Anteil | 2024 | 2025 | 2026 | zuletzt |
 |---|---|---|---|---|---|---|---|
-| 1 | Reis | 98 | 22,6 % | 7 | 54 | 37 | 2026-10-12 |
-| 2 | Pommes | 56 | 12,9 % | 3 | 28 | 25 | 2026-10-01 |
-| 3 | Spatzlen | 44 | 10,1 % | 6 | 18 | 20 | 2026-09-24 |
-| 4 | Püree | 43 | 9,9 % | 2 | 22 | 19 | 2026-10-07 |
-| 5 | Ofenkartoffeln | 38 | 8,8 % | 4 | 23 | 11 | 2026-10-02 |
-| 6 | Kartoffelsalat | 34 | 7,8 % | 1 | 15 | 18 | 2026-10-06 |
-| 7 | Kroketten | 25 | 5,8 % | 2 | 14 | 9 | 2026-10-09 |
-| 8 | Kartoffelgratin | 23 | 5,3 % | 1 | 16 | 6 | 2026-06-10 |
-| 9 | Plent | 19 | 4,4 % | 1 | 12 | 6 | 2026-09-09 |
+| 1 | Reis | 100 | 22,6 % | 7 | 54 | 39 | 2026-10-26 |
+| 2 | Pommes | 57 | 12,9 % | 3 | 28 | 26 | 2026-10-23 |
+| 3 | Spatzlen | 45 | 10,2 % | 6 | 18 | 21 | 2026-10-15 |
+| 4 | Püree | 44 | 10,0 % | 2 | 22 | 20 | 2026-10-20 |
+| 5 | Ofenkartoffeln | 38 | 8,6 % | 4 | 23 | 11 | 2026-10-02 |
+| 6 | Kartoffelsalat | 35 | 7,9 % | 1 | 15 | 19 | 2026-10-21 |
+| 7 | Kroketten | 25 | 5,7 % | 2 | 14 | 9 | 2026-10-09 |
+| 8 | Kartoffelgratin | 23 | 5,2 % | 1 | 16 | 6 | 2026-06-10 |
+| 9 | Plent | 20 | 4,5 % | 1 | 12 | 7 | 2026-10-16 |
 | 10 | Röstkartoffeln | 14 | 3,2 % | 2 | 7 | 5 | 2026-06-25 |
 | 11 | Salzkartoffeln | 11 | 2,5 % | 1 | 5 | 5 | 2026-09-04 |
-| 12 | Kartoffelstampf | 9 | 2,1 % | 2 | 3 | 4 | 2026-09-30 |
+| 12 | Kartoffelstampf | 9 | 2,0 % | 2 | 3 | 4 | 2026-09-30 |
 | 13 | Wedges | 7 | 1,6 % | 0 | 0 | 7 | 2026-10-14 |
 | 14 | Bratkartoffeln | 6 | 1,4 % | 0 | 1 | 5 | 2026-08-06 |
 | 15 | Gulasch | 3 | 0,7 % | 0 | 3 | 0 | 2025-12-16 |
-| 16 | Röstinchen | 2 | 0,5 % | 0 | 0 | 2 | 2026-09-25 |
+| 16 | Röstinchen | 2 | 0,4 % | 0 | 0 | 2 | 2026-09-25 |
 | 17 | Kartoffel-Käse-Kroketten | 1 | 0,2 % | 0 | 0 | 1 | 2026-02-11 |
-| 18 | Safranreis | 1 | 0,2 % | 1 | 0 | 0 | 2024-11-22 |
+| 18 | Knödel | 1 | 0,2 % | 0 | 0 | 1 | 2026-10-22 |
+| 19 | Safranreis | 1 | 0,2 % | 1 | 0 | 0 | 2024-11-22 |
 
-**Selten (n ≤ 2, 3 Gerichte):** Röstinchen, Kartoffel-Käse-Kroketten, Safranreis
+**Selten (n ≤ 2, 4 Gerichte):** Röstinchen, Kartoffel-Käse-Kroketten, Knödel, Safranreis
 
 **Nur als Alternative angesagt:** Kraut, Peperonata, Zucchini
 
@@ -139,13 +140,13 @@ Abstände in **Arbeitstagen** (Position im Spielkalender; freie Tage und Saisonp
 
 | Kategorie | kleinster Abstand | Median | ≤ 2 AT | ≤ 5 AT | ≤ 10 AT | ≤ 20 AT | gleiche Woche (Paare) | Zufall | p (weniger als Zufall) | keine Wdh. innerhalb |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Vorspeise | 3 | 18,0 | 0 % | 2 % | 16 % | 60 % | 0 | 37,1 | < 0,001 | 5 AT |
-| Hauptspeise | 2 | 19,0 | 1 % | 4 % | 20 % | 58 % | 0 | 37,3 | < 0,001 | 3 AT |
-| Beilage | 1 | 8,0 | 6 % | 31 % | 64 % | 87 % | 17 | 97,5 | < 0,001 | 1 AT |
+| Vorspeise | 3 | 17,0 | 0 % | 2 % | 16 % | 60 % | 0 | 38,0 | < 0,001 | 5 AT |
+| Hauptspeise | 2 | 19,0 | 1 % | 4 % | 19 % | 58 % | 0 | 37,7 | < 0,001 | 3 AT |
+| Beilage | 1 | 8,0 | 6 % | 31 % | 64 % | 87 % | 17 | 99,3 | < 0,001 | 1 AT |
 
-- **Vorspeise**: Die Küche **vermeidet** Wiederholungen innerhalb von 5 Arbeitstagen (6 gleiche Paare, Zufall 93,4); innerhalb von 10 Arbeitstagen 54 vs 183,6. Erste Wiederholung frühestens nach 3 AT.
-- **Hauptspeise**: Die Küche **vermeidet** Wiederholungen innerhalb von 5 Arbeitstagen (15 gleiche Paare, Zufall 93,5); innerhalb von 10 Arbeitstagen 70 vs 183,4. Erste Wiederholung frühestens nach 2 AT.
-- **Beilage**: Die Küche wiederholt **seltener** als Zufall innerhalb von 5 Arbeitstagen (133 gleiche Paare, Zufall 244,7); innerhalb von 10 Arbeitstagen 359 vs 480,7. Erste Wiederholung frühestens nach 1 AT.
+- **Vorspeise**: Die Küche **vermeidet** Wiederholungen innerhalb von 5 Arbeitstagen (6 gleiche Paare, Zufall 95,5); innerhalb von 10 Arbeitstagen 55 vs 187,8. Erste Wiederholung frühestens nach 3 AT.
+- **Hauptspeise**: Die Küche **vermeidet** Wiederholungen innerhalb von 5 Arbeitstagen (15 gleiche Paare, Zufall 94,5); innerhalb von 10 Arbeitstagen 70 vs 185,5. Erste Wiederholung frühestens nach 2 AT.
+- **Beilage**: Die Küche wiederholt **seltener** als Zufall innerhalb von 5 Arbeitstagen (135 gleiche Paare, Zufall 249,0); innerhalb von 10 Arbeitstagen 365 vs 489,3. Erste Wiederholung frühestens nach 1 AT.
 
 ### Refraktärkurve P(gleiches Gericht im Abstand L)
 
@@ -153,51 +154,51 @@ Basis = Σ p² (globale Anteile, wie in `stats.json`); Saison-Basis = Erwartung 
 
 | L (AT) | Vorspeise | Hauptspeise | Beilage |
 |---|---|---|---|
-| 1 | 0,0 % (0/424) | 0,0 % (0/427) | 2,1 % (9/427) |
-| 2 | 0,0 % (0/422) | 0,5 % (2/425) | 3,5 % (15/425) |
-| 3 | 0,2 % (1/419) | 0,7 % (3/422) | 7,3 % (31/422) |
-| 4 | 0,5 % (2/416) | 1,2 % (5/419) | 8,8 % (37/419) |
-| 5 | 0,7 % (3/414) | 1,2 % (5/416) | 9,9 % (41/416) |
-| 6 | 1,5 % (6/411) | 1,7 % (7/413) | 9,4 % (39/413) |
-| 7 | 2,5 % (10/408) | 1,2 % (5/410) | 12,4 % (51/410) |
-| 8 | 2,0 % (8/405) | 2,5 % (10/407) | 10,3 % (42/407) |
-| 9 | 3,2 % (13/402) | 2,7 % (11/404) | 11,1 % (45/404) |
-| 10 | 2,8 % (11/399) | 5,5 % (22/401) | 12,2 % (49/401) |
-| 11 | 2,8 % (11/397) | 2,8 % (11/399) | 10,8 % (43/399) |
-| 12 | 6,1 % (24/393) | 4,3 % (17/395) | 9,4 % (37/395) |
-| 13 | 5,9 % (23/390) | 3,6 % (14/392) | 8,7 % (34/392) |
-| 14 | 4,9 % (19/387) | 4,6 % (18/389) | 12,3 % (48/389) |
-| 15 | 4,2 % (16/384) | 5,7 % (22/386) | 13,0 % (50/386) |
-| 16 | 3,9 % (15/381) | 2,3 % (9/383) | 11,5 % (44/383) |
-| 17 | 3,2 % (12/378) | 2,6 % (10/380) | 13,7 % (52/380) |
-| 18 | 4,8 % (18/375) | 5,0 % (19/377) | 8,8 % (33/377) |
-| 19 | 2,4 % (9/372) | 4,5 % (17/374) | 10,2 % (38/374) |
-| 20 | 5,7 % (21/369) | 8,1 % (30/371) | 11,6 % (43/371) |
-| 21 | 2,2 % (8/366) | 3,5 % (13/368) | 14,4 % (53/368) |
-| 22 | 3,6 % (13/363) | 4,7 % (17/365) | 12,3 % (45/365) |
-| 23 | 3,3 % (12/360) | 3,6 % (13/362) | 12,4 % (45/362) |
-| 24 | 2,5 % (9/357) | 4,7 % (17/359) | 10,9 % (39/359) |
-| 25 | 5,4 % (19/354) | 3,9 % (14/356) | 13,2 % (47/356) |
-| 26 | 4,6 % (16/351) | 3,4 % (12/353) | 10,2 % (36/353) |
-| 27 | 3,7 % (13/348) | 2,6 % (9/350) | 11,7 % (41/350) |
-| 28 | 6,1 % (21/345) | 4,3 % (15/347) | 10,1 % (35/347) |
-| 29 | 5,0 % (17/342) | 6,1 % (21/344) | 12,5 % (43/344) |
-| 30 | 7,1 % (24/340) | 3,8 % (13/341) | 14,7 % (50/341) |
-| Basis Σp² | 4,2 % | 4,2 % | 11,2 % |
-| Saison-Basis | 4,4 % | 4,3 % | 11,6 % |
+| 1 | 0,0 % (0/432) | 0,0 % (0/435) | 2,1 % (9/435) |
+| 2 | 0,0 % (0/429) | 0,5 % (2/432) | 3,5 % (15/432) |
+| 3 | 0,2 % (1/426) | 0,7 % (3/429) | 7,2 % (31/429) |
+| 4 | 0,5 % (2/423) | 1,2 % (5/426) | 8,7 % (37/426) |
+| 5 | 0,7 % (3/421) | 1,2 % (5/423) | 10,2 % (43/423) |
+| 6 | 1,4 % (6/418) | 1,7 % (7/420) | 9,3 % (39/420) |
+| 7 | 2,4 % (10/415) | 1,2 % (5/417) | 12,5 % (52/417) |
+| 8 | 1,9 % (8/412) | 2,4 % (10/414) | 10,1 % (42/414) |
+| 9 | 3,4 % (14/409) | 2,7 % (11/411) | 11,2 % (46/411) |
+| 10 | 2,7 % (11/407) | 5,4 % (22/409) | 12,5 % (51/409) |
+| 11 | 2,7 % (11/405) | 2,7 % (11/407) | 10,8 % (44/407) |
+| 12 | 6,0 % (24/401) | 4,2 % (17/403) | 9,4 % (38/403) |
+| 13 | 6,0 % (24/398) | 3,8 % (15/400) | 8,5 % (34/400) |
+| 14 | 5,1 % (20/395) | 4,5 % (18/397) | 12,3 % (49/397) |
+| 15 | 4,1 % (16/392) | 5,8 % (23/394) | 13,2 % (52/394) |
+| 16 | 3,9 % (15/389) | 2,6 % (10/391) | 11,5 % (45/391) |
+| 17 | 3,6 % (14/386) | 2,8 % (11/388) | 13,4 % (52/388) |
+| 18 | 4,7 % (18/383) | 4,9 % (19/385) | 8,6 % (33/385) |
+| 19 | 2,6 % (10/380) | 4,5 % (17/382) | 10,5 % (40/382) |
+| 20 | 5,6 % (21/377) | 7,9 % (30/379) | 12,1 % (46/379) |
+| 21 | 2,1 % (8/374) | 3,5 % (13/376) | 14,1 % (53/376) |
+| 22 | 3,5 % (13/371) | 4,8 % (18/373) | 12,3 % (46/373) |
+| 23 | 3,3 % (12/368) | 3,5 % (13/370) | 12,2 % (45/370) |
+| 24 | 2,5 % (9/365) | 4,6 % (17/367) | 10,9 % (40/367) |
+| 25 | 5,5 % (20/362) | 4,1 % (15/364) | 13,2 % (48/364) |
+| 26 | 4,5 % (16/359) | 3,3 % (12/361) | 10,0 % (36/361) |
+| 27 | 3,7 % (13/356) | 2,8 % (10/358) | 12,0 % (43/358) |
+| 28 | 6,2 % (22/353) | 4,5 % (16/355) | 10,1 % (36/355) |
+| 29 | 5,1 % (18/350) | 6,0 % (21/352) | 12,5 % (44/352) |
+| 30 | 6,9 % (24/348) | 3,7 % (13/349) | 14,3 % (50/349) |
+| Basis Σp² | 4,2 % | 4,1 % | 11,2 % |
+| Saison-Basis | 4,5 % | 4,3 % | 11,6 % |
 
 **Auffällige Spitzen (Rate > 1,3 × Saison-Basis, p < 0,05; L=5 ≈ 1 Woche, L=20 ≈ 4 Wochen):**
 
-- Vorspeise: L=30 → 7,1 % vs 4,4 % (24/340, p = 0,018)
-- Hauptspeise: L=20 → 8,1 % vs 4,4 % (30/371, p = 0,001)
+- Vorspeise: L=30 → 6,9 % vs 4,5 % (24/348, p = 0,024)
+- Hauptspeise: L=20 → 7,9 % vs 4,3 % (30/379, p = 0,001)
 
 **Wochenrhythmus** – gleiche Speise bei Abständen L = 10, 15, 20, 25, 30 AT (meist gleicher Wochentag) vs. allen anderen Abständen 10–30 AT:
 
 | Kategorie | L = 5·k | andere L | p |
 |---|---|---|---|
-| Vorspeise | 4,9 % (91/1846) | 4,1 % (240/5905) | 0,037 |
-| Hauptspeise | 5,4 % (101/1855) | 3,9 % (232/5937) | < 0,001 |
-| Beilage | 12,9 % (239/1855) | 11,2 % (666/5937) | 0,014 |
+| Vorspeise | 4,9 % (92/1886) | 4,1 % (247/6033) | 0,051 |
+| Hauptspeise | 5,4 % (103/1895) | 3,9 % (238/6065) | < 0,001 |
+| Beilage | 13,0 % (247/1895) | 11,2 % (678/6065) | 0,007 |
 
 → Der Wochentag-Effekt (Abschnitt 3) erzeugt einen schwachen Wochenrhythmus; die Refraktärzeit dominiert aber die ersten 1–2 Wochen.
 
@@ -206,16 +207,16 @@ Basis = Σ p² (globale Anteile, wie in `stats.json`); Saison-Basis = Erwartung 
 | Gericht | n | Mittel | Median | min | max | Wdh. gleiche Woche |
 |---|---|---|---|---|---|---|
 | Arrabbiata | 30 | 14,6 | 13,0 | 7 | 25 | 0 |
-| Nudel mit Käsesoße | 29 | 14,9 | 14,0 | 5 | 30 | 0 |
+| Nudel mit Käsesoße | 30 | 14,8 | 14,0 | 5 | 30 | 0 |
 | Hirten | 28 | 14,6 | 13,0 | 4 | 45 | 0 |
-| Aglio olio | 26 | 16,4 | 14,0 | 6 | 41 | 0 |
-| Nudel mit Ragu | 25 | 16,0 | 18,0 | 5 | 33 | 0 |
+| Aglio olio | 27 | 16,8 | 14,0 | 6 | 41 | 0 |
+| Nudel mit Ragu | 26 | 17,4 | 18,0 | 5 | 48 | 0 |
 | Nudel mit Thunfischsoße | 25 | 16,7 | 13,5 | 6 | 41 | 0 |
-| Schlutzer | 23 | 17,9 | 14,0 | 3 | 41 | 0 |
-| Nudel Mammarosa | 21 | 20,3 | 18,5 | 4 | 45 | 0 |
-| Lasagne | 20 | 20,7 | 18,0 | 12 | 48 | 0 |
+| Schlutzer | 24 | 17,8 | 14,0 | 3 | 41 | 0 |
+| Nudel Mammarosa | 22 | 20,2 | 19,0 | 4 | 45 | 0 |
+| Lasagne | 21 | 20,1 | 17,5 | 9 | 48 | 0 |
 | Amatriciana | 19 | 21,7 | 20,0 | 12 | 51 | 0 |
-| Tortellini mit Schinken-Rahm | 18 | 19,2 | 19,0 | 7 | 30 | 0 |
+| Tortellini mit Schinken-Rahm | 19 | 18,8 | 16,0 | 7 | 30 | 0 |
 | Nudel mit Pesto | 16 | 22,8 | 20,0 | 6 | 49 | 0 |
 | Spinatspatzlen | 16 | 27,7 | 25,0 | 8 | 71 | 0 |
 | Gnocchi mit Tomatensoße | 14 | 26,7 | 23,5 | 7 | 78 | 0 |
@@ -223,26 +224,26 @@ Basis = Σ p² (globale Anteile, wie in `stats.json`); Saison-Basis = Erwartung 
 | Pizzastrudel | 11 | 41,1 | 41,5 | 30 | 61 | 0 |
 | Carbonara | 10 | 33,9 | 33,0 | 18 | 63 | 0 |
 | Spinatcannelloni | 10 | 44,3 | 48,0 | 23 | 67 | 0 |
-| Nudel mit Lachs | 8 | 46,5 | 58,5 | 9 | 63 | 0 |
+| Nudel mit Lachs | 9 | 42,3 | 58,0 | 9 | 63 | 0 |
 
 ### Abstände je Gericht – Hauptspeise (n ≥ 8)
 
 | Gericht | n | Mittel | Median | min | max | Wdh. gleiche Woche |
 |---|---|---|---|---|---|---|
 | Hühnerbrust | 32 | 13,4 | 12,0 | 4 | 31 | 0 |
-| Champignonschnitzel | 28 | 14,7 | 12,0 | 3 | 34 | 0 |
+| Champignonschnitzel | 29 | 14,7 | 13,5 | 3 | 34 | 0 |
 | Truthahngeschnetzeltes | 26 | 17,0 | 16,0 | 8 | 34 | 0 |
 | Truthahnschnitzel | 26 | 17,0 | 13,0 | 2 | 85 | 0 |
 | Schweinsschopf | 24 | 19,1 | 15,0 | 4 | 73 | 0 |
-| Truthahnbraten | 23 | 17,2 | 11,0 | 4 | 66 | 0 |
-| Wienerschnitzel | 22 | 18,3 | 15,0 | 7 | 41 | 0 |
+| Truthahnbraten | 24 | 17,1 | 12,0 | 4 | 66 | 0 |
+| Wienerschnitzel | 23 | 18,2 | 16,0 | 7 | 41 | 0 |
+| Schweinsfilet | 21 | 19,0 | 16,0 | 4 | 44 | 0 |
 | Schweinsschnitzel | 21 | 17,9 | 14,0 | 2 | 59 | 0 |
-| Schweinsfilet | 20 | 18,8 | 15,0 | 4 | 44 | 0 |
 | Leberkas | 19 | 24,0 | 21,0 | 13 | 61 | 0 |
 | Chilli con carne | 17 | 24,0 | 21,0 | 12 | 44 | 0 |
 | Hühnerhaxlen | 17 | 28,0 | 24,5 | 7 | 76 | 0 |
 | Schweinskotelett | 17 | 18,7 | 17,5 | 9 | 60 | 0 |
-| Hauswurst | 13 | 35,4 | 27,0 | 17 | 87 | 0 |
+| Hauswurst | 14 | 34,6 | 27,0 | 17 | 87 | 0 |
 | Cordon Bleu | 12 | 30,3 | 23,5 | 15 | 62 | 0 |
 | Zwiebelrostbraten | 12 | 34,8 | 35,0 | 6 | 61 | 0 |
 | Schweinsgulasch | 11 | 40,1 | 31,0 | 17 | 78 | 0 |
@@ -252,15 +253,15 @@ Basis = Σ p² (globale Anteile, wie in `stats.json`); Saison-Basis = Erwartung 
 
 | Gericht | n | Mittel | Median | min | max | Wdh. gleiche Woche |
 |---|---|---|---|---|---|---|
-| Reis | 98 | 4,5 | 4,0 | 1 | 11 | 13 |
-| Pommes | 56 | 7,6 | 6,0 | 1 | 25 | 3 |
-| Spatzlen | 44 | 9,7 | 8,0 | 3 | 26 | 0 |
-| Püree | 43 | 9,7 | 9,0 | 3 | 20 | 0 |
+| Reis | 100 | 4,5 | 4,0 | 1 | 11 | 13 |
+| Pommes | 57 | 7,8 | 6,0 | 1 | 25 | 3 |
+| Spatzlen | 45 | 9,9 | 8,0 | 3 | 26 | 0 |
+| Püree | 44 | 9,7 | 9,0 | 3 | 20 | 0 |
 | Ofenkartoffeln | 38 | 10,9 | 9,0 | 2 | 45 | 1 |
-| Kartoffelsalat | 34 | 11,9 | 10,0 | 4 | 32 | 0 |
+| Kartoffelsalat | 35 | 11,8 | 10,0 | 4 | 32 | 0 |
 | Kroketten | 25 | 16,5 | 13,0 | 7 | 31 | 0 |
 | Kartoffelgratin | 23 | 13,2 | 11,5 | 3 | 40 | 0 |
-| Plent | 19 | 22,1 | 20,5 | 4 | 60 | 0 |
+| Plent | 20 | 22,4 | 21,0 | 4 | 60 | 0 |
 | Röstkartoffeln | 14 | 25,3 | 23,0 | 2 | 47 | 0 |
 | Salzkartoffeln | 11 | 42,6 | 22,0 | 5 | 151 | 0 |
 | Kartoffelstampf | 9 | 61,5 | 47,0 | 10 | 134 | 0 |
@@ -269,7 +270,7 @@ Basis = Σ p² (globale Anteile, wie in `stats.json`); Saison-Basis = Erwartung 
 
 ## 3. Wochentage
 
-Servierte Tage je Wochentag (Hauptspeise): Mo 84, Di 88, Mi 90, Do 89, Fr 83. Getestet wurden 300 Kombinationen (Gericht mit n ≥ 5 × Wochentag) mit einem einseitigen Binomialtest; bei so vielen Tests sind einzelne p < 0,05 auch zufällig zu erwarten (Bonferroni-Schwelle ≈ 0,0002).
+Servierte Tage je Wochentag (Hauptspeise): Mo 86, Di 89, Mi 91, Do 91, Fr 85. Getestet wurden 305 Kombinationen (Gericht mit n ≥ 5 × Wochentag) mit einem einseitigen Binomialtest; bei so vielen Tests sind einzelne p < 0,05 auch zufällig zu erwarten (Bonferroni-Schwelle ≈ 0,0002).
 
 ### Gezielte Hypothesen
 
@@ -277,146 +278,146 @@ Servierte Tage je Wochentag (Hauptspeise): Mo 84, Di 88, Mi 90, Do 89, Fr 83. Ge
 |---|---|---|---|---|---|---|---|---|---|
 | Fisch (alle Fischgerichte) | 13 | 0 | 0 | 2 | 0 | 11 | Fr | 85 % (19 %) | < 0,001 |
 | Fisch außerhalb Fastenzeit | 3 | 0 | 0 | 0 | 0 | 3 | Fr | 100 % (19 %) | 0,007 |
-| Scombri | 3 | 0 | 0 | 1 | 0 | 2 | Fr | 67 % (19 %) | 0,096 |
-| Plent | 19 | 0 | 0 | 5 | 5 | 9 | Fr | 47 % (19 %) | 0,005 |
-| Leberkas | 19 | 3 | 1 | 6 | 5 | 4 | Mi | 32 % (21 %) | 0,185 |
-| Hauswurst | 14 | 0 | 0 | 4 | 4 | 6 | Fr | 43 % (19 %) | 0,036 |
+| Scombri | 3 | 0 | 0 | 1 | 0 | 2 | Fr | 67 % (19 %) | 0,097 |
+| Plent | 20 | 0 | 0 | 5 | 5 | 10 | Fr | 50 % (19 %) | 0,002 |
+| Leberkas | 19 | 3 | 1 | 6 | 5 | 4 | Mi | 32 % (21 %) | 0,180 |
+| Hauswurst | 15 | 0 | 0 | 4 | 4 | 7 | Fr | 47 % (19 %) | 0,015 |
 
 ### Auffällige Wochentag-Vorlieben (Lift ≥ 1,5, mind. 3×, p < 0,05)
 
 | Kategorie | Gericht | Tag | an diesem Tag | Anteil | erwartet | Lift | p | Bonferroni |
 |---|---|---|---|---|---|---|---|---|
-| Beilage | Reis | Mo | 40/98 | 41 % | 19 % | 2,11 | < 0,001 | ✔ |
-| Hauptspeise | Schweinskotelett | Mi | 13/17 | 76 % | 21 % | 3,69 | < 0,001 | ✔ |
-| Vorspeise | Arrabbiata | Mo | 17/30 | 57 % | 19 % | 2,92 | < 0,001 | ✔ |
-| Hauptspeise | Champignonschnitzel | Mo | 15/28 | 54 % | 19 % | 2,77 | < 0,001 | ✔ |
-| Vorspeise | Amatriciana | Mo | 11/19 | 58 % | 19 % | 2,98 | < 0,001 |  |
-| Vorspeise | Spinatspatzlen | Di | 10/16 | 62 % | 20 % | 3,08 | < 0,001 |  |
-| Hauptspeise | Truthahnbraten | Di | 12/23 | 52 % | 20 % | 2,57 | < 0,001 |  |
-| Hauptspeise | Schweinsschnitzel | Mo | 11/21 | 52 % | 19 % | 2,71 | < 0,001 |  |
-| Beilage | Salzkartoffeln | Fr | 7/11 | 64 % | 19 % | 3,33 | 0,001 |  |
-| Vorspeise | Lasagne | Di | 10/20 | 50 % | 20 % | 2,46 | 0,003 |  |
-| Vorspeise | Tortellini mit Schinken-Rahm | Di | 9/18 | 50 % | 20 % | 2,46 | 0,005 |  |
-| Beilage | Plent | Fr | 9/19 | 47 % | 19 % | 2,48 | 0,005 |  |
-| Beilage | Wedges | Mi | 5/7 | 71 % | 21 % | 3,44 | 0,006 |  |
-| Hauptspeise | Schweinsschnitzel mit Kräuterrahmsoße | Mo | 4/5 | 80 % | 19 % | 4,13 | 0,006 |  |
-| Hauptspeise | Hühnerbrust | Di | 13/32 | 41 % | 20 % | 2,00 | 0,007 |  |
-| Hauptspeise | Truthahngeschnetzeltes | Di | 11/26 | 42 % | 20 % | 2,09 | 0,009 |  |
-| Vorspeise | Nudel mit Lachs | Fr | 5/8 | 62 % | 19 % | 3,22 | 0,009 |  |
-| Beilage | Spatzlen | Do | 16/44 | 36 % | 21 % | 1,77 | 0,011 |  |
-| Vorspeise | Nudel Mammarosa | Mo | 9/21 | 43 % | 19 % | 2,21 | 0,012 |  |
-| Beilage | Püree | Di | 15/43 | 35 % | 20 % | 1,72 | 0,018 |  |
-| Hauptspeise | Ossobuchi | Do | 4/6 | 67 % | 21 % | 3,25 | 0,019 |  |
-| Beilage | Ofenkartoffeln | Mo | 13/38 | 34 % | 19 % | 1,77 | 0,022 |  |
-| Hauptspeise | Cordon Bleu | Mi | 6/12 | 50 % | 21 % | 2,41 | 0,023 |  |
-| Vorspeise | Spinatcannelloni | Fr | 5/10 | 50 % | 19 % | 2,58 | 0,029 |  |
-| Vorspeise | Carbonara | Fr | 5/10 | 50 % | 19 % | 2,58 | 0,029 |  |
+| Beilage | Reis | Mo | 42/100 | 42 % | 19 % | 2,16 | < 0,001 | ✔ |
+| Hauptspeise | Schweinskotelett | Mi | 13/17 | 76 % | 21 % | 3,71 | < 0,001 | ✔ |
+| Vorspeise | Arrabbiata | Mo | 17/30 | 57 % | 20 % | 2,91 | < 0,001 | ✔ |
+| Hauptspeise | Champignonschnitzel | Mo | 16/29 | 55 % | 19 % | 2,84 | < 0,001 | ✔ |
+| Vorspeise | Amatriciana | Mo | 11/19 | 58 % | 20 % | 2,97 | < 0,001 |  |
+| Vorspeise | Spinatspatzlen | Di | 10/16 | 62 % | 20 % | 3,10 | < 0,001 |  |
+| Hauptspeise | Schweinsschnitzel | Mo | 11/21 | 52 % | 19 % | 2,69 | < 0,001 |  |
+| Hauptspeise | Truthahnbraten | Di | 12/24 | 50 % | 20 % | 2,48 | 0,001 |  |
+| Beilage | Salzkartoffeln | Fr | 7/11 | 64 % | 19 % | 3,31 | 0,002 |  |
+| Beilage | Plent | Fr | 10/20 | 50 % | 19 % | 2,60 | 0,002 |  |
+| Vorspeise | Nudel mit Lachs | Fr | 6/9 | 67 % | 20 % | 3,42 | 0,003 |  |
+| Vorspeise | Lasagne | Di | 10/21 | 48 % | 20 % | 2,36 | 0,004 |  |
+| Vorspeise | Nudel Mammarosa | Mo | 10/22 | 45 % | 20 % | 2,33 | 0,005 |  |
+| Hauptspeise | Ossobuchi | Do | 5/7 | 71 % | 21 % | 3,47 | 0,005 |  |
+| Beilage | Wedges | Mi | 5/7 | 71 % | 21 % | 3,47 | 0,005 |  |
+| Beilage | Spatzlen | Do | 17/45 | 38 % | 21 % | 1,83 | 0,006 |  |
+| Hauptspeise | Schweinsschnitzel mit Kräuterrahmsoße | Mo | 4/5 | 80 % | 19 % | 4,11 | 0,006 |  |
+| Hauptspeise | Hühnerbrust | Di | 13/32 | 41 % | 20 % | 2,02 | 0,006 |  |
+| Vorspeise | Tortellini mit Schinken-Rahm | Di | 9/19 | 47 % | 20 % | 2,35 | 0,007 |  |
+| Hauptspeise | Truthahngeschnetzeltes | Di | 11/26 | 42 % | 20 % | 2,10 | 0,008 |  |
+| Beilage | Püree | Di | 16/44 | 36 % | 20 % | 1,81 | 0,009 |  |
+| Hauptspeise | Cordon Bleu | Mi | 6/12 | 50 % | 21 % | 2,43 | 0,022 |  |
+| Beilage | Ofenkartoffeln | Mo | 13/38 | 34 % | 19 % | 1,76 | 0,023 |  |
+| Vorspeise | Nudel mit Ragu | Do | 10/26 | 38 % | 20 % | 1,91 | 0,025 |  |
+| Hauptspeise | Sparerips | Fr | 4/7 | 57 % | 19 % | 2,97 | 0,029 |  |
 
 ### Gerichte, die an einem Wochentag (fast) nie kommen (n ≥ 10, p < 0,05)
 
 | Kategorie | Gericht | Tag | an diesem Tag | erwartet | p |
 |---|---|---|---|---|---|
+| Hauptspeise | Champignonschnitzel | Mi | 1/29 | 6,0 | 0,011 |
+| Beilage | Plent | Di | 0/20 | 4,0 | 0,011 |
 | Vorspeise | Amatriciana | Mi | 0/19 | 3,9 | 0,012 |
-| Vorspeise | Nudel mit Käsesoße | Do | 1/29 | 5,8 | 0,012 |
-| Hauptspeise | Champignonschnitzel | Mi | 1/28 | 5,8 | 0,012 |
-| Beilage | Plent | Di | 0/19 | 3,9 | 0,013 |
-| Beilage | Plent | Mo | 0/19 | 3,7 | 0,017 |
-| Hauptspeise | Champignonschnitzel | Fr | 1/28 | 5,4 | 0,020 |
-| Vorspeise | Tortellini mit Schinken-Rahm | Mo | 0/18 | 3,5 | 0,021 |
-| Hauptspeise | Schweinskotelett | Di | 0/17 | 3,4 | 0,021 |
-| Hauptspeise | Schweinskotelett | Mo | 0/17 | 3,3 | 0,026 |
-| Hauptspeise | Schweinskotelett | Fr | 0/17 | 3,3 | 0,027 |
-| Vorspeise | Spinatspatzlen | Mo | 0/16 | 3,1 | 0,032 |
-| Vorspeise | Nudel mit Pesto | Mo | 0/16 | 3,1 | 0,032 |
-| Beilage | Kroketten | Mo | 1/25 | 4,8 | 0,032 |
-| Vorspeise | Arrabbiata | Mi | 2/30 | 6,2 | 0,036 |
-| Beilage | Röstkartoffeln | Di | 0/14 | 2,8 | 0,042 |
+| Beilage | Plent | Mo | 0/20 | 3,9 | 0,013 |
+| Hauptspeise | Champignonschnitzel | Fr | 1/29 | 5,6 | 0,016 |
+| Vorspeise | Tortellini mit Schinken-Rahm | Mo | 0/19 | 3,7 | 0,016 |
+| Hauptspeise | Schweinskotelett | Di | 0/17 | 3,4 | 0,022 |
+| Hauptspeise | Schweinskotelett | Mo | 0/17 | 3,3 | 0,025 |
+| Hauptspeise | Schweinskotelett | Fr | 0/17 | 3,3 | 0,026 |
+| Vorspeise | Spinatspatzlen | Mo | 0/16 | 3,1 | 0,031 |
+| Vorspeise | Nudel mit Pesto | Mo | 0/16 | 3,1 | 0,031 |
+| Beilage | Kroketten | Mo | 1/25 | 4,9 | 0,031 |
+| Vorspeise | Arrabbiata | Mi | 2/30 | 6,2 | 0,037 |
+| Hauptspeise | Truthahnbraten | Fr | 1/24 | 4,6 | 0,040 |
+| Vorspeise | Nudel mit Käsesoße | Do | 2/30 | 6,1 | 0,042 |
 
 ### Vorspeise: Anzahl je Wochentag (Top 12)
 
 | Gericht | Mo | Di | Mi | Do | Fr | max. Lift |
 |---|---|---|---|---|---|---|
-| Arrabbiata | 17 | 4 | 2 | 5 | 2 | 2,92 |
-| Nudel mit Käsesoße | 8 | 3 | 9 | 1 | 8 | 1,49 |
-| Hirten | 6 | 7 | 9 | 4 | 2 | 1,55 |
-| Aglio olio | 5 | 3 | 5 | 7 | 6 | 1,34 |
-| Nudel mit Ragu | 5 | 4 | 4 | 9 | 3 | 1,79 |
+| Arrabbiata | 17 | 4 | 2 | 5 | 2 | 2,91 |
+| Nudel mit Käsesoße | 8 | 3 | 9 | 2 | 8 | 1,45 |
+| Hirten | 6 | 7 | 9 | 4 | 2 | 1,56 |
+| Aglio olio | 6 | 3 | 5 | 7 | 6 | 1,28 |
+| Nudel mit Ragu | 5 | 4 | 4 | 10 | 3 | 1,91 |
 | Nudel mit Thunfischsoße | 7 | 3 | 5 | 4 | 6 | 1,44 |
-| Schlutzer | 3 | 6 | 6 | 5 | 3 | 1,28 |
-| Nudel Mammarosa | 9 | 2 | 2 | 7 | 1 | 2,21 |
-| Lasagne | 1 | 10 | 1 | 7 | 1 | 2,46 |
-| Amatriciana | 11 | 1 | 0 | 6 | 1 | 2,98 |
-| Tortellini mit Schinken-Rahm | 0 | 9 | 1 | 3 | 5 | 2,46 |
-| Nudel mit Pesto | 0 | 3 | 6 | 3 | 4 | 1,80 |
+| Schlutzer | 3 | 7 | 6 | 5 | 3 | 1,45 |
+| Nudel Mammarosa | 10 | 2 | 2 | 7 | 1 | 2,33 |
+| Lasagne | 1 | 10 | 2 | 7 | 1 | 2,36 |
+| Amatriciana | 11 | 1 | 0 | 6 | 1 | 2,97 |
+| Tortellini mit Schinken-Rahm | 0 | 9 | 1 | 3 | 6 | 2,35 |
+| Nudel mit Pesto | 0 | 3 | 6 | 3 | 4 | 1,82 |
 
 ### Hauptspeise: Anzahl je Wochentag (Top 12)
 
 | Gericht | Mo | Di | Mi | Do | Fr | max. Lift |
 |---|---|---|---|---|---|---|
-| Hühnerbrust | 3 | 13 | 4 | 9 | 3 | 2,00 |
-| Champignonschnitzel | 15 | 8 | 1 | 3 | 1 | 2,77 |
-| Truthahngeschnetzeltes | 4 | 11 | 4 | 5 | 2 | 2,09 |
-| Truthahnschnitzel | 8 | 3 | 2 | 6 | 7 | 1,59 |
-| Schweinsschopf | 4 | 5 | 9 | 3 | 3 | 1,81 |
-| Truthahnbraten | 4 | 12 | 3 | 3 | 1 | 2,57 |
-| Wienerschnitzel | 5 | 2 | 6 | 7 | 2 | 1,55 |
-| Schweinsschnitzel | 11 | 4 | 2 | 1 | 3 | 2,71 |
-| Schweinsfilet | 5 | 1 | 2 | 6 | 6 | 1,57 |
-| Leberkas | 3 | 1 | 6 | 5 | 4 | 1,52 |
-| Chilli con carne | 2 | 3 | 5 | 4 | 3 | 1,42 |
-| Hühnerhaxlen | 1 | 5 | 2 | 5 | 4 | 1,45 |
+| Hühnerbrust | 3 | 13 | 4 | 9 | 3 | 2,02 |
+| Champignonschnitzel | 16 | 8 | 1 | 3 | 1 | 2,84 |
+| Truthahngeschnetzeltes | 4 | 11 | 4 | 5 | 2 | 2,10 |
+| Truthahnschnitzel | 8 | 3 | 2 | 6 | 7 | 1,58 |
+| Schweinsschopf | 4 | 5 | 9 | 3 | 3 | 1,82 |
+| Truthahnbraten | 5 | 12 | 3 | 3 | 1 | 2,48 |
+| Wienerschnitzel | 5 | 2 | 7 | 7 | 2 | 1,48 |
+| Schweinsfilet | 5 | 2 | 2 | 6 | 6 | 1,49 |
+| Schweinsschnitzel | 11 | 4 | 2 | 1 | 3 | 2,69 |
+| Leberkas | 3 | 1 | 6 | 5 | 4 | 1,53 |
+| Chilli con carne | 2 | 3 | 5 | 4 | 3 | 1,43 |
+| Hühnerhaxlen | 1 | 5 | 2 | 5 | 4 | 1,46 |
 
 ### Beilage: Anzahl je Wochentag (Top 12)
 
 | Gericht | Mo | Di | Mi | Do | Fr | max. Lift |
 |---|---|---|---|---|---|---|
-| Reis | 40 | 21 | 14 | 10 | 13 | 2,11 |
-| Pommes | 7 | 13 | 13 | 11 | 12 | 1,15 |
-| Spatzlen | 7 | 7 | 8 | 16 | 6 | 1,77 |
-| Püree | 4 | 15 | 12 | 8 | 4 | 1,72 |
-| Ofenkartoffeln | 13 | 8 | 4 | 8 | 5 | 1,77 |
-| Kartoffelsalat | 5 | 3 | 11 | 8 | 7 | 1,56 |
-| Kroketten | 1 | 7 | 3 | 5 | 9 | 1,88 |
-| Kartoffelgratin | 2 | 5 | 6 | 8 | 2 | 1,70 |
-| Plent | 0 | 0 | 5 | 5 | 9 | 2,48 |
+| Reis | 42 | 21 | 14 | 10 | 13 | 2,16 |
+| Pommes | 7 | 13 | 13 | 11 | 13 | 1,19 |
+| Spatzlen | 7 | 7 | 8 | 17 | 6 | 1,83 |
+| Püree | 4 | 16 | 12 | 8 | 4 | 1,81 |
+| Ofenkartoffeln | 13 | 8 | 4 | 8 | 5 | 1,76 |
+| Kartoffelsalat | 5 | 3 | 12 | 8 | 7 | 1,67 |
+| Kroketten | 1 | 7 | 3 | 5 | 9 | 1,87 |
+| Kartoffelgratin | 2 | 5 | 6 | 8 | 2 | 1,69 |
+| Plent | 0 | 0 | 5 | 5 | 10 | 2,60 |
 | Röstkartoffeln | 2 | 0 | 3 | 5 | 4 | 1,74 |
-| Salzkartoffeln | 0 | 1 | 0 | 3 | 7 | 3,33 |
-| Kartoffelstampf | 2 | 4 | 3 | 0 | 0 | 2,19 |
+| Salzkartoffeln | 0 | 1 | 0 | 3 | 7 | 3,31 |
+| Kartoffelstampf | 2 | 4 | 3 | 0 | 0 | 2,21 |
 
 ## 4. Kombinationen
 
 ### Beilage | Hauptspeise (Hauptspeisen mit n ≥ 3)
 
-Wer die Hauptspeise kennt (bzw. richtig schätzt), sollte die dazu typische Beilage tippen: Treffer 48 % (Leave-one-out) statt 23 % mit der global häufigsten Beilage (Reis).
+Wer die Hauptspeise kennt (bzw. richtig schätzt), sollte die dazu typische Beilage tippen: Treffer 49 % (Leave-one-out) statt 23 % mit der global häufigsten Beilage (Reis).
 
 | Hauptspeise | n | Beilage 1 | Beilage 2 | Beilage 3 |
 |---|---|---|---|---|
 | Hühnerbrust | 32 | Kroketten 34 % (11) | Spatzlen 22 % (7) | Kartoffelgratin 12 % (4) |
-| Champignonschnitzel | 28 | Reis 75 % (21) | Kartoffelgratin 18 % (5) | Püree 4 % (1) |
+| Champignonschnitzel | 29 | Reis 76 % (22) | Kartoffelgratin 17 % (5) | Püree 3 % (1) |
 | Truthahngeschnetzeltes | 26 | Püree 42 % (11) | Reis 35 % (9) | Spatzlen 19 % (5) |
 | Truthahnschnitzel | 26 | Ofenkartoffeln 42 % (11) | Pommes 38 % (10) | Kroketten 8 % (2) |
 | Schweinsschopf | 24 | Pommes 25 % (6) | Reis 17 % (4) | Kartoffelgratin 12 % (3) |
-| Truthahnbraten | 23 | Püree 30 % (7) | Spatzlen 22 % (5) | Reis 17 % (4) |
-| Wienerschnitzel | 22 | Kartoffelsalat 82 % (18) | Pommes 18 % (4) |  |
+| Truthahnbraten | 24 | Püree 29 % (7) | Reis 21 % (5) | Spatzlen 21 % (5) |
+| Wienerschnitzel | 23 | Kartoffelsalat 83 % (19) | Pommes 17 % (4) |  |
+| Schweinsfilet | 21 | Kroketten 29 % (6) | Spatzlen 29 % (6) | Reis 24 % (5) |
 | Schweinsschnitzel | 21 | Ofenkartoffeln 38 % (8) | Reis 24 % (5) | Pommes 10 % (2) |
-| Schweinsfilet | 20 | Kroketten 30 % (6) | Spatzlen 30 % (6) | Reis 25 % (5) |
 | Leberkas | 19 | Röstkartoffeln 63 % (12) | Pommes 37 % (7) |  |
 | Chilli con carne | 17 | Reis 100 % (17) |  |  |
 | Hühnerhaxlen | 17 | Pommes 71 % (12) | Ofenkartoffeln 24 % (4) | Wedges 6 % (1) |
 | Schweinskotelett | 17 | Kartoffelgratin 35 % (6) | Spatzlen 24 % (4) | Ofenkartoffeln 18 % (3) |
-| Hauswurst | 13 | Plent 100 % (13) |  |  |
+| Hauswurst | 14 | Plent 100 % (14) |  |  |
 | Cordon Bleu | 12 | Kartoffelsalat 100 % (12) |  |  |
 | Zwiebelrostbraten | 12 | Reis 50 % (6) | Püree 42 % (5) | Kroketten 8 % (1) |
 | Schweinsgulasch | 11 | Püree 36 % (4) | Reis 36 % (4) | Spatzlen 18 % (2) |
 | Zigeunerschnitzel | 10 | Reis 50 % (5) | Spatzlen 30 % (3) | Kartoffelstampf 10 % (1) |
 | Currywurst | 7 | Pommes 100 % (7) |  |  |
+| Ossobuchi | 7 | Spatzlen 57 % (4) | Reis 29 % (2) | Safranreis 14 % (1) |
+| Sparerips | 7 | Pommes 71 % (5) | Röstinchen 14 % (1) | Wedges 14 % (1) |
 | Gekochtes Rindfleisch | 6 | Salzkartoffeln 100 % (6) |  |  |
-| Ossobuchi | 6 | Spatzlen 50 % (3) | Reis 33 % (2) | Safranreis 17 % (1) |
-| Sparerips | 6 | Pommes 67 % (4) | Röstinchen 17 % (1) | Wedges 17 % (1) |
+| Gulasch | 5 | Plent 40 % (2) | Reis 40 % (2) | Knödel 20 % (1) |
 | Hackbraten | 5 | Püree 60 % (3) | Reis 40 % (2) |  |
 | Pizzaiolaschnitzel | 5 | Ofenkartoffeln 60 % (3) | Pommes 40 % (2) |  |
 | Schweinsschnitzel mit Kräuterrahmsoße | 5 | Reis 40 % (2) | Spatzlen 40 % (2) | Kroketten 20 % (1) |
-| Gulasch | 4 | Plent 50 % (2) | Reis 50 % (2) |  |
 | Knödel | 3 | Gulasch 100 % (3) |  |  |
 | Rindsbraten | 3 | Reis 67 % (2) | Püree 33 % (1) |  |
 | Rindsschnitzel | 3 | Ofenkartoffeln 33 % (1) | Pommes 33 % (1) | Spatzlen 33 % (1) |
@@ -430,37 +431,37 @@ Mutual Information zwischen den Kategorien vs. Erwartung bei zufälliger Zuordnu
 
 | Paar | MI (bit) | Zufall (bit) | p |
 |---|---|---|---|
-| V–H | 1,717 | 1,676 | 0,096 |
-| H–B | 2,062 | 0,838 | 0,003 |
-| V–B | 0,904 | 0,900 | 0,442 |
+| V–H | 1,694 | 1,654 | 0,103 |
+| H–B | 2,071 | 0,835 | 0,003 |
+| V–B | 0,900 | 0,896 | 0,435 |
 
 | Vorspeise | Hauptspeise | zusammen | n(V) | n(H) | Lift | p |
 |---|---|---|---|---|---|---|
-| Lasagne | Truthahngeschnetzeltes | 5 | 19 | 26 | 4,37 | 0,005 |
-| Nudel mit Thunfischsoße | Sparerips | 3 | 25 | 6 | 8,64 | 0,005 |
-| Gnocchi mit Tomatensoße | Zwiebelrostbraten | 3 | 14 | 12 | 7,71 | 0,006 |
-| Carbonara | Schweinsfilet | 3 | 10 | 20 | 6,48 | 0,009 |
-| Nudel mit Lachs | Truthahnschnitzel | 3 | 8 | 26 | 6,23 | 0,010 |
-| Tortellini mit Schinken-Rahm | Schweinsschopf | 4 | 18 | 24 | 4,00 | 0,016 |
-| Nudel mit Thunfischsoße | Chilli con carne | 4 | 25 | 17 | 4,07 | 0,016 |
-| Spinatspatzlen | Chilli con carne | 3 | 16 | 17 | 4,76 | 0,023 |
-| Spinatspatzlen | Hühnerhaxlen | 3 | 16 | 17 | 4,76 | 0,023 |
-| Tortellini mit Schinken-Rahm | Hühnerbrust | 4 | 18 | 32 | 3,00 | 0,040 |
-| Nudel mit Ragu | Truthahnbraten | 4 | 25 | 23 | 3,01 | 0,042 |
-| Arrabbiata | Champignonschnitzel | 5 | 30 | 28 | 2,57 | 0,042 |
-| Arrabbiata | Schweinsfilet | 4 | 30 | 20 | 2,88 | 0,048 |
-| Nudel mit Käsesoße | Wienerschnitzel | 4 | 29 | 21 | 2,84 | 0,050 |
-| Hirten | Schweinskotelett | 3 | 28 | 17 | 2,72 | 0,096 |
-| Lasagne | Truthahnschnitzel | 3 | 19 | 26 | 2,62 | 0,103 |
-| Nudel mit Thunfischsoße | Schweinsschnitzel | 3 | 25 | 21 | 2,47 | 0,119 |
-| Nudel mit Ragu | Wienerschnitzel | 3 | 25 | 21 | 2,47 | 0,119 |
-| Arrabbiata | Leberkas | 3 | 30 | 18 | 2,40 | 0,128 |
-| Hirten | Hühnerbrust | 4 | 28 | 32 | 1,93 | 0,150 |
-| Nudel mit Käsesoße | Schweinsschnitzel | 3 | 29 | 21 | 2,13 | 0,165 |
-| Hirten | Truthahnbraten | 3 | 28 | 23 | 2,01 | 0,185 |
-| Aglio olio | Champignonschnitzel | 3 | 26 | 28 | 1,78 | 0,236 |
-| Hirten | Truthahnschnitzel | 3 | 28 | 26 | 1,78 | 0,236 |
-| Hirten | Truthahngeschnetzeltes | 3 | 28 | 26 | 1,78 | 0,236 |
+| Lasagne | Truthahngeschnetzeltes | 5 | 20 | 26 | 4,23 | 0,005 |
+| Gnocchi mit Tomatensoße | Zwiebelrostbraten | 3 | 14 | 12 | 7,86 | 0,006 |
+| Nudel mit Thunfischsoße | Sparerips | 3 | 25 | 7 | 7,54 | 0,007 |
+| Carbonara | Schweinsfilet | 3 | 10 | 21 | 6,29 | 0,010 |
+| Nudel mit Lachs | Truthahnschnitzel | 3 | 9 | 26 | 5,64 | 0,013 |
+| Nudel mit Thunfischsoße | Chilli con carne | 4 | 25 | 17 | 4,14 | 0,015 |
+| Tortellini mit Schinken-Rahm | Schweinsschopf | 4 | 19 | 24 | 3,86 | 0,018 |
+| Spinatspatzlen | Chilli con carne | 3 | 16 | 17 | 4,85 | 0,022 |
+| Spinatspatzlen | Hühnerhaxlen | 3 | 16 | 17 | 4,85 | 0,022 |
+| Arrabbiata | Champignonschnitzel | 5 | 30 | 29 | 2,53 | 0,045 |
+| Tortellini mit Schinken-Rahm | Hühnerbrust | 4 | 19 | 32 | 2,89 | 0,045 |
+| Nudel mit Ragu | Truthahnbraten | 4 | 26 | 24 | 2,82 | 0,051 |
+| Arrabbiata | Schweinsfilet | 4 | 30 | 21 | 2,79 | 0,053 |
+| Nudel mit Käsesoße | Wienerschnitzel | 4 | 30 | 22 | 2,67 | 0,061 |
+| Hirten | Schweinskotelett | 3 | 28 | 17 | 2,77 | 0,092 |
+| Aglio olio | Champignonschnitzel | 4 | 27 | 29 | 2,25 | 0,099 |
+| Lasagne | Truthahnschnitzel | 3 | 20 | 26 | 2,54 | 0,111 |
+| Nudel mit Thunfischsoße | Schweinsschnitzel | 3 | 25 | 21 | 2,51 | 0,115 |
+| Arrabbiata | Leberkas | 3 | 30 | 18 | 2,44 | 0,123 |
+| Nudel mit Ragu | Wienerschnitzel | 3 | 26 | 22 | 2,31 | 0,139 |
+| Hirten | Hühnerbrust | 4 | 28 | 32 | 1,96 | 0,143 |
+| Nudel mit Käsesoße | Schweinsschnitzel | 3 | 30 | 21 | 2,10 | 0,171 |
+| Hirten | Truthahnbraten | 3 | 28 | 24 | 1,96 | 0,195 |
+| Hirten | Truthahnschnitzel | 3 | 28 | 26 | 1,81 | 0,228 |
+| Hirten | Truthahngeschnetzeltes | 3 | 28 | 26 | 1,81 | 0,228 |
 
 ## 5. Saisonalität
 
@@ -468,55 +469,55 @@ Mutual Information zwischen den Kategorien vs. Erwartung bei zufälliger Zuordnu
 
 Fastenzeiten in den Daten: 2025: 05.03.–20.04., 2026: 18.02.–05.04.. Fisch = jede Hauptspeise, die als Fisch gilt (inkl. Scombri).
 
-**Hauptspeise** (Fastentage n=64, sonst n=370; Gerichte mit ≥ 2 Fastentagen):
+**Hauptspeise** (Fastentage n=64, sonst n=378; Gerichte mit ≥ 2 Fastentagen):
 
 | Gericht | Fastenzeit | sonst | Lift | p |
 |---|---|---|---|---|
 | Scombri | 4,7 % (3) | 0,0 % (0) | nur Fastenzeit | 0,003 |
-| Fisch | 15,6 % (10) | 0,8 % (3) | 19,27 | < 0,001 |
-| Currywurst | 3,1 % (2) | 1,4 % (5) | 2,31 | 0,276 |
-| Truthahnbraten | 9,4 % (6) | 4,6 % (17) | 2,04 | 0,112 |
-| Schweinsfilet | 6,2 % (4) | 4,3 % (16) | 1,45 | 0,340 |
-| Zigeunerschnitzel | 3,1 % (2) | 2,2 % (8) | 1,45 | 0,446 |
-| Chilli con carne | 4,7 % (3) | 3,8 % (14) | 1,24 | 0,468 |
-| Schweinskotelett | 4,7 % (3) | 3,8 % (14) | 1,24 | 0,468 |
-| Zwiebelrostbraten | 3,1 % (2) | 2,7 % (10) | 1,16 | 0,547 |
-| Champignonschnitzel | 6,2 % (4) | 6,5 % (24) | 0,96 | 0,608 |
-| Wienerschnitzel | 4,7 % (3) | 5,1 % (19) | 0,91 | 0,650 |
-| Truthahngeschnetzeltes | 4,7 % (3) | 6,2 % (23) | 0,75 | 0,760 |
+| Fisch | 15,6 % (10) | 0,8 % (3) | 19,69 | < 0,001 |
+| Currywurst | 3,1 % (2) | 1,3 % (5) | 2,36 | 0,269 |
+| Truthahnbraten | 9,4 % (6) | 4,8 % (18) | 1,97 | 0,123 |
+| Zigeunerschnitzel | 3,1 % (2) | 2,1 % (8) | 1,48 | 0,436 |
+| Schweinsfilet | 6,2 % (4) | 4,5 % (17) | 1,39 | 0,362 |
+| Chilli con carne | 4,7 % (3) | 3,7 % (14) | 1,27 | 0,456 |
+| Schweinskotelett | 4,7 % (3) | 3,7 % (14) | 1,27 | 0,456 |
+| Zwiebelrostbraten | 3,1 % (2) | 2,6 % (10) | 1,18 | 0,536 |
+| Champignonschnitzel | 6,2 % (4) | 6,6 % (25) | 0,95 | 0,622 |
+| Wienerschnitzel | 4,7 % (3) | 5,3 % (20) | 0,89 | 0,667 |
+| Truthahngeschnetzeltes | 4,7 % (3) | 6,1 % (23) | 0,77 | 0,748 |
 
-**Vorspeise** (Fastentage n=64, sonst n=369; Gerichte mit ≥ 2 Fastentagen):
-
-| Gericht | Fastenzeit | sonst | Lift | p |
-|---|---|---|---|---|
-| Nudel mit Lachs | 3,1 % (2) | 1,6 % (6) | 1,92 | 0,336 |
-| Amatriciana | 6,2 % (4) | 4,1 % (15) | 1,54 | 0,306 |
-| Nudel mit Ragu | 7,8 % (5) | 5,4 % (20) | 1,44 | 0,306 |
-| Spinatcannelloni | 3,1 % (2) | 2,2 % (8) | 1,44 | 0,448 |
-| Spinatspatzlen | 4,7 % (3) | 3,5 % (13) | 1,33 | 0,429 |
-| Pizzastrudel | 3,1 % (2) | 2,4 % (9) | 1,28 | 0,499 |
-| Schlutzer | 6,2 % (4) | 5,1 % (19) | 1,21 | 0,448 |
-| Nudel mit Käsesoße | 7,8 % (5) | 6,5 % (24) | 1,20 | 0,431 |
-| Aglio olio | 6,2 % (4) | 6,0 % (22) | 1,05 | 0,549 |
-| Lasagne | 4,7 % (3) | 4,6 % (17) | 1,02 | 0,584 |
-| Gnocchi mit Tomatensoße | 3,1 % (2) | 3,3 % (12) | 0,96 | 0,635 |
-| Arrabbiata | 6,2 % (4) | 7,0 % (26) | 0,89 | 0,666 |
-
-**Beilage** (Fastentage n=64, sonst n=370; Gerichte mit ≥ 2 Fastentagen):
+**Vorspeise** (Fastentage n=64, sonst n=377; Gerichte mit ≥ 2 Fastentagen):
 
 | Gericht | Fastenzeit | sonst | Lift | p |
 |---|---|---|---|---|
-| Salzkartoffeln | 4,7 % (3) | 2,2 % (8) | 2,17 | 0,214 |
-| Plent | 7,8 % (5) | 3,8 % (14) | 2,06 | 0,137 |
-| Kartoffelgratin | 9,4 % (6) | 4,6 % (17) | 2,04 | 0,112 |
-| Röstkartoffeln | 4,7 % (3) | 3,0 % (11) | 1,58 | 0,342 |
-| Kartoffelsalat | 10,9 % (7) | 7,3 % (27) | 1,50 | 0,228 |
-| Püree | 12,5 % (8) | 9,5 % (35) | 1,32 | 0,296 |
-| Kroketten | 6,2 % (4) | 5,7 % (21) | 1,10 | 0,515 |
-| Spatzlen | 9,4 % (6) | 10,3 % (38) | 0,91 | 0,647 |
-| Reis | 20,3 % (13) | 23,0 % (85) | 0,88 | 0,703 |
-| Pommes | 7,8 % (5) | 13,8 % (51) | 0,57 | 0,930 |
-| Ofenkartoffeln | 3,1 % (2) | 9,7 % (36) | 0,32 | 0,982 |
+| Nudel mit Lachs | 3,1 % (2) | 1,9 % (7) | 1,68 | 0,384 |
+| Amatriciana | 6,2 % (4) | 4,0 % (15) | 1,57 | 0,294 |
+| Spinatcannelloni | 3,1 % (2) | 2,1 % (8) | 1,47 | 0,438 |
+| Nudel mit Ragu | 7,8 % (5) | 5,6 % (21) | 1,40 | 0,323 |
+| Spinatspatzlen | 4,7 % (3) | 3,4 % (13) | 1,36 | 0,416 |
+| Pizzastrudel | 3,1 % (2) | 2,4 % (9) | 1,31 | 0,489 |
+| Nudel mit Käsesoße | 7,8 % (5) | 6,6 % (25) | 1,18 | 0,445 |
+| Schlutzer | 6,2 % (4) | 5,3 % (20) | 1,18 | 0,468 |
+| Aglio olio | 6,2 % (4) | 6,1 % (23) | 1,02 | 0,565 |
+| Lasagne | 4,7 % (3) | 4,8 % (18) | 0,98 | 0,606 |
+| Gnocchi mit Tomatensoße | 3,1 % (2) | 3,2 % (12) | 0,98 | 0,624 |
+| Arrabbiata | 6,2 % (4) | 6,9 % (26) | 0,91 | 0,651 |
+
+**Beilage** (Fastentage n=64, sonst n=378; Gerichte mit ≥ 2 Fastentagen):
+
+| Gericht | Fastenzeit | sonst | Lift | p |
+|---|---|---|---|---|
+| Salzkartoffeln | 4,7 % (3) | 2,1 % (8) | 2,21 | 0,206 |
+| Kartoffelgratin | 9,4 % (6) | 4,5 % (17) | 2,08 | 0,104 |
+| Plent | 7,8 % (5) | 4,0 % (15) | 1,97 | 0,153 |
+| Röstkartoffeln | 4,7 % (3) | 2,9 % (11) | 1,61 | 0,331 |
+| Kartoffelsalat | 10,9 % (7) | 7,4 % (28) | 1,48 | 0,236 |
+| Püree | 12,5 % (8) | 9,5 % (36) | 1,31 | 0,301 |
+| Kroketten | 6,2 % (4) | 5,6 % (21) | 1,12 | 0,499 |
+| Spatzlen | 9,4 % (6) | 10,3 % (39) | 0,91 | 0,651 |
+| Reis | 20,3 % (13) | 23,0 % (87) | 0,88 | 0,705 |
+| Pommes | 7,8 % (5) | 13,8 % (52) | 0,57 | 0,930 |
+| Ofenkartoffeln | 3,1 % (2) | 9,5 % (36) | 0,33 | 0,981 |
 
 ### Sommer (Jun–Aug) vs Winter (Dez–Feb)
 
@@ -579,102 +580,102 @@ Signifikant (p < 0,05): _keine_
 
 ### Monate (Anteil der servierten Tage, Top 10)
 
-**Vorspeise** (Tage je Monat: Jan 30, Feb 40, Mär 42, Apr 34, Mai 39, Jun 39, Jul 45, Aug 22, Sep 43, Okt 36, Nov 35, Dez 28)
+**Vorspeise** (Tage je Monat: Jan 30, Feb 40, Mär 42, Apr 34, Mai 39, Jun 39, Jul 45, Aug 22, Sep 43, Okt 44, Nov 35, Dez 28)
 
 | Gericht | Jan | Feb | Mär | Apr | Mai | Jun | Jul | Aug | Sep | Okt | Nov | Dez |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Arrabbiata | 10 | 8 | 5 | 6 | 5 | 8 | 7 | 9 | 7 | 6 | 6 | 11 |
-| Nudel mit Käsesoße | 7 | 8 | 7 | 3 | 10 | 10 | 4 | 5 | 7 | 8 | 6 | 4 |
-| Hirten | · | 8 | 7 | 3 | 8 | 8 | 7 | 14 | 9 | 6 | 3 | 7 |
-| Aglio olio | 10 | · | 7 | 6 | 5 | 5 | 4 | 14 | 5 | 6 | 9 | 7 |
-| Nudel mit Ragu | 7 | 8 | 5 | 9 | 5 | 3 | 9 | · | 7 | 6 | 6 | 4 |
-| Nudel mit Thunfischsoße | 7 | 10 | 2 | 6 | 5 | 5 | 4 | 9 | 2 | 8 | 9 | 4 |
-| Schlutzer | 7 | 2 | 7 | 3 | 8 | 3 | 9 | 5 | 5 | 6 | 3 | 7 |
-| Nudel Mammarosa | 3 | 5 | 5 | 3 | 3 | 8 | 4 | 5 | 7 | 3 | 3 | 11 |
-| Lasagne | 3 | · | 5 | 6 | 8 | 5 | 7 | · | 5 | 8 | 3 | 4 |
-| Amatriciana | 3 | 2 | 7 | 6 | 5 | 5 | 2 | 5 | 2 | 6 | 6 | 4 |
+| Arrabbiata | 10 | 8 | 5 | 6 | 5 | 8 | 7 | 9 | 7 | 5 | 6 | 11 |
+| Nudel mit Käsesoße | 7 | 8 | 7 | 3 | 10 | 10 | 4 | 5 | 7 | 9 | 6 | 4 |
+| Hirten | · | 8 | 7 | 3 | 8 | 8 | 7 | 14 | 9 | 5 | 3 | 7 |
+| Aglio olio | 10 | · | 7 | 6 | 5 | 5 | 4 | 14 | 5 | 7 | 9 | 7 |
+| Nudel mit Ragu | 7 | 8 | 5 | 9 | 5 | 3 | 9 | · | 7 | 7 | 6 | 4 |
+| Nudel mit Thunfischsoße | 7 | 10 | 2 | 6 | 5 | 5 | 4 | 9 | 2 | 7 | 9 | 4 |
+| Schlutzer | 7 | 2 | 7 | 3 | 8 | 3 | 9 | 5 | 5 | 7 | 3 | 7 |
+| Nudel Mammarosa | 3 | 5 | 5 | 3 | 3 | 8 | 4 | 5 | 7 | 5 | 3 | 11 |
+| Lasagne | 3 | · | 5 | 6 | 8 | 5 | 7 | · | 5 | 9 | 3 | 4 |
+| Amatriciana | 3 | 2 | 7 | 6 | 5 | 5 | 2 | 5 | 2 | 5 | 6 | 4 |
 
-**Hauptspeise** (Tage je Monat: Jan 30, Feb 40, Mär 42, Apr 34, Mai 39, Jun 39, Jul 45, Aug 22, Sep 44, Okt 36, Nov 35, Dez 28)
-
-| Gericht | Jan | Feb | Mär | Apr | Mai | Jun | Jul | Aug | Sep | Okt | Nov | Dez |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Hühnerbrust | 10 | 5 | 10 | 3 | 10 | 8 | 7 | · | 9 | 8 | 9 | 7 |
-| Champignonschnitzel | 3 | 8 | 5 | 9 | 8 | 5 | 4 | 9 | 7 | 8 | 3 | 11 |
-| Truthahngeschnetzeltes | 7 | 8 | 5 | 3 | 10 | 5 | 4 | 5 | 5 | 6 | 6 | 11 |
-| Truthahnschnitzel | 7 | 2 | 5 | 3 | 8 | 18 | 7 | 5 | 5 | 3 | 3 | 7 |
-| Schweinsschopf | 7 | 8 | 2 | 6 | 3 | · | 9 | 9 | 5 | 8 | 6 | 7 |
-| Truthahnbraten | · | 5 | 10 | 9 | · | · | 4 | 14 | 7 | 6 | 9 | 4 |
-| Wienerschnitzel | · | 10 | 2 | 3 | 5 | 3 | 9 | 5 | 9 | 6 | 3 | 4 |
-| Schweinsschnitzel | 3 | 5 | 2 | 3 | 3 | 8 | 9 | 9 | 2 | 6 | 6 | 4 |
-| Schweinsfilet | 3 | 5 | 5 | 9 | 8 | 3 | 4 | · | 5 | · | 9 | 4 |
-| Leberkas | 7 | · | 2 | 6 | 5 | 5 | 4 | 5 | 5 | 6 | 6 | 4 |
-
-**Beilage** (Tage je Monat: Jan 30, Feb 40, Mär 42, Apr 34, Mai 39, Jun 39, Jul 45, Aug 22, Sep 44, Okt 36, Nov 35, Dez 28)
+**Hauptspeise** (Tage je Monat: Jan 30, Feb 40, Mär 42, Apr 34, Mai 39, Jun 39, Jul 45, Aug 22, Sep 44, Okt 44, Nov 35, Dez 28)
 
 | Gericht | Jan | Feb | Mär | Apr | Mai | Jun | Jul | Aug | Sep | Okt | Nov | Dez |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Reis | 23 | 22 | 24 | 21 | 18 | 18 | 24 | 27 | 20 | 31 | 20 | 25 |
+| Hühnerbrust | 10 | 5 | 10 | 3 | 10 | 8 | 7 | · | 9 | 7 | 9 | 7 |
+| Champignonschnitzel | 3 | 8 | 5 | 9 | 8 | 5 | 4 | 9 | 7 | 9 | 3 | 11 |
+| Truthahngeschnetzeltes | 7 | 8 | 5 | 3 | 10 | 5 | 4 | 5 | 5 | 5 | 6 | 11 |
+| Truthahnschnitzel | 7 | 2 | 5 | 3 | 8 | 18 | 7 | 5 | 5 | 2 | 3 | 7 |
+| Schweinsschopf | 7 | 8 | 2 | 6 | 3 | · | 9 | 9 | 5 | 7 | 6 | 7 |
+| Truthahnbraten | · | 5 | 10 | 9 | · | · | 4 | 14 | 7 | 7 | 9 | 4 |
+| Wienerschnitzel | · | 10 | 2 | 3 | 5 | 3 | 9 | 5 | 9 | 7 | 3 | 4 |
+| Schweinsfilet | 3 | 5 | 5 | 9 | 8 | 3 | 4 | · | 5 | 2 | 9 | 4 |
+| Schweinsschnitzel | 3 | 5 | 2 | 3 | 3 | 8 | 9 | 9 | 2 | 5 | 6 | 4 |
+| Leberkas | 7 | · | 2 | 6 | 5 | 5 | 4 | 5 | 5 | 5 | 6 | 4 |
+
+**Beilage** (Tage je Monat: Jan 30, Feb 40, Mär 42, Apr 34, Mai 39, Jun 39, Jul 45, Aug 22, Sep 44, Okt 44, Nov 35, Dez 28)
+
+| Gericht | Jan | Feb | Mär | Apr | Mai | Jun | Jul | Aug | Sep | Okt | Nov | Dez |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Reis | 23 | 22 | 24 | 21 | 18 | 18 | 24 | 27 | 20 | 30 | 20 | 25 |
 | Pommes | 13 | 12 | 10 | 12 | 13 | 15 | 18 | 18 | 11 | 14 | 6 | 14 |
-| Spatzlen | 10 | 8 | 10 | 12 | 13 | 5 | 9 | 14 | 11 | 8 | 11 | 14 |
-| Püree | 10 | 12 | 12 | 12 | 18 | 8 | 7 | 14 | 7 | 6 | 11 | 4 |
-| Ofenkartoffeln | 3 | 8 | 2 | 6 | 5 | 13 | 13 | 9 | 14 | 11 | 11 | 7 |
-| Kartoffelsalat | 3 | 10 | 5 | 9 | 8 | 13 | 9 | 5 | 9 | 8 | 6 | 7 |
-| Kroketten | 7 | 8 | 7 | 6 | 3 | 8 | 2 | 5 | 7 | 8 | 9 | · |
-| Kartoffelgratin | 3 | 8 | 10 | 6 | 8 | 5 | 4 | · | 2 | 6 | 6 | 4 |
-| Plent | 7 | 2 | 7 | 6 | 3 | 3 | 4 | · | 5 | 3 | 6 | 7 |
-| Röstkartoffeln | 3 | 2 | 2 | 6 | 3 | 8 | 2 | · | 2 | 3 | 3 | 4 |
+| Spatzlen | 10 | 8 | 10 | 12 | 13 | 5 | 9 | 14 | 11 | 9 | 11 | 14 |
+| Püree | 10 | 12 | 12 | 12 | 18 | 8 | 7 | 14 | 7 | 7 | 11 | 4 |
+| Ofenkartoffeln | 3 | 8 | 2 | 6 | 5 | 13 | 13 | 9 | 14 | 9 | 11 | 7 |
+| Kartoffelsalat | 3 | 10 | 5 | 9 | 8 | 13 | 9 | 5 | 9 | 9 | 6 | 7 |
+| Kroketten | 7 | 8 | 7 | 6 | 3 | 8 | 2 | 5 | 7 | 7 | 9 | · |
+| Kartoffelgratin | 3 | 8 | 10 | 6 | 8 | 5 | 4 | · | 2 | 5 | 6 | 4 |
+| Plent | 7 | 2 | 7 | 6 | 3 | 3 | 4 | · | 5 | 5 | 6 | 7 |
+| Röstkartoffeln | 3 | 2 | 2 | 6 | 3 | 8 | 2 | · | 2 | 2 | 3 | 4 |
 
 ### Weihnachtszeit (1.–23. Dezember)
 
-- **Vorspeise** (Dezembertage n=28): Fleischcannelloni 2× (7 % vs 0 % sonst, p = 0,012); Nudel Mammarosa 3× (11 % vs 4 % sonst, p = 0,151); Arrabbiata 3× (11 % vs 7 % sonst, p = 0,306)
-- **Hauptspeise** (Dezembertage n=28): Zwiebelrostbraten 2× (7 % vs 2 % sonst, p = 0,179); Hauswurst 2× (7 % vs 3 % sonst, p = 0,203); Hühnerhaxlen 2× (7 % vs 4 % sonst, p = 0,301); Truthahngeschnetzeltes 3× (11 % vs 6 % sonst, p = 0,234); Champignonschnitzel 3× (11 % vs 6 % sonst, p = 0,269)
-- **Beilage** (Dezembertage n=28): Kartoffelstampf 2× (7 % vs 2 % sonst, p = 0,111); Plent 2× (7 % vs 4 % sonst, p = 0,349)
+- **Vorspeise** (Dezembertage n=28): Fleischcannelloni 2× (7 % vs 0 % sonst, p = 0,012); Nudel Mammarosa 3× (11 % vs 5 % sonst, p = 0,161); Arrabbiata 3× (11 % vs 7 % sonst, p = 0,297)
+- **Hauptspeise** (Dezembertage n=28): Zwiebelrostbraten 2× (7 % vs 2 % sonst, p = 0,174); Hauswurst 2× (7 % vs 3 % sonst, p = 0,221); Hühnerhaxlen 2× (7 % vs 4 % sonst, p = 0,293); Truthahngeschnetzeltes 3× (11 % vs 6 % sonst, p = 0,226); Champignonschnitzel 3× (11 % vs 6 % sonst, p = 0,278)
+- **Beilage** (Dezembertage n=28): Kartoffelstampf 2× (7 % vs 2 % sonst, p = 0,107); Plent 2× (7 % vs 4 % sonst, p = 0,364)
 - Letztes Menü vor Weihnachten 2024 (19.12.): Lasagne / Truthahngeschnetzeltes / Spatzlen
 - Letztes Menü vor Weihnachten 2025 (19.12.): Nudel Mammarosa / Cordon Bleu / Kartoffelsalat
 
 ## 6. Trends (2026 vs. 2024, 2025)
 
 - **Vorspeise neu 2026** (10): Gnocchi mit Gorgonzolasoße (2×), Spinatknödel mit Käsesoße (2×), Gnocchi mit Kräutersauce (1×), Gnocchi mit Lachs (1×), Käse-Sofficini mit Tomantensoße (1×), Nudel mit Schinken-Rahm (1×), Pilzrisotto (1×), Spargelrisotto (1×), Speck-Zwiebel-Kuchen (1×), Tomatenrisotto (1×)
-- **Vorspeise verschwunden 2026** (27): Fleischcannelloni (3×), Ravioli mit Parmesan-Butter (3×), Tomatenrisotto mit Mozzarella (3×), Gerstsuppe (2×), Gnocchi mit Käsesoße (2×), Gulaschsuppe (2×), Nudelsalat (2×), Omelett mit Schinken und Käse (2×), Plentauflauf (2×), Ravioli (2×), Fleischsuppe (1×), Gemüselasagne (1×), Gnocchi (1×), Gnocchi mit Ragu (1×), Kürbisrisotto (1×), Nudel mit Lachs und Tomantensoße (1×), Nudel mit Tomatensoße (1×), Nudel mit Tomatensoße und Schinken (1×), Putanesca (1×), Ravioli mit Käsesoße (1×), Ravioli mit Tomantensoße (1×), Reissalat (1×), Schlutzer Schinken-Rahm (1×), Schupfnudel mit Lachs (1×), Schüttelbrot-Risotto mit Speckstreifen (1×), Spinatknödel (1×), Spinatknödel mit Gorgonzolasoße (1×)
+- **Vorspeise verschwunden 2026** (26): Fleischcannelloni (3×), Ravioli mit Parmesan-Butter (3×), Tomatenrisotto mit Mozzarella (3×), Gnocchi mit Käsesoße (2×), Gulaschsuppe (2×), Nudelsalat (2×), Omelett mit Schinken und Käse (2×), Plentauflauf (2×), Ravioli (2×), Fleischsuppe (1×), Gemüselasagne (1×), Gnocchi (1×), Gnocchi mit Ragu (1×), Kürbisrisotto (1×), Nudel mit Lachs und Tomantensoße (1×), Nudel mit Tomatensoße (1×), Nudel mit Tomatensoße und Schinken (1×), Putanesca (1×), Ravioli mit Käsesoße (1×), Ravioli mit Tomantensoße (1×), Reissalat (1×), Schlutzer Schinken-Rahm (1×), Schupfnudel mit Lachs (1×), Schüttelbrot-Risotto mit Speckstreifen (1×), Spinatknödel (1×), Spinatknödel mit Gorgonzolasoße (1×)
 - **Hauptspeise neu 2026** (13): Vitello tonnato (3×), Forelle (2×), Frittiertes Pangasiusfilet (2×), Hamburger (2×), Kalbsgulasch (2×), Schweinsfilet mit Pfeffersoße (2×), 1/2 Brathuhn (1×), Fleischkrapfln (1×), Hirschgulasch (1×), Lammbraten (1×), Pangasiusfilet mit Kräuterrahmsoße (1×), Panierter Pangasius (1×), Spiegelei (1×)
 - **Hauptspeise verschwunden 2026** (7): Pizzaiolaschnitzel (5×), Knödel (3×), Rotbarschfilet (2×), Frittiertes Schollenfilet (1×), Pangasiusfilet (1×), Paprika-Schweinegulasch (1×), Saures Rindfleisch (1×)
-- **Beilage neu 2026** (3): Wedges (7×), Röstinchen (2×), Kartoffel-Käse-Kroketten (1×)
+- **Beilage neu 2026** (4): Wedges (7×), Röstinchen (2×), Kartoffel-Käse-Kroketten (1×), Knödel (1×)
 - **Beilage verschwunden 2026** (4): Gulasch (3×), Kraut (1×), Safranreis (1×), Zucchini (1×)
 
 **Aufsteiger / Absteiger** (Anteil 2025 → 2026, Gerichte mit n ≥ 5):
 
 | Kategorie | Gericht |  | 2025 | 2026 |
 |---|---|---|---|---|
-| Vorspeise | Tortellini mit Schinken-Rahm | ↑ | 3,6 % | 5,6 % |
-| Vorspeise | Gnocchi mit Tomatensoße | ↑ | 2,7 % | 4,4 % |
-| Vorspeise | Hirten | ↑ | 5,9 % | 7,2 % |
-| Vorspeise | Nudel mit Pesto | ↑ | 3,2 % | 4,4 % |
-| Vorspeise | Carbonara | ↑ | 1,8 % | 2,8 % |
-| Vorspeise | Nudel mit Ragu | ↓ | 6,4 % | 4,4 % |
-| Vorspeise | Spinatspatzlen | ↓ | 4,5 % | 2,8 % |
-| Vorspeise | Nudel mit Thunfischsoße | ↓ | 6,4 % | 5,0 % |
-| Vorspeise | Aglio olio | ↓ | 6,8 % | 5,6 % |
-| Vorspeise | Nudel mit Lachs | ↓ | 2,3 % | 1,7 % |
-| Hauptspeise | Sparerips | ↑ | 0,5 % | 2,2 % |
-| Hauptspeise | Cordon Bleu | ↑ | 2,3 % | 3,9 % |
-| Hauptspeise | Hühnerhaxlen | ↑ | 3,2 % | 4,4 % |
-| Hauptspeise | Schweinsgulasch | ↑ | 2,3 % | 3,3 % |
-| Hauptspeise | Zwiebelrostbraten | ↑ | 2,3 % | 3,3 % |
-| Hauptspeise | Schweinskotelett | ↓ | 5,4 % | 1,7 % |
-| Hauptspeise | Truthahnschnitzel | ↓ | 7,2 % | 4,4 % |
-| Hauptspeise | Schweinsfilet | ↓ | 5,4 % | 3,3 % |
-| Hauptspeise | Schweinsschnitzel | ↓ | 5,9 % | 3,9 % |
+| Vorspeise | Tortellini mit Schinken-Rahm | ↑ | 3,6 % | 5,9 % |
+| Vorspeise | Gnocchi mit Tomatensoße | ↑ | 2,7 % | 4,3 % |
+| Vorspeise | Lasagne | ↑ | 4,1 % | 5,3 % |
+| Vorspeise | Nudel mit Pesto | ↑ | 3,2 % | 4,3 % |
+| Vorspeise | Hirten | ↑ | 5,9 % | 6,9 % |
+| Vorspeise | Spinatspatzlen | ↓ | 4,5 % | 2,7 % |
+| Vorspeise | Nudel mit Ragu | ↓ | 6,4 % | 4,8 % |
+| Vorspeise | Nudel mit Thunfischsoße | ↓ | 6,4 % | 4,8 % |
+| Vorspeise | Aglio olio | ↓ | 6,8 % | 5,9 % |
+| Vorspeise | Arrabbiata | ↓ | 7,3 % | 6,4 % |
+| Hauptspeise | Sparerips | ↑ | 0,5 % | 2,7 % |
+| Hauptspeise | Cordon Bleu | ↑ | 2,3 % | 3,7 % |
+| Hauptspeise | Ossobuchi | ↑ | 0,9 % | 2,1 % |
+| Hauptspeise | Hühnerhaxlen | ↑ | 3,2 % | 4,3 % |
+| Hauptspeise | Schweinsgulasch | ↑ | 2,3 % | 3,2 % |
+| Hauptspeise | Schweinskotelett | ↓ | 5,4 % | 1,6 % |
+| Hauptspeise | Truthahnschnitzel | ↓ | 7,2 % | 4,3 % |
+| Hauptspeise | Schweinsschnitzel | ↓ | 5,9 % | 3,7 % |
 | Hauptspeise | Pizzaiolaschnitzel | ↓ | 1,8 % | 0,0 % |
-| Beilage | Wedges | ↑ | 0,0 % | 3,9 % |
-| Beilage | Kartoffelsalat | ↑ | 6,8 % | 10,0 % |
-| Beilage | Spatzlen | ↑ | 8,1 % | 11,1 % |
-| Beilage | Bratkartoffeln | ↑ | 0,5 % | 2,8 % |
-| Beilage | Pommes | ↑ | 12,7 % | 13,9 % |
-| Beilage | Ofenkartoffeln | ↓ | 10,4 % | 6,1 % |
-| Beilage | Kartoffelgratin | ↓ | 7,2 % | 3,3 % |
-| Beilage | Reis | ↓ | 24,4 % | 20,6 % |
-| Beilage | Plent | ↓ | 5,4 % | 3,3 % |
-| Beilage | Kroketten | ↓ | 6,3 % | 5,0 % |
+| Hauptspeise | Schweinsfilet | ↓ | 5,4 % | 3,7 % |
+| Beilage | Wedges | ↑ | 0,0 % | 3,7 % |
+| Beilage | Kartoffelsalat | ↑ | 6,8 % | 10,1 % |
+| Beilage | Spatzlen | ↑ | 8,1 % | 11,2 % |
+| Beilage | Bratkartoffeln | ↑ | 0,5 % | 2,7 % |
+| Beilage | Pommes | ↑ | 12,7 % | 13,8 % |
+| Beilage | Ofenkartoffeln | ↓ | 10,4 % | 5,9 % |
+| Beilage | Kartoffelgratin | ↓ | 7,2 % | 3,2 % |
+| Beilage | Reis | ↓ | 24,4 % | 20,7 % |
+| Beilage | Plent | ↓ | 5,4 % | 3,7 % |
+| Beilage | Kroketten | ↓ | 6,3 % | 4,8 % |
 
 ### Gewichtung nach Aktualität
 
@@ -682,9 +683,9 @@ Mittlerer Log-Loss einer reinen Häufigkeitsprognose für jeden Tag 2026 (nur Ve
 
 | Kategorie | 30 T | 60 T | 90 T | 180 T | 365 T | ∞ (ungewichtet) |
 |---|---|---|---|---|---|---|
-| Vorspeise | 3,786 | 3,632 | 3,571 | 3,523 | 3,516 | 3,530 |
-| Hauptspeise | 3,750 | 3,664 | 3,634 | 3,619 | 3,628 | 3,653 |
-| Beilage | 2,630 | 2,568 | 2,551 | 2,545 | 2,551 | 2,565 |
+| Vorspeise | 3,779 | 3,622 | 3,559 | 3,509 | 3,500 | 3,513 |
+| Hauptspeise | 3,752 | 3,667 | 3,636 | 3,620 | 3,627 | 3,649 |
+| Beilage | 2,632 | 2,571 | 2,555 | 2,550 | 2,558 | 2,574 |
 
 Aktualitätsgewichtung: beste Halbwertszeit (Log-Loss, Tage) – Vorspeise 365, Hauptspeise 180, Beilage 180.
 
@@ -694,60 +695,60 @@ Aktualitätsgewichtung: beste Halbwertszeit (Log-Loss, Tage) – Vorspeise 365, 
 
 | Gericht | 2024 | 2025 | 2026 |
 |---|---|---|---|
-| Arrabbiata | 6,1 % | 7,3 % | 6,7 % |
-| Nudel mit Käsesoße | 3,0 % | 6,8 % | 7,2 % |
-| Hirten | 6,1 % | 5,9 % | 7,2 % |
-| Aglio olio | 3,0 % | 6,8 % | 5,6 % |
-| Nudel mit Ragu | 9,1 % | 6,4 % | 4,4 % |
-| Nudel mit Thunfischsoße | 6,1 % | 6,4 % | 5,0 % |
-| Schlutzer | 3,0 % | 5,5 % | 5,6 % |
-| Nudel Mammarosa | 6,1 % | 5,0 % | 4,4 % |
-| Lasagne | 6,1 % | 4,1 % | 5,0 % |
-| Amatriciana | 3,0 % | 4,5 % | 4,4 % |
-| Tortellini mit Schinken-Rahm | 0,0 % | 3,6 % | 5,6 % |
-| Nudel mit Pesto | 3,0 % | 3,2 % | 4,4 % |
-| Spinatspatzlen | 3,0 % | 4,5 % | 2,8 % |
-| Gnocchi mit Tomatensoße | 0,0 % | 2,7 % | 4,4 % |
-| Käseknödel | 6,1 % | 1,8 % | 2,8 % |
+| Arrabbiata | 6,1 % | 7,3 % | 6,4 % |
+| Nudel mit Käsesoße | 3,0 % | 6,8 % | 7,4 % |
+| Hirten | 6,1 % | 5,9 % | 6,9 % |
+| Aglio olio | 3,0 % | 6,8 % | 5,9 % |
+| Nudel mit Ragu | 9,1 % | 6,4 % | 4,8 % |
+| Nudel mit Thunfischsoße | 6,1 % | 6,4 % | 4,8 % |
+| Schlutzer | 3,0 % | 5,5 % | 5,9 % |
+| Nudel Mammarosa | 6,1 % | 5,0 % | 4,8 % |
+| Lasagne | 6,1 % | 4,1 % | 5,3 % |
+| Amatriciana | 3,0 % | 4,5 % | 4,3 % |
+| Tortellini mit Schinken-Rahm | 0,0 % | 3,6 % | 5,9 % |
+| Nudel mit Pesto | 3,0 % | 3,2 % | 4,3 % |
+| Spinatspatzlen | 3,0 % | 4,5 % | 2,7 % |
+| Gnocchi mit Tomatensoße | 0,0 % | 2,7 % | 4,3 % |
+| Käseknödel | 6,1 % | 1,8 % | 2,7 % |
 
 **Hauptspeise**
 
 | Gericht | 2024 | 2025 | 2026 |
 |---|---|---|---|
-| Hühnerbrust | 6,1 % | 7,2 % | 7,8 % |
-| Champignonschnitzel | 6,1 % | 7,2 % | 5,6 % |
-| Truthahngeschnetzeltes | 6,1 % | 5,9 % | 6,1 % |
-| Truthahnschnitzel | 6,1 % | 7,2 % | 4,4 % |
-| Schweinsschopf | 9,1 % | 5,0 % | 5,6 % |
-| Truthahnbraten | 12,1 % | 5,0 % | 4,4 % |
-| Wienerschnitzel | 3,0 % | 5,4 % | 5,0 % |
-| Schweinsschnitzel | 3,0 % | 5,9 % | 3,9 % |
-| Schweinsfilet | 6,1 % | 5,4 % | 3,3 % |
-| Leberkas | 6,1 % | 4,5 % | 3,9 % |
-| Chilli con carne | 0,0 % | 4,5 % | 3,9 % |
-| Hühnerhaxlen | 6,1 % | 3,2 % | 4,4 % |
-| Schweinskotelett | 6,1 % | 5,4 % | 1,7 % |
-| Hauswurst | 3,0 % | 3,2 % | 2,8 % |
-| Cordon Bleu | 0,0 % | 2,3 % | 3,9 % |
+| Hühnerbrust | 6,1 % | 7,2 % | 7,4 % |
+| Champignonschnitzel | 6,1 % | 7,2 % | 5,9 % |
+| Truthahngeschnetzeltes | 6,1 % | 5,9 % | 5,9 % |
+| Truthahnschnitzel | 6,1 % | 7,2 % | 4,3 % |
+| Schweinsschopf | 9,1 % | 5,0 % | 5,3 % |
+| Truthahnbraten | 12,1 % | 5,0 % | 4,8 % |
+| Wienerschnitzel | 3,0 % | 5,4 % | 5,3 % |
+| Schweinsfilet | 6,1 % | 5,4 % | 3,7 % |
+| Schweinsschnitzel | 3,0 % | 5,9 % | 3,7 % |
+| Leberkas | 6,1 % | 4,5 % | 3,7 % |
+| Chilli con carne | 0,0 % | 4,5 % | 3,7 % |
+| Hühnerhaxlen | 6,1 % | 3,2 % | 4,3 % |
+| Schweinskotelett | 6,1 % | 5,4 % | 1,6 % |
+| Hauswurst | 3,0 % | 3,2 % | 3,2 % |
+| Cordon Bleu | 0,0 % | 2,3 % | 3,7 % |
 
 **Beilage**
 
 | Gericht | 2024 | 2025 | 2026 |
 |---|---|---|---|
-| Reis | 21,2 % | 24,4 % | 20,6 % |
-| Pommes | 9,1 % | 12,7 % | 13,9 % |
-| Spatzlen | 18,2 % | 8,1 % | 11,1 % |
+| Reis | 21,2 % | 24,4 % | 20,7 % |
+| Pommes | 9,1 % | 12,7 % | 13,8 % |
+| Spatzlen | 18,2 % | 8,1 % | 11,2 % |
 | Püree | 6,1 % | 10,0 % | 10,6 % |
-| Ofenkartoffeln | 12,1 % | 10,4 % | 6,1 % |
-| Kartoffelsalat | 3,0 % | 6,8 % | 10,0 % |
-| Kroketten | 6,1 % | 6,3 % | 5,0 % |
-| Kartoffelgratin | 3,0 % | 7,2 % | 3,3 % |
-| Plent | 3,0 % | 5,4 % | 3,3 % |
-| Röstkartoffeln | 6,1 % | 3,2 % | 2,8 % |
-| Salzkartoffeln | 3,0 % | 2,3 % | 2,8 % |
-| Kartoffelstampf | 6,1 % | 1,4 % | 2,2 % |
-| Wedges | 0,0 % | 0,0 % | 3,9 % |
-| Bratkartoffeln | 0,0 % | 0,4 % | 2,8 % |
+| Ofenkartoffeln | 12,1 % | 10,4 % | 5,9 % |
+| Kartoffelsalat | 3,0 % | 6,8 % | 10,1 % |
+| Kroketten | 6,1 % | 6,3 % | 4,8 % |
+| Kartoffelgratin | 3,0 % | 7,2 % | 3,2 % |
+| Plent | 3,0 % | 5,4 % | 3,7 % |
+| Röstkartoffeln | 6,1 % | 3,2 % | 2,7 % |
+| Salzkartoffeln | 3,0 % | 2,3 % | 2,7 % |
+| Kartoffelstampf | 6,1 % | 1,4 % | 2,1 % |
+| Wedges | 0,0 % | 0,0 % | 3,7 % |
+| Bratkartoffeln | 0,0 % | 0,4 % | 2,7 % |
 | Gulasch | 0,0 % | 1,4 % | 0,0 % |
 
 ## 7. Spieler

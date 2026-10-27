@@ -20,14 +20,14 @@ Diese Paare erscheinen nicht unter den Fuzzy-Vorschlägen. „unklar“ = Entsch
 
 | A | B | n(A) | n(B) | Warum |
 |---|---|---|---|---|
-| Kartoffelstampf | Püree | 13 | 191 | Entscheidung Johannes Paul III: zwei verschiedene Gerichte (Stampf = grob, mit Stücken). |
-| Safranreis | Reis | 1 | 395 | eigene Beilage (zu Ossobuchi). |
+| Kartoffelstampf | Püree | 13 | 192 | Entscheidung Johannes Paul III: zwei verschiedene Gerichte (Stampf = grob, mit Stücken). |
+| Safranreis | Reis | 1 | 397 | eigene Beilage (zu Ossobuchi). |
 | Tomatenrisotto | Tomatenrisotto mit Mozzarella | 4 | 3 | unklar, bleibt getrennt. |
 | Röstinchen | Röstkartoffeln | 3 | 118 | unklar, bleibt getrennt. |
 | Paprika-Schweinegulasch | Schweinsgulasch | 1 | 15 | unklar, bleibt getrennt. |
-| Schweinsfilet mit Pfeffersoße | Schweinsfilet | 2 | 101 | eigene Variante. |
+| Schweinsfilet mit Pfeffersoße | Schweinsfilet | 2 | 102 | eigene Variante. |
 | Spinatknödel mit Käsesoße | Spinatknödel | 5 | 17 | eigene Variante. |
-| Schlutzer Schinken-Rahm | Schlutzer | 1 | 73 | eigene Variante. |
+| Schlutzer Schinken-Rahm | Schlutzer | 1 | 74 | eigene Variante. |
 
 ## Auffälligkeiten
 
@@ -35,7 +35,8 @@ Keine Namensfrage, sondern Auffälligkeiten in den Daten (werden nicht automatis
 
 | Auffälligkeit | Tage | Hinweis |
 |---|---|---|
-| Beilage „Gulasch“ (3×), sonst Hauptspeise (4×); Hauptspeise an diesen Tagen: „Knödel“ | 2025-01-24, 2025-07-30, 2025-12-16 | Spalten Hauptspeise/Beilage vertauscht? Gemeint ist wohl Hauptspeise „Gulasch“ mit Beilage „Knödel“ („Knödel“ kommt als Hauptspeise nur an diesen Tagen vor). Für Statistik/Modell zählt es so, wie es im Excel steht; Korrektur in der Excel-Datei (oder bewusst so lassen). Tipps an diesen Tagen mit einem der Namen: 0. |
+| Beilage „Gulasch“ (3×), sonst Hauptspeise (5×); Hauptspeise an diesen Tagen: „Knödel“ | 2025-01-24, 2025-07-30, 2025-12-16 | Spalten Hauptspeise/Beilage vertauscht? Gemeint ist wohl Hauptspeise „Gulasch“ mit Beilage „Knödel“ („Knödel“ kommt als Hauptspeise nur an diesen Tagen vor). Für Statistik/Modell zählt es so, wie es im Excel steht; Korrektur in der Excel-Datei (oder bewusst so lassen). Tipps an diesen Tagen mit einem der Namen: 0. |
+| Beilage „Knödel“ (1×), sonst Hauptspeise (3×); Hauptspeise an diesen Tagen: „Gulasch“ | 2026-10-22 | Bitte prüfen, ob „Knödel“ hier wirklich Beilage ist. Für Statistik/Modell zählt es so, wie es im Excel steht; Korrektur in der Excel-Datei (oder bewusst so lassen). Tipps an diesen Tagen mit einem der Namen: 0. |
 
 ## Angewandte Aliase (Rohschreibweise → kanonisch)
 
@@ -44,6 +45,7 @@ Keine Namensfrage, sondern Auffälligkeiten in den Daten (werden nicht automatis
 | Roh | Kanonisch | Anzahl |
 |---|---|---|
 | `Aglio Olio` | Aglio olio | 48 |
+| `Aglio Olio / Gerstsuppe` | Aglio olio / Gerstsuppe | 1 |
 | `Algio Olio` | Aglio olio | 3 |
 | `Amatriciana oder Gerstsuppe` | Amatriciana / Gerstsuppe | 1 |
 | `Amatriciana oder Nudelsalat` | Amatriciana / Nudelsalat | 1 |
@@ -131,11 +133,11 @@ Kandidaten: max(rapidfuzz `ratio`, `token_sort_ratio`) ≥ 88 auf kleingeschrieb
 
 | A | B | Score | Lev. | Hinweis | n(A) | n(B) |
 |---|---|---|---|---|---|---|
-| Nudel mit Lachs | Nudel mit Lachssoße | 88.2 | 4 | Variante? | 12 | 2 |
+| Nudel mit Lachs | Nudel mit Lachssoße | 88.2 | 4 | Variante? | 13 | 2 |
 | Nudel mit Tomatensoße | Nudel mit Tomatensoße und Schinken | 76.4 | 13 | Variante? | 2 | 1 |
 | Nudel mit Tomatensoße | Nudel mit Tomatensoße und Mozzarella | 73.7 | 15 | Variante? | 2 | 5 |
-| Nudel mit Lachs | Nudel mit Lachs und Rahmsoße | 69.8 | 13 | Variante? | 12 | 1 |
-| Nudel mit Lachs | Nudel mit Lachs und Tomantensoße | 63.8 | 17 | Variante? | 12 | 1 |
+| Nudel mit Lachs | Nudel mit Lachs und Rahmsoße | 69.8 | 13 | Variante? | 13 | 1 |
+| Nudel mit Lachs | Nudel mit Lachs und Tomantensoße | 63.8 | 17 | Variante? | 13 | 1 |
 | Gnocchi | Gnocchi mit Ragu | 60.9 | 9 | Variante? | 6 | 1 |
 | Gnocchi | Gnocchi mit Lachs | 58.3 | 10 | Variante? | 6 | 1 |
 | Spinatknödel | Spinatknödel mit Gorgonzolasoße | 55.8 | 19 | Variante? | 17 | 1 |
