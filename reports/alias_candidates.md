@@ -143,7 +143,7 @@ Kandidaten: max(rapidfuzz `ratio`, `token_sort_ratio`) ≥ 88 auf kleingeschrieb
 | Spinatknödel | Spinatknödel mit Gorgonzolasoße | 55.8 | 19 | Variante? | 17 | 1 |
 | Gnocchi | Gnocchi mit Käsesoße | 51.9 | 13 | Variante? | 6 | 8 |
 | Ravioli | Ravioli mit Käsesoße | 51.9 | 13 | Variante? | 2 | 1 |
-| Gnocchi | Gnocchi mit Tomatensoße | 46.7 | 16 | Variante? | 6 | 23 |
+| Gnocchi | Gnocchi mit Tomatensoße | 46.7 | 16 | Variante? | 6 | 24 |
 | Gnocchi | Gnocchi mit Kräutersauce | 45.2 | 17 | Variante? | 6 | 1 |
 | Ravioli | Ravioli mit Tomantensoße | 45.2 | 17 | Variante? | 2 | 1 |
 | Gnocchi | Gnocchi mit Gorgonzolasoße | 42.4 | 19 | Variante? | 6 | 2 |
