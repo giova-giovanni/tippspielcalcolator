@@ -626,10 +626,23 @@ def as_of(ds, day: dt.date):
     return Dataset(menus, tips, ds.norm, ds.config)
 
 
+def missing_menus(ds, target: dt.date, lookback_days: int = 28) -> list[str]:
+    """Past game days (before ``target``, last ``lookback_days`` calendar days) without a menu.
+
+    The model is online: every missing menu hides the recent rotation (what was just served, what
+    is "due"). Oct/Nov 2026: with five weeks of menus missing, the published tips scored 8.5 points
+    in 26 days, the same model with the menus entered 12.5 (backtest)."""
+    lo = target - dt.timedelta(days=lookback_days)
+    return [m.date.isoformat() for m in ds.menus
+            if m.status == "pending" and lo <= m.date < target and m.date.weekday() < 5]
+
+
 def run(ds, today: dt.date, now: dt.datetime | None = None) -> dict:
     from .output import write_site_json
 
     today_obj, week_obj = build(ds, today, now)
+    tgt = dt.date.fromisoformat(today_obj["date"]) if today_obj.get("date") else today
+    today_obj["missing_menus"] = missing_menus(ds, tgt)
     write_site_json("today", today_obj)
     write_site_json("week", week_obj)
     return today_obj
@@ -682,6 +695,9 @@ def main(argv=None) -> int:
           + "  ".join(f"{c[0].upper()}={rec[c]['p']:.3f}" for c in CATEGORIES) + f"  valid={rec['valid']}")
     g = obj["greedy"]
     print(f"Greedy:     {g['copy_text']}  EV={g['ev']:.3f}")
+    miss = obj.get("missing_menus") or missing_menus(ds, dt.date.fromisoformat(obj["date"]))
+    if miss:
+        print(f"ACHTUNG/ATTENZIONE: {len(miss)} Menüs fehlen / menù mancanti: {', '.join(miss)}")
     for r in obj["week_plan"]:
         print(f"  Plan {r['date']}: {r['vorspeise']} / {r['hauptspeise']} / {r['beilage']}  EV={r['ev']:.3f}")
     return 0

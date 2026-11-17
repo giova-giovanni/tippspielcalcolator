@@ -449,33 +449,33 @@ date,year,weekday,status,vorspeise,hauptspeise,beilage,vorspeise_norm,hauptspeis
 2026-10-06,2026,Di,served,Tortellini mit Schinken-Rahm,Cordon Bleu,Kartoffelsalat,Tortellini mit Schinken-Rahm,Cordon Bleu,Kartoffelsalat,xlsx
 2026-10-07,2026,Mi,served,Pizzastrudel,Truthahngeschnetzeltes,Püree,Pizzastrudel,Truthahngeschnetzeltes,Püree,xlsx
 2026-10-08,2026,Do,served,Lasagne,Rindsbraten,Reis,Lasagne,Rindsbraten,Reis,xlsx
-2026-10-09,2026,Fr,served,Gnocchi mit Tomatensoße,Schweinsgulasch,Kroketten,Gnocchi mit Tomatensoße,Schweinsgulasch,Kroketten,form
-2026-10-12,2026,Mo,served,Amatriciana,Hühnerbrust,Reis,Amatriciana,Hühnerbrust,Reis,form
-2026-10-13,2026,Di,pending,,,,,,,xlsx
-2026-10-14,2026,Mi,served,Nudel mit Grillgemüseragu,Schweinsschopf,Wedges,Nudel mit Grillgemüseragu,Schweinsschopf,Wedges,form
-2026-10-15,2026,Do,served,Nudel mit Ragu,Ossobuchi,Spatzlen,Nudel mit Ragu,Ossobuchi,Spatzlen,form
-2026-10-16,2026,Fr,served,Nudel mit Lachs,Hauswurst,Plent,Nudel mit Lachs,Hauswurst,Plent,form
-2026-10-19,2026,Mo,served,Nudel Mammarosa,Truthahnbraten,Reis,Nudel Mammarosa,Truthahnbraten,Reis,form
-2026-10-20,2026,Di,served,Schlutzer,Schweinsfilet,Püree,Schlutzer,Schweinsfilet,Püree,form
-2026-10-21,2026,Mi,served,Lasagne,Wienerschnitzel,Kartoffelsalat / Pommes,Lasagne,Wienerschnitzel,Kartoffelsalat / Pommes,form
-2026-10-22,2026,Do,served,Nudel mit Käsesoße,Gulasch,Knödel,Nudel mit Käsesoße,Gulasch,Knödel,form
-2026-10-23,2026,Fr,served,Tortellini mit Schinken-Rahm,Sparerips,Pommes,Tortellini mit Schinken-Rahm,Sparerips,Pommes,form
-2026-10-26,2026,Mo,served,Aglio Olio / Gerstsuppe,Champignonschnitzel,Reis,Aglio olio / Gerstsuppe,Champignonschnitzel,Reis,form
-2026-10-27,2026,Di,served,Gnocchi mit Tomatensoße,Leberkas,Pommes,Gnocchi mit Tomatensoße,Leberkas,Pommes,form
-2026-10-28,2026,Mi,pending,,,,,,,xlsx
-2026-10-29,2026,Do,pending,,,,,,,xlsx
-2026-10-30,2026,Fr,pending,,,,,,,xlsx
-2026-11-02,2026,Mo,pending,,,,,,,xlsx
-2026-11-03,2026,Di,pending,,,,,,,xlsx
-2026-11-04,2026,Mi,pending,,,,,,,xlsx
-2026-11-05,2026,Do,pending,,,,,,,xlsx
-2026-11-06,2026,Fr,pending,,,,,,,xlsx
-2026-11-09,2026,Mo,pending,,,,,,,xlsx
-2026-11-10,2026,Di,pending,,,,,,,xlsx
-2026-11-11,2026,Mi,pending,,,,,,,xlsx
-2026-11-12,2026,Do,pending,,,,,,,xlsx
-2026-11-13,2026,Fr,pending,,,,,,,xlsx
-2026-11-16,2026,Mo,pending,,,,,,,xlsx
+2026-10-09,2026,Fr,served,Gnocchi mit Tomatensoße,Schweinsgulasch,Kroketten,Gnocchi mit Tomatensoße,Schweinsgulasch,Kroketten,xlsx
+2026-10-12,2026,Mo,served,Aglio Olio / Amatriciana,Hühnerbrust,Reis,Aglio olio / Amatriciana,Hühnerbrust,Reis,xlsx
+2026-10-13,2026,Di,served,Nudel mit Käsesoße,Currywurst,Pommes,Nudel mit Käsesoße,Currywurst,Pommes,xlsx
+2026-10-14,2026,Mi,served,Nudel mit Grillgemüseragu,Schweinsschopf,Wedges,Nudel mit Grillgemüseragu,Schweinsschopf,Wedges,xlsx
+2026-10-15,2026,Do,served,Nudel mit Ragu,Ossobuchi,Spatzlen,Nudel mit Ragu,Ossobuchi,Spatzlen,xlsx
+2026-10-16,2026,Fr,served,Nudel mit Lachs,Hauswurst,Plent,Nudel mit Lachs,Hauswurst,Plent,xlsx
+2026-10-19,2026,Mo,served,Nudel Mammarosa,Truthahnbraten,Reis,Nudel Mammarosa,Truthahnbraten,Reis,xlsx
+2026-10-20,2026,Di,served,Schlutzer,Schweinsfilet,Püree,Schlutzer,Schweinsfilet,Püree,xlsx
+2026-10-21,2026,Mi,served,Lasagne,Wienerschnitzel,Kartoffelsalat / Pommes,Lasagne,Wienerschnitzel,Kartoffelsalat / Pommes,xlsx
+2026-10-22,2026,Do,served,Nudel mit Käsesoße,Gulasch,Knödel,Nudel mit Käsesoße,Gulasch,Knödel,xlsx
+2026-10-23,2026,Fr,served,Tortellini mit Schinken-Rahm,Sparerips,Pommes,Tortellini mit Schinken-Rahm,Sparerips,Pommes,xlsx
+2026-10-26,2026,Mo,served,Aglio Olio / Gerstsuppe,Champignonschnitzel,Reis,Aglio olio / Gerstsuppe,Champignonschnitzel,Reis,xlsx
+2026-10-27,2026,Di,served,Gnocchi mit Tomatensoße,Leberkas,Pommes,Gnocchi mit Tomatensoße,Leberkas,Pommes,xlsx
+2026-10-28,2026,Mi,served,Hirten,Schweinsfilet,Spatzlen,Hirten,Schweinsfilet,Spatzlen,xlsx
+2026-10-29,2026,Do,served,Spinatcannelloni,Rindsschnitzel,Röstinchen,Spinatcannelloni,Rindsschnitzel,Röstinchen,xlsx
+2026-10-30,2026,Fr,served,Nudel mit Thunfischsoße,Truthahngeschnetzeltes,Püree,Nudel mit Thunfischsoße,Truthahngeschnetzeltes,Püree,xlsx
+2026-11-02,2026,Mo,served,Lasagne,Chilli con Carne,Reis,Lasagne,Chilli con carne,Reis,xlsx
+2026-11-03,2026,Di,served,Tortellini mit Schinken-Rahm,Zigeunerschnitzel,Spatzlen,Tortellini mit Schinken-Rahm,Zigeunerschnitzel,Spatzlen,xlsx
+2026-11-04,2026,Mi,served,Nudel mit Pesto,Hackbraten,Kartoffelgratin,Nudel mit Pesto,Hackbraten,Kartoffelgratin,xlsx
+2026-11-05,2026,Do,served,Nudel Mammarosa,Cordon Bleu,Kartoffelsalat / Pommes,Nudel Mammarosa,Cordon Bleu,Kartoffelsalat / Pommes,xlsx
+2026-11-06,2026,Fr,served,Arrabbiata,Surfleisch,Kraut,Arrabbiata,Surfleisch,Kraut,xlsx
+2026-11-09,2026,Mo,served,Amatriciana,Schweinsschnitzel,Reis,Amatriciana,Schweinsschnitzel,Reis,xlsx
+2026-11-10,2026,Di,served,Spinatknödel,Currywurst,Pommes,Spinatknödel,Currywurst,Pommes,xlsx
+2026-11-11,2026,Mi,served,Gerstsuppe / Nudel mit Käsesoße,Truthahnbraten,Kroketten,Gerstsuppe / Nudel mit Käsesoße,Truthahnbraten,Kroketten,xlsx
+2026-11-12,2026,Do,served,Nudel mit Ragu,Schweinshax,Plent,Nudel mit Ragu,Schweinshaxe,Plent,xlsx
+2026-11-13,2026,Fr,served,Nudel mit Grillgemüseragu,Zwiebelrostbraten,Reis,Nudel mit Grillgemüseragu,Zwiebelrostbraten,Reis,xlsx
+2026-11-16,2026,Mo,served,Aglio olio,Truthahngeschnetzeltes,Püree,Aglio olio,Truthahngeschnetzeltes,Püree,xlsx
 2026-11-17,2026,Di,pending,,,,,,,xlsx
 2026-11-18,2026,Mi,pending,,,,,,,xlsx
 2026-11-19,2026,Do,pending,,,,,,,xlsx

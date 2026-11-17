@@ -119,6 +119,8 @@ def parse_year_sheet(ws, norm: Normalizer, today: dt.date, log: list[str]):
             p = points_cell(r[c + 3]) if c + 3 < len(r) else None
             if any(t):
                 tip_rows.append((name, t, p))
+            elif p:  # points without a tip = start points / correction (e.g. a player joining mid-season)
+                tip_rows.append((name, t, p))
         if any(norm.is_free(x) for x in raw if x):
             status = "free"
         elif not any(raw):
@@ -129,6 +131,9 @@ def parse_year_sheet(ws, norm: Normalizer, today: dt.date, log: list[str]):
             status = "served"
         menus.append({"date": day, "status": status, "raw": raw})
         for name, t, p in tip_rows:
+            if not any(t):  # adjustment row: keep the points whatever the menu status
+                tips.append({"date": day, "player": name, "raw": t, "points_sheet": p})
+                continue
             tips.append({"date": day, "player": name, "raw": t,
                          "points_sheet": p if status in ("served", "unknown") else None})
     return menus, tips
@@ -179,8 +184,19 @@ def menu_row(day: dt.date, status: str, raw: list[str], source: str) -> dict:
             "source": source}
 
 
-def merge(existing_menus: list[dict], existing_tips: list[dict], x_menus: list[dict], x_tips: list[dict]):
-    """Workbook wins wherever it has content; CSV-only rows (website/manual) are kept."""
+def merge(existing_menus: list[dict], existing_tips: list[dict], x_menus: list[dict], x_tips: list[dict],
+          player_aliases: dict | None = None):
+    """Workbook wins wherever it has content; CSV-only rows (website/manual) are kept.
+
+    Player names are compared after ``config.player_aliases`` (case-insensitive), so a renamed
+    column in the workbook (e.g. 'Giovanni' for 'Johannes Paul III') replaces the old rows.
+    """
+    alias = {k.casefold(): v for k, v in (player_aliases or {}).items()}
+
+    def pkey(name: str) -> str:
+        n = clean(name)
+        return alias.get(n.casefold(), n).casefold()
+
     menus = {r["date"]: r for r in existing_menus}
     for m in x_menus:
         key = m["date"].isoformat()
@@ -189,9 +205,9 @@ def merge(existing_menus: list[dict], existing_tips: list[dict], x_menus: list[d
         if old and m["status"] == "pending" and old.get("status") not in ("", "pending", None):
             continue
         menus[key] = new
-    tips = {(r["date"], r["player"].casefold()): r for r in existing_tips}
+    tips = {(r["date"], pkey(r["player"])): r for r in existing_tips}
     for t in x_tips:
-        key = (t["date"].isoformat(), t["player"].casefold())
+        key = (t["date"].isoformat(), pkey(t["player"]))
         tips[key] = {"date": key[0], "player": t["player"], "vorspeise": t["raw"][0],
                      "hauptspeise": t["raw"][1], "beilage": t["raw"][2],
                      "points_sheet": fmt_points(t["points_sheet"]), "source": "xlsx"}
@@ -215,7 +231,7 @@ def run(xlsx: Path | None = None, if_changed: bool = False, today: dt.date | Non
     norm = Normalizer()
     log: list[str] = []
     x_menus, x_tips = read_workbook(xlsx, norm, today, log)
-    menus, tips = merge(read_csv(MENUS_CSV), read_csv(TIPS_CSV), x_menus, x_tips)
+    menus, tips = merge(read_csv(MENUS_CSV), read_csv(TIPS_CSV), x_menus, x_tips, cfg.get("player_aliases"))
     write_csv(MENUS_CSV, MENU_FIELDS, menus)
     write_csv(TIPS_CSV, TIP_FIELDS, tips)
     state.update({"ingested_sha256": digest, "ingested_file": xlsx.name,

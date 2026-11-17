@@ -32,9 +32,19 @@ def test_players_per_sheet(parsed):
         players[t["date"].year].add(t["player"])
     assert players[2024] == BASE_PLAYERS
     assert players[2025] == BASE_PLAYERS
-    assert players[2026] >= BASE_PLAYERS | {"Johannes Paul III"}
-    assert any(l.startswith("Blatt 2026") and "Johannes Paul III" in l for l in log)
+    # since Nov 2026 the workbook calls 'Johannes Paul III' 'Giovanni' (config.player_aliases maps it back)
+    assert players[2026] >= BASE_PLAYERS | {"Giovanni", "Lorenz"}
+    assert any(l.startswith("Blatt 2026") and "Giovanni" in l and "Lorenz" in l for l in log)
     assert not any("Regelwerk" in l or "Grafische" in l for l in log)  # non-year sheets ignored
+
+
+def test_start_points_row(parsed):
+    """Lorenz joined on 2026-11-02 with 48 start points, written in his points column on 2026-10-30."""
+    _, tips, _ = parsed
+    rows = [t for t in tips if t["player"] == "Lorenz"]
+    start = [t for t in rows if not any(t["raw"])]
+    assert [(t["date"], t["points_sheet"]) for t in start] == [(D(2026, 10, 30), 48.0)]
+    assert min(t["date"] for t in rows if any(t["raw"])) == D(2026, 11, 2)
 
 
 def test_free_days_2026(parsed):
@@ -150,6 +160,31 @@ def test_merge_workbook_wins_and_csv_only_rows_survive():
     assert tip_by[("2026-10-08", "Andreas")]["points_sheet"] == "3"
     assert tip_by[("2026-10-08", "Andreas")]["source"] == "xlsx"
     assert tip_by[("2026-10-20", "Johannes Paul III")]["source"] == "form"
+
+
+def test_merge_renamed_player_replaces_old_rows():
+    """A renamed workbook column (player alias) replaces the rows of the old name instead of duplicating them."""
+    existing_tips = [_csv_tip("2026-10-12", "Johannes Paul III", "Hirten", "Gulasch", "Reis", source="xlsx"),
+                     _csv_tip("2026-10-13", "Johannes Paul III", "Schlutzer", "Leberkas", "Pommes", source="form")]
+    x_tips = [{"date": D(2026, 10, 12), "player": "Giovanni", "raw": ["Lasagne", "Gulasch", "Reis"], "points_sheet": 1.0}]
+    _, tips = merge([], existing_tips, [], x_tips, {"Giovanni": "Johannes Paul III"})
+    by = {(t["date"], t["player"]): t for t in tips}
+    assert set(by) == {("2026-10-12", "Giovanni"), ("2026-10-13", "Johannes Paul III")}
+    assert by[("2026-10-12", "Giovanni")]["vorspeise"] == "Lasagne"
+    # without the alias both spellings would survive side by side
+    _, tips2 = merge([], existing_tips, [], x_tips)
+    assert len(tips2) == 3
+
+
+def test_adjustment_rows_in_dataset(dataset):
+    """Start points count for the standings, not as a tipping day; the alias maps Giovanni to me."""
+    lor = [t for t in dataset.tips if t.player == "Lorenz"]
+    adj = [t for t in lor if t.is_adjustment]
+    assert [(t.date, t.points) for t in adj] == [(D(2026, 10, 30), 48.0)]
+    assert "Giovanni" not in dataset.players and dataset.me in dataset.players
+    from engine.backtest import player_stats
+    ps = player_stats(dataset, D(2026, 11, 16))["2026"]["Lorenz"]
+    assert ps["days"] == 10 and ps["points"] == 2.0
 
 
 def test_merge_pending_overrides_pending():

@@ -50,6 +50,11 @@ class Tip:
     hits: dict[str, bool] = field(default_factory=dict)
     source: str = ""
 
+    @property
+    def is_adjustment(self) -> bool:
+        """Points without any dish: start points of a player joining mid-season or a correction."""
+        return not any(self.raw)
+
 
 @dataclass
 class Dataset:
@@ -154,7 +159,11 @@ def load_dataset(menus_path=MENUS_CSV, tips_path=TIPS_CSV, config: dict | None =
         opts = {c: norm.options(x, c) for c, x in zip(CATEGORIES, raw)}
         t = Tip(d, player, raw, opts, _float(r.get("points_sheet")), None, {}, r.get("source", ""))
         m = by_date.get(d)
-        if m and m.status in ("served", "unknown") and any(opts.values()):
+        if not any(raw):  # adjustment (start points / correction): the sheet value is the score
+            if not t.points_sheet:
+                continue
+            t.points, t.hits = t.points_sheet, {}
+        elif m and m.status in ("served", "unknown") and any(opts.values()):
             t.points, t.hits = score_tip(opts, m.options, d, norm, scoring)
         elif m and m.status in ("served", "unknown"):
             t.points, t.hits = 0.0, {c: False for c in CATEGORIES}
