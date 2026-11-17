@@ -1,6 +1,6 @@
 # Analyse Tippspiel Essen Wies
 
-_Automatisch erzeugt von `engine/analyze.py` am 2026-11-17 10:03 UTC (Stichtag 2026-11-17). Datenstand: 459 servierte Menüs (2024: 34, 2025: 221, 2026: 204), letztes Menü 2026-11-16._
+_Automatisch erzeugt von `engine/analyze.py` am 2026-11-17 10:42 UTC (Stichtag 2026-11-17). Datenstand: 459 servierte Menüs (2024: 34, 2025: 221, 2026: 204), letztes Menü 2026-11-16._
 
 ## Riassunto (IT)
 
