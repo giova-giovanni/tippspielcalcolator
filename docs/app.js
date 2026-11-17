@@ -1039,6 +1039,12 @@
         var staleGen = romeTodayISO(gen) < lastWd && (lastWd < todayR || zonedParts(Date.now()).h >= 9);
         if (staleGen && ageH > 3) notes.appendChild(notice('warn', t('stale.generated', { ago: ageH > 48 ? t('ago.days', { n: Math.floor(ageH / 24) }) : t('ago.hours', { n: Math.floor(ageH) }) })));
       }
+      // menus of past game days not entered yet: the model does not know the recent rotation
+      var miss = (d.missing_menus || []).filter(function (x) { return isISO(x) && !(menuOf(ctx, x) || {}).pending; });
+      if (miss.length) {
+        notes.appendChild(notice(miss.length >= 3 ? 'danger' : 'warn', t('stale.menus', { n: miss.length, dates: miss.map(fmtDM).join(', ') }),
+          h('a', { href: '#/eingabe' }, t('stale.menusLink'))));
+      }
       var pb = pendingBanner(ctx);
       if (pb) notes.appendChild(pb);
       if (notes.childNodes.length) out.appendChild(notes);
@@ -1692,7 +1698,38 @@
             isNum(ps.ppd) ? fmtNum(ps.ppd, 2) : (series[n] && dates.length ? fmtNum(totals[n] / dates.length, 2) : '–')]
         };
       });
-      out.appendChild(card(t('rank.totals', { y: y }), table([{ label: '#' }, { label: t('col.player') }, { label: t('col.points'), num: true }, { label: t('col.diff'), num: true }, { label: t('col.ppd'), num: true }], trows)));
+      out.appendChild(card(t('rank.totals', { y: y }), table([{ label: '#' }, { label: t('col.player') }, { label: t('col.points'), num: true }, { label: t('col.diff'), num: true }, { label: t('col.ppd'), num: true }], trows),
+        (Y.adjustments || []).length ? { sub: Y.adjustments.map(function (a) { return t('race.adj', { p: a.player, x: fmtPts(a.points), date: fmtDM(a.date) }); }).join(' ') } : null));
+
+      // race to the end of the season (engine/race.py)
+      var R = lb.race;
+      if (R && String(R.season) === y && R.scenarios && R.scenarios.model) {
+        var sm = R.scenarios.model, so = R.scenarios.own || {};
+        var rnames = Object.keys(R.standings || {});
+        var rrows = rnames.map(function (n) {
+          return {
+            cls: n === me ? 'me-row' : null,
+            cells: [h('span', { class: 'who' }, h('span', { class: 'dot', style: { backgroundColor: cmap2[n] || colNow.muted } }), n),
+              fmtPts(R.standings[n]), fmtNum((R.ppd || {})[n], 2), fmtNum(((sm.end || {}).expected || {})[n], 1),
+              fmtPct(((sm.end || {}).win_share || {})[n]), fmtPct(((so.end || {}).win_share || {})[n])]
+          };
+        });
+        var kpi = function (label, val, sub) {
+          return h('div', null, h('span', { class: 'k' }, label), h('span', { class: 'v' }, val), sub ? h('span', { class: 'small muted' }, sub) : null);
+        };
+        out.appendChild(card(t('race.title', { y: y }), [
+          pick(R, 'summary') ? h('p', { class: 'lead' }, pick(R, 'summary')) : null,
+          h('div', { class: 'kpis race-kpis' },
+            kpi(t('race.pEnd') + ' · ' + t('race.me.model'), fmtPct(sm.end.p_first)),
+            kpi(t('race.p2w', { d: sm.two_weeks.days }), fmtPct(sm.two_weeks.p_first)),
+            kpi(t('race.pLeader', { p: R.leader }), fmtPct((sm.end.p_ahead_of || {})[R.leader])),
+            kpi(t('race.pEnd') + ' · ' + t('race.me.own'), fmtPct((so.end || {}).p_first))),
+          table([{ label: t('col.player') }, { label: t('race.col.now'), num: true }, { label: t('race.col.ppd'), num: true },
+            { label: t('race.col.exp'), num: true }, { label: t('race.col.win'), num: true }, { label: t('race.col.winOwn'), num: true }], rrows),
+          isNum(R.needed_ppd_vs_leader) ? h('p', { class: 'small' }, t('race.needed', { x: fmtNum(R.needed_ppd_vs_leader, 2), m: fmtNum(R.ppd_model, 2) })) : null,
+          (R.newbies || []).length ? h('p', { class: 'small muted' }, R.newbies.map(function (p) { return t('race.newbie', { p: p }); }).join(' ')) : null
+        ], { sub: t('race.sub', { n: R.n_sims, d: R.remaining_days }) }));
+      }
 
       // player stats from stats.json
       var plist = Object.keys(pstats).map(function (k) { return pstats[k]; }).sort(function (a, b) { return (b.ppd || 0) - (a.ppd || 0); });

@@ -167,8 +167,11 @@ token → *Delete* (subito invalido ovunque). Su dispositivi altrui cancellarlo 
 | R9.5 – seconde opzioni | **conta qualsiasi opzione annunciata** (così è tenuto l'Excel, es. righe `Pommes / Kartoffelsalat`); configurabile con `scoring.alt_options_count` |
 | R9.6 – "Fisch" | fuori Quaresima "Fisch" vale per ogni piatto di pesce tranne Scombri; in Quaresima nome esatto |
 | R9.8 – solo piatti finiti | componenti come `(und Blaukraut)` vengono tolti (`strip_patterns` in `aliases.json`) |
-| R11 – fine stagione | ultimo giorno lavorativo dell'anno, al più tardi il 23.12 (`season_end_mmdd`) |
-| R17 – Lachsforelle = Forelle | alias in `aliases.json` |
+| R10 – fine stagione | ultimo giorno lavorativo dell'anno, al più tardi il 23.12 (`season_end_mmdd`) |
+| R16 – Lachsforelle = Forelle | alias in `aliases.json` |
+
+Numerazione del *Regelwerk* dall'Excel di novembre 2026 (la vecchia regola 10 vuota è sparita: fine
+stagione era R11, Lachsforelle R17; il contenuto non è cambiato).
 
 Scelte di interpretazione:
 
@@ -179,9 +182,18 @@ Scelte di interpretazione:
 - **Settimana** = settimana ISO (lun–ven).
 - Confronto dei nomi **senza distinzione tra maiuscole/minuscole** (come l'Excel); le varianti di
   scrittura vengono unite solo tramite `aliases.json`.
-- Verifica: ricalcolando tutte le ~1400 giocate storiche il motore dà gli stessi punti dell'Excel,
-  tranne 3 righe corrette a mano nel foglio (2025-10-09 Andreas e Johannes, 2025-12-19 Johannes);
-  i totali 2026 coincidono.
+- Verifica: ricalcolando tutte le ~1500 giocate storiche il motore dà gli stessi punti dell'Excel,
+  tranne 3 righe corrette a mano nel foglio (2025-10-09 Andreas e Johannes, 2025-12-19 Johannes) e
+  2026-10-14 Andreas (`Schweinsschopfbraten` contro il menù `Schweinsschopf`: per l'alias è lo stesso
+  piatto, l'Excel dà 0). **La classifica (scheda Rangliste, `leaderboard.json`) usa i punti ufficiali
+  dell'Excel** dove ci sono, il ricalcolo solo per le righe inserite dal sito; backtest e confronto
+  modello/giocatori usano il ricalcolo (stesse regole per tutti).
+- **Punti senza tipp** (blocco giocatore con punti ma V/H/B vuoti) = punti di partenza o correzione:
+  es. Lorenz, entrato il 02.11.2026 con **48 punti di partenza** (scritti il 30.10). Contano nella
+  classifica e nella simulazione, non come giorno giocato (né nei punti/giorno né nelle statistiche).
+- **Nome del giocatore cambiato nell'Excel**: da novembre 2026 la colonna "Johannes Paul III" si chiama
+  "Giovanni". `config.json → player_aliases` (`"Giovanni": "Johannes Paul III"`) li unisce; l'ingest
+  confronta i nomi dopo l'alias, quindi le righe nuove sostituiscono quelle vecchie invece di duplicarle.
 
 ## Risultati del backtest
 
@@ -190,23 +202,56 @@ Walk-forward onesto: per ogni giorno il modello usa solo i menù **precedenti**,
 Iperparametri, modello e strategia sono stati scelti solo su 2025 (tuning gen–ago, validazione set–dic);
 il **2026 non è mai stato usato per nessuna scelta** → è un vero test fuori campione.
 
-| Chi | 2025 (in parte nel campione) | 2026 (test, fuori campione) |
+| Chi | 2025 (in parte nel campione) | 2026 (test, fuori campione, 204 giorni fino al 16.11) |
 |---|---|---|
-| **Modello ensemble** (quello usato) | **65,5** | **54,5** |
-| Modello euristico | 64,5 | 58,0 |
-| Modello ML (regressione logistica) | 55,5 | 56,5 |
-| Baseline frequenze | 36,0 | 32,5 |
-| Noah | 51,5 | 41,5 |
-| Andreas | 47,5 | 44,5 |
-| Johannes | 39,0 | 45,5 |
-| Johannes Paul III (io) | – | 41,0 |
+| **Modello ensemble** (quello usato) | **65,5** | **67,0** |
+| Modello euristico | 64,5 | 70,0 |
+| Modello ML (regressione logistica) | 55,5 | 69,0 |
+| Baseline frequenze | 36,0 | 39,5 |
+| Andreas | 47,5 | 54,5 (54 ufficiali) |
+| Johannes | 39,0 | 53,0 |
+| Noah | 51,5 | 49,5 |
+| Johannes Paul III / Giovanni (io) | – | 49,0 |
+| Lorenz (dal 02.11) | – | 2,0 (+ 48 di partenza) |
 
-**Verdetto onesto:** nel 2026 il modello avrebbe fatto **+9 punti** rispetto al migliore (Johannes) e **+13,5**
-rispetto a me, ma con ~180 giorni e punti giornalieri molto variabili l'intervallo bootstrap al 95 % contro
-Johannes è **[−6,5; +24,5]**: il vantaggio è probabile (≈ 86 %) ma **non statisticamente garantito**.
-Il modello è un po' troppo ottimista sulle proprie probabilità (2026: 62 punti attesi, 54,5 reali).
-Il pianificatore settimanale vale poco più della scelta giorno per giorno (+1 punto nel 2026).
+**Verdetto onesto:** nel 2026 il modello avrebbe fatto **+12,5 punti** rispetto al migliore (Andreas) e **+18**
+rispetto a me, ma con ~200 giorni e punti giornalieri molto variabili l'intervallo bootstrap al 95 % contro
+Andreas è **[−4; +30]**: il vantaggio è probabile (≈ 92 %) ma **non statisticamente garantito**.
+Il modello è un po' troppo ottimista sulle proprie probabilità (2026: 71,7 punti attesi, 67 reali).
+Il pianificatore settimanale vale poco più della scelta giorno per giorno (+1,5 punti nel 2026).
 Dettagli, calibrazione e intervalli: [`reports/backtest.md`](reports/backtest.md) e la scheda **Backtest** del sito.
+
+## Aggiornamento novembre 2026 (dati fino al 16.11)
+
+- **Dati**: nuovo Excel con i menù dal 10.10 al 16.11, il nuovo giocatore **Lorenz** (48 punti di
+  partenza) e la colonna rinominata "Giovanni" (vedi sopra). Classifica ufficiale al 16.11: Andreas 54,
+  Johannes 53, Lorenz 50, Noah 49,5, Johannes Paul III 49.
+- **Menù mancanti = consigli peggiori.** Dal 10.10 al 16.11 i menù non erano nel repository: i consigli
+  pubblicati ogni mattina (calcolati senza conoscere la rotazione recente) avrebbero fatto **8,5 punti**
+  in 26 giorni; lo stesso modello con i menù aggiornati (backtest) **12,5**. Per questo la scheda
+  "Heute" ora mostra un avviso quando mancano menù dei giorni di gioco passati (`today.json →
+  missing_menus`, ultimi 28 giorni). Inserire il menù ogni giorno (scheda Eingabe) è la cosa più utile.
+- **Parametri del modello: invariati, dopo verifica.**
+  - Ritaratura con i dati 2026 (tuning 13.01.2025–31.03.2026, validazione 01.04–31.08.2026) e confronto
+    sul periodo 01.09–16.11.2026, mai visto da nessuno dei due set: i parametri nuovi sono **peggiori**
+    (ensemble: log-loss pesata 2,946 contro 2,926; 21 contro 24,5 punti). Restano quelli del 2025.
+  - Variante dell'algoritmo: nel modello ML (conditional logit) pesare di più i giorni recenti
+    (half-life 60/120/250/500 giorni serviti). Nessun guadagno né sulla validazione 2025 (2,931 senza peso
+    = il migliore) né sul 2026 (2,8811 contro 2,8812 al meglio): scartata, il codice resta com'era.
+  - Il modello sceglie la stessa Vorspeise di Andreas solo nel 18 % dei giorni (Johannes/Noah 15 %):
+    è già molto diverso dagli altri, una strategia "anti-leader" non porterebbe quasi niente (e
+    richiederebbe di usare i tipp degli altri, cosa che il motore non fa – regola 6).
+  - Le probabilità del giorno si aggiornano da sole a ogni nuovo menù (il modello è online).
+- **Aufholjagd / rimonta** (`engine/race.py`, scheda Rangliste, `leaderboard.json → race`,
+  `reports/backtest.md`): Monte Carlo sui giorni di gioco rimasti fino al 23.12. Ogni giorno simulato è
+  un giorno *vero* della stagione estratto a caso, con i punti di tutti i giocatori e del modello nello
+  stesso giorno: così resta la correlazione (spesso tutti indovinano la stessa cosa e il distacco non
+  cambia). Due scenari per me: "seguo il modello" (punti del backtest) e "gioco come finora". I nuovi
+  giocatori con meno di 30 giorni (Lorenz) sono simulati come un giocatore medio. Solo punti, mai i
+  piatti giocati dagli altri. Al 16.11 (26 giorni rimasti, −5 da Andreas): **seguendo il modello ≈ 8 %
+  di finire primo da solo (≈ 11 % primo o a pari merito), ≈ 1 % di essere in testa fra due settimane;
+  giocando come finora ≈ 1 %**. Servirebbero ≈ 0,49 punti/giorno, il modello ne fa 0,33 nel backtest.
+  `python -m engine.race` stampa la simulazione aggiornata.
 
 ## Privacy e limiti di GitHub Free
 
@@ -241,6 +286,7 @@ python -m engine.pipeline --tune                 # ri-ottimizza i parametri del 
 python -m engine.pipeline --force-ingest         # rilegge l'Excel anche se non è cambiato
 python -m engine.backtest [--tune]               # solo backtest walk-forward (report in reports/backtest.md)
 python -m engine.analyze                         # solo statistiche (reports/analysis.md)
+python -m engine.race                            # simulazione della corsa al titolo (fine stagione)
 python -m engine.ingest --xlsx percorso.xlsx     # solo import Excel → CSV
 python -m pytest -q                              # test (nessuna rete, non modificano data/)
 python -m http.server -d docs 8000               # anteprima del sito su http://localhost:8000
@@ -255,7 +301,7 @@ python -m http.server -d docs 8000               # anteprima del sito su http://
 | Chiave | Significato |
 |---|---|
 | `me` | giocatore per cui si calcola il consiglio e la regola 4 (`"Johannes Paul III"`) |
-| `player_aliases` | nomi alternativi dei giocatori (es. `"Hannes": "Johannes"`) |
+| `player_aliases` | nomi alternativi dei giocatori (es. `"Hannes": "Johannes"`, `"Giovanni": "Johannes Paul III"`); valgono anche nell'ingest |
 | `timezone`, `deadline` | `Europe/Rome`, `12:00` |
 | `season_end_mmdd` | fine stagione (`12-23`) |
 | `scoring` | punti per categoria, `full_menu_total`, `alt_options_count` (true = conta ogni opzione annunciata) |
@@ -291,7 +337,7 @@ docs/                        sito GitHub Pages (index.html, app.js, i18n.js, sty
   data/*.json                generati dalla pipeline: meta, menus, tips, dishes, today, week,
                              stats, leaderboard, backtest
 engine/                      motore Python: ingest, normalize, rules, dates, data, analyze,
-                             model, backtest, recommend, site, output, pipeline
+                             model, backtest, race, recommend, site, output, pipeline
 reports/                     report Markdown generati (ingest, analisi, alias, backtest)
 tests/                       pytest
 requirements.txt, pytest.ini

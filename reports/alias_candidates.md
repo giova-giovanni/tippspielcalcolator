@@ -20,14 +20,14 @@ Diese Paare erscheinen nicht unter den Fuzzy-Vorschlägen. „unklar“ = Entsch
 
 | A | B | n(A) | n(B) | Warum |
 |---|---|---|---|---|
-| Kartoffelstampf | Püree | 13 | 192 | Entscheidung Johannes Paul III: zwei verschiedene Gerichte (Stampf = grob, mit Stücken). |
-| Safranreis | Reis | 1 | 397 | eigene Beilage (zu Ossobuchi). |
+| Kartoffelstampf | Püree | 14 | 206 | Entscheidung Johannes Paul III: zwei verschiedene Gerichte (Stampf = grob, mit Stücken). |
+| Safranreis | Reis | 1 | 417 | eigene Beilage (zu Ossobuchi). |
 | Tomatenrisotto | Tomatenrisotto mit Mozzarella | 4 | 3 | unklar, bleibt getrennt. |
-| Röstinchen | Röstkartoffeln | 3 | 118 | unklar, bleibt getrennt. |
+| Röstinchen | Röstkartoffeln | 4 | 127 | unklar, bleibt getrennt. |
 | Paprika-Schweinegulasch | Schweinsgulasch | 1 | 15 | unklar, bleibt getrennt. |
-| Schweinsfilet mit Pfeffersoße | Schweinsfilet | 2 | 102 | eigene Variante. |
-| Spinatknödel mit Käsesoße | Spinatknödel | 5 | 17 | eigene Variante. |
-| Schlutzer Schinken-Rahm | Schlutzer | 1 | 74 | eigene Variante. |
+| Schweinsfilet mit Pfeffersoße | Schweinsfilet | 2 | 104 | eigene Variante. |
+| Spinatknödel mit Käsesoße | Spinatknödel | 5 | 18 | eigene Variante. |
+| Schlutzer Schinken-Rahm | Schlutzer | 1 | 81 | eigene Variante. |
 
 ## Auffälligkeiten
 
@@ -44,7 +44,8 @@ Keine Namensfrage, sondern Auffälligkeiten in den Daten (werden nicht automatis
 
 | Roh | Kanonisch | Anzahl |
 |---|---|---|
-| `Aglio Olio` | Aglio olio | 48 |
+| `Aglio Olio` | Aglio olio | 50 |
+| `Aglio Olio / Amatriciana` | Aglio olio / Amatriciana | 4 |
 | `Aglio Olio / Gerstsuppe` | Aglio olio / Gerstsuppe | 1 |
 | `Algio Olio` | Aglio olio | 3 |
 | `Amatriciana oder Gerstsuppe` | Amatriciana / Gerstsuppe | 1 |
@@ -59,6 +60,7 @@ Keine Namensfrage, sondern Auffälligkeiten in den Daten (werden nicht automatis
 | `Nudel mit Käsesauce` | Nudel mit Käsesoße | 5 |
 | `Nudel mit Meeresfrüchte` | Nudel mit Meeresfrüchten | 10 |
 | `Nudel mit Ragu oder Aglio olio` | Nudel mit Ragu / Aglio olio | 1 |
+| `Nudel mit Salsicciaragu` | Nudel mit Salsiccia-Ragu | 1 |
 | `Nudel mit Thunfisch` | Nudel mit Thunfischsoße | 3 |
 | `Nudel mit Tomantensauce` | Nudel mit Tomatensoße | 1 |
 | `Nudel mit Tomatensoße und Mozarella / Fleischsuppe` | Nudel mit Tomatensoße und Mozzarella / Fleischsuppe | 1 |
@@ -81,7 +83,7 @@ Keine Namensfrage, sondern Auffälligkeiten in den Daten (werden nicht automatis
 |---|---|---|
 | `Champignonschintzel` | Champignonschnitzel | 2 |
 | `Chili con carne` | Chilli con carne | 1 |
-| `Chilli con Carne` | Chilli con carne | 7 |
+| `Chilli con Carne` | Chilli con carne | 8 |
 | `Chmpignonschnitzel` | Champignonschnitzel | 2 |
 | `Fleischkarpfln` | Fleischkrapfln | 1 |
 | `Fleischkrapflen` | Fleischkrapfln | 1 |
@@ -98,10 +100,10 @@ Keine Namensfrage, sondern Auffälligkeiten in den Daten (werden nicht automatis
 | `Schnitzel mit Champignonsauce` | Champignonschnitzel | 1 |
 | `Schweinschnitzel` | Schweinsschnitzel | 1 |
 | `Schweinschopf` | Schweinsschopf | 7 |
-| `Schweinshax` | Schweinshaxe | 2 |
+| `Schweinshax` | Schweinshaxe | 3 |
 | `Schweinsschnitzel mit Champignonsauce` | Champignonschnitzel | 1 |
 | `Schweinsschopf-braten` | Schweinsschopf | 6 |
-| `Schweinsschopfbraten` | Schweinsschopf | 30 |
+| `Schweinsschopfbraten` | Schweinsschopf | 31 |
 | `Spareribs` | Sparerips | 1 |
 | `Truthahn-geschnetzeltes` | Truthahngeschnetzeltes | 2 |
 | `Truthahnschnitzel mit Champignonsauce` | Champignonschnitzel | 7 |
@@ -133,28 +135,28 @@ Kandidaten: max(rapidfuzz `ratio`, `token_sort_ratio`) ≥ 88 auf kleingeschrieb
 
 | A | B | Score | Lev. | Hinweis | n(A) | n(B) |
 |---|---|---|---|---|---|---|
-| Nudel mit Lachs | Nudel mit Lachssoße | 88.2 | 4 | Variante? | 13 | 2 |
+| Nudel mit Lachs | Nudel mit Lachssoße | 88.2 | 4 | Variante? | 14 | 2 |
 | Nudel mit Tomatensoße | Nudel mit Tomatensoße und Schinken | 76.4 | 13 | Variante? | 2 | 1 |
 | Nudel mit Tomatensoße | Nudel mit Tomatensoße und Mozzarella | 73.7 | 15 | Variante? | 2 | 5 |
-| Nudel mit Lachs | Nudel mit Lachs und Rahmsoße | 69.8 | 13 | Variante? | 13 | 1 |
-| Nudel mit Lachs | Nudel mit Lachs und Tomantensoße | 63.8 | 17 | Variante? | 13 | 1 |
+| Nudel mit Lachs | Nudel mit Lachs und Rahmsoße | 69.8 | 13 | Variante? | 14 | 1 |
+| Nudel mit Lachs | Nudel mit Lachs und Tomantensoße | 63.8 | 17 | Variante? | 14 | 1 |
 | Gnocchi | Gnocchi mit Ragu | 60.9 | 9 | Variante? | 6 | 1 |
 | Gnocchi | Gnocchi mit Lachs | 58.3 | 10 | Variante? | 6 | 1 |
-| Spinatknödel | Spinatknödel mit Gorgonzolasoße | 55.8 | 19 | Variante? | 17 | 1 |
+| Spinatknödel | Spinatknödel mit Gorgonzolasoße | 55.8 | 19 | Variante? | 18 | 1 |
 | Gnocchi | Gnocchi mit Käsesoße | 51.9 | 13 | Variante? | 6 | 8 |
 | Ravioli | Ravioli mit Käsesoße | 51.9 | 13 | Variante? | 2 | 1 |
-| Gnocchi | Gnocchi mit Tomatensoße | 46.7 | 16 | Variante? | 6 | 24 |
+| Gnocchi | Gnocchi mit Tomatensoße | 46.7 | 16 | Variante? | 6 | 25 |
 | Gnocchi | Gnocchi mit Kräutersauce | 45.2 | 17 | Variante? | 6 | 1 |
 | Ravioli | Ravioli mit Tomantensoße | 45.2 | 17 | Variante? | 2 | 1 |
 | Gnocchi | Gnocchi mit Gorgonzolasoße | 42.4 | 19 | Variante? | 6 | 2 |
-| Ravioli | Ravioli mit Parmesan-Butter | 41.2 | 20 | Variante? | 2 | 36 |
+| Ravioli | Ravioli mit Parmesan-Butter | 41.2 | 20 | Variante? | 2 | 37 |
 
 ### Hauptspeise
 
 | A | B | Score | Lev. | Hinweis | n(A) | n(B) |
 |---|---|---|---|---|---|---|
-| Truthahnschnitzel | Truthahnschnitzel vom Grill | 77.3 | 10 | Variante? | 123 | 3 |
-| Schweinsschnitzel | Schweinsschnitzel mit Kräuterrahmsoße | 63.0 | 20 | Variante? | 45 | 19 |
+| Truthahnschnitzel | Truthahnschnitzel vom Grill | 77.3 | 10 | Variante? | 126 | 3 |
+| Schweinsschnitzel | Schweinsschnitzel mit Kräuterrahmsoße | 63.0 | 20 | Variante? | 46 | 20 |
 | Pangasiusfilet | Pangasiusfilet mit Kräuterrahmsoße | 58.3 | 20 | Variante? | 1 | 1 |
 
 ### Beilage

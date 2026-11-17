@@ -1,6 +1,6 @@
 {
   "me": "Johannes Paul III",
-  "player_aliases": {"Hannes": "Johannes"},
+  "player_aliases": {"Hannes": "Johannes", "Giovanni": "Johannes Paul III"},
   "timezone": "Europe/Rome",
   "deadline": "12:00",
   "season_end_mmdd": "12-23",

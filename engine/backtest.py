@@ -295,6 +295,8 @@ def player_stats(ds, until: dt.date | None = None) -> dict:
     for t in ds.tips:
         if until is not None and t.date > until:
             continue
+        if t.is_adjustment:  # start points / correction: not a tipping day, no skill statistic
+            continue
         m = ds.menus_by_date.get(t.date)
         if m is None or m.status not in ("served", "unknown") or t.points is None:
             continue
@@ -598,7 +600,15 @@ def run(ds, today: dt.date | None = None, verbose: bool = True) -> dict:
     }
     obj["summary_de"], obj["summary_it"] = _summaries(obj, ds)
     write_site_json("backtest", obj)
-    write_site_json("leaderboard", _leaderboard(ds, best_rec, best_model, today))
+    lb = _leaderboard(ds, best_rec, best_model, today)
+    # race to the end of the season (Monte Carlo on whole real days; only scores, never the others' dishes)
+    from . import race
+    rc = race.compute(ds, best_rec, today or last) if (today or last) else None
+    if rc:
+        rc["summary_de"], rc["summary_it"] = race.summary(rc, "de"), race.summary(rc, "it")
+        lb["race"] = rc
+        obj["race"] = rc
+    write_site_json("leaderboard", lb)
     _write_report(obj, ds)
     if verbose:
         print(f"[backtest {time.time() - t0:5.1f}s] fertig", flush=True)
@@ -614,7 +624,7 @@ def _compare(ds, model_rec, n_boot: int = 4000, seed: int = 11) -> dict:
     by_day = {r["date"]: r["points"] for r in model_rec if r["served"]}
     tips = defaultdict(dict)
     for t in ds.tips:
-        if t.points is not None:
+        if t.points is not None and not t.is_adjustment:
             tips[t.player][t.date] = t.points
     out: dict = {}
     for y in sorted({d.year for d in by_day}):
@@ -652,17 +662,28 @@ def _compare(ds, model_rec, n_boot: int = 4000, seed: int = 11) -> dict:
     return out
 
 
+def official_points(t) -> float | None:
+    """Points as they count in the game: the workbook value when there is one (hand corrections,
+    exact-text decisions such as 'Schweinsschopfbraten' ≠ 'Schweinsschopf' on 2026-10-14, start
+    points), otherwise the engine's recomputation (website/manual rows)."""
+    return t.points_sheet if t.points_sheet is not None else t.points
+
+
 def _leaderboard(ds, model_rec, model_name, until: dt.date | None = None) -> dict:
     by_year_days = defaultdict(set)
     pts = defaultdict(lambda: defaultdict(float))
+    adjustments = []
     for t in ds.tips:
         if until is not None and t.date > until:
             continue
         m = ds.menus_by_date.get(t.date)
-        if m is None or m.status not in ("served", "unknown") or t.points is None:
+        if t.is_adjustment:
+            if official_points(t):
+                adjustments.append({"date": t.date.isoformat(), "player": t.player, "points": official_points(t)})
+        elif m is None or m.status not in ("served", "unknown") or t.points is None:
             continue
         by_year_days[t.date.year].add(t.date)
-        pts[t.player][t.date] += t.points
+        pts[t.player][t.date] += official_points(t) or 0.0
     mpts = {}
     for r in model_rec:
         mpts[r["date"]] = r["points"]
@@ -686,7 +707,8 @@ def _leaderboard(ds, model_rec, model_name, until: dt.date | None = None) -> dic
                 cum.append(round(s, 2))
             series["Modell"] = cum
             totals["Modell"] = round(s, 2)
-        years[str(y)] = {"dates": [d.isoformat() for d in dates], "series": series, "totals": totals}
+        years[str(y)] = {"dates": [d.isoformat() for d in dates], "series": series, "totals": totals,
+                         "adjustments": [a for a in adjustments if a["date"].startswith(str(y))]}
     return {"years": years, "model_name": model_name}
 
 
@@ -983,6 +1005,23 @@ def _write_report(obj: dict, ds) -> None:
             if v:
                 L.append(f"| {p} | {y} | {v['acc']['vorspeise']:.1%} | {v['acc']['hauptspeise']:.1%} | "
                          f"{v['acc']['beilage']:.1%} | {v['full_hits']} |")
+    rc = obj.get("race")
+    if rc:
+        sm, so = rc["scenarios"]["model"], rc["scenarios"]["own"]
+        L += ["", f"## Aufholjagd {rc['season']} (Stand {rc['as_of']}, noch {rc['remaining_days']} Spieltage)", "",
+              rc.get("summary_de", ""), "",
+              f"Monte Carlo: {rc['n_sims']} Saisonenden, jeder Spieltag = ein ganzer echter Tag der Saison "
+              f"({rc['pool_days']} Tage, Punkte aller Spieler + Modell-Backtest, Korrelation bleibt erhalten). "
+              f"Neue Spieler ({', '.join(rc['newbies']) or '–'}) = Punkte eines zufälligen Stammspielers desselben Tages.", "",
+              f"| Spieler | Stand | Pkt/Tag | erwartet Ende | Siegchance (ich = Modell) | Siegchance (ich = eigene Form) |",
+              "|---|---|---|---|---|---|"]
+        for p, v in rc["standings"].items():
+            L.append(f"| {p} | {_fmt(v)} | {_fmt(rc['ppd'].get(p), 3)} | {_fmt(sm['end']['expected'][p])} | "
+                     f"{sm['end']['win_share'][p]:.1%} | {so['end']['win_share'][p]:.1%} |")
+        L += ["", f"Ich ({rc['me']}) mit dem Modell: Platz 1 am Saisonende {sm['end']['p_first']:.1%}, "
+                  f"in {sm['two_weeks']['days']} Spieltagen vorne {sm['two_weeks']['p_first']:.1%}; "
+                  f"vor {rc['leader']} am Ende {sm['end']['p_ahead_of'][rc['leader']]:.1%}. "
+                  f"Benötigt: {_fmt(rc['needed_ppd_vs_leader'], 3)} Pkt/Tag (Modell im Backtest {_fmt(rc['ppd_model'], 3)})."]
     L += ["", "## Wahrscheinlichkeitsgüte (Log-Loss, Top-1/Top-3 ohne R4)", "",
           "| Modell | Split | LL V | LL H | LL B | Top1 V | Top1 H | Top1 B | Top3 V | Top3 H | Top3 B |",
           "|---|---|---|---|---|---|---|---|---|---|---|"]
