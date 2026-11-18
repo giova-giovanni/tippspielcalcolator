@@ -1,6 +1,6 @@
 # Analyse Tippspiel Essen Wies
 
-_Automatisch erzeugt von `engine/analyze.py` am 2026-11-17 14:23 UTC (Stichtag 2026-11-17). Datenstand: 460 servierte Menüs (2024: 34, 2025: 221, 2026: 205), letztes Menü 2026-11-17._
+_Automatisch erzeugt von `engine/analyze.py` am 2026-11-18 09:11 UTC (Stichtag 2026-11-18). Datenstand: 460 servierte Menüs (2024: 34, 2025: 221, 2026: 205), letztes Menü 2026-11-17._
 
 ## Riassunto (IT)
 
@@ -35,8 +35,8 @@ _Automatisch erzeugt von `engine/analyze.py` am 2026-11-17 14:23 UTC (Stichtag 2
 - **Vorspeise ↔ Hauptspeise**: kaum Zusammenhang (MI 1,664 vs Zufall 1,629 bit, p = 0,150); einzelne Paare mit hohem Lift entstehen v. a. über den gemeinsamen Wochentag.
 - **Fisch & Fastenzeit**: Fisch an 16 % der Fastentage (10) vs 1 % sonst (3; p < 0,001). Sommer/Winter: keine signifikanten Unterschiede.
 - Aktualitätsgewichtung: beste Halbwertszeit (Log-Loss, Tage) – Vorspeise 365, Hauptspeise 180, Beilage 180.
-- **Tipp-Timing (alle Spieler)**: Tipps auf Gerichte, die vor 1–5 AT serviert wurden, treffen bei V nur 2,8 % (sonst 9,0 %), bei H 3,9 % (sonst 8,8 %). Beste Abstandsklasse: Vorspeise 11–20 AT (11,5 %, n=564), Hauptspeise 21–40 AT (10,3 %, n=292), Beilage 3–5 AT (28,5 %, n=481).
-- **Spieler 2026**: beste Quote Johannes mit 0,279 Punkten/Tag; Spannweite 0,079 Punkte/Tag: Johannes 0,279 (190 T.), Andreas 0,277 (197 T.), Johannes Paul III 0,259 (189 T.), Noah 0,247 (200 T.), Lorenz 0,200 (10 T.).
+- **Tipp-Timing (alle Spieler)**: Tipps auf Gerichte, die vor 1–5 AT serviert wurden, treffen bei V nur 2,8 % (sonst 9,0 %), bei H 3,9 % (sonst 8,8 %). Beste Abstandsklasse: Vorspeise 11–20 AT (11,5 %, n=565), Hauptspeise 21–40 AT (10,2 %, n=293), Beilage 3–5 AT (28,4 %, n=482).
+- **Spieler 2026**: beste Quote Johannes mit 0,279 Punkten/Tag; Spannweite 0,079 Punkte/Tag: Johannes 0,279 (190 T.), Andreas 0,277 (197 T.), Johannes Paul III 0,258 (190 T.), Noah 0,247 (200 T.), Lorenz 0,200 (10 T.).
 
 ## 1. Häufigkeiten
 
@@ -761,7 +761,7 @@ Punkte = Neuberechnung der Engine (`tips.points`; identisch mit dem Excel bis au
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 2026 | Johannes | 190 | 53,0 | 0,279 | 119 (63 %) | 1 | 8 % | 11 % | 28 % | 5 | 0 |
 | 2026 | Andreas | 197 | 54,5 | 0,277 | 127 (64 %) | 0 | 11 % | 10 % | 24 % | 2 | 1 |
-| 2026 | Johannes Paul III | 189 | 49,0 | 0,259 | 129 (68 %) | 2 | 9 % | 10 % | 23 % | 2 | 0 |
+| 2026 | Johannes Paul III | 190 | 49,0 | 0,258 | 130 (68 %) | 2 | 9 % | 10 % | 22 % | 2 | 0 |
 | 2026 | Noah | 200 | 49,5 | 0,247 | 138 (69 %) | 1 | 8 % | 9 % | 24 % | 3 | 0 |
 | 2026 | Lorenz | 10 | 2,0 | 0,200 | 6 (60 %) | 0 | 0 % | 10 % | 30 % | 0 | 0 |
 | 2025 | Noah | 213 | 51,5 | 0,242 | 151 (71 %) | 1 | 11 % | 8 % | 17 % | 0 | 0 |
@@ -777,7 +777,7 @@ Punkte = Neuberechnung der Engine (`tips.points`; identisch mit dem Excel bis au
 |---|---|---|---|---|
 | 2026 | Johannes | Amatriciana 25, Carbonara 22, Hirten 20 | Wienerschnitzel 31, Champignonschnitzel 25, Hühnerhaxlen 20 | Pommes 49, Reis 44, Kartoffelsalat 20 |
 | 2026 | Andreas | Nudel mit Käsesoße 22, Lasagne 18, Spinatspatzlen 18 | Wienerschnitzel 28, Champignonschnitzel 23, Currywurst 19 | Pommes 53, Reis 37, Kartoffelsalat 26 |
-| 2026 | Johannes Paul III | Hirten 19, Amatriciana 17, Lasagne 15 | Wienerschnitzel 20, Champignonschnitzel 19, Hühnerbrust 16 | Reis 48, Kartoffelsalat 24, Pommes 24 |
+| 2026 | Johannes Paul III | Hirten 19, Amatriciana 17, Lasagne 15 | Wienerschnitzel 20, Champignonschnitzel 19, Hühnerbrust 17 | Reis 48, Pommes 25, Kartoffelsalat 24 |
 | 2026 | Noah | Amatriciana 36, Carbonara 22, Aglio olio 21 | Truthahngeschnetzeltes 40, Champignonschnitzel 37, Hühnerbrust 17 | Reis 47, Püree 43, Kartoffelgratin 25 |
 | 2026 | Lorenz | Amatriciana 2, Aglio olio 1, Arrabbiata 1 | Wienerschnitzel 4, Truthahngeschnetzeltes 3, Gulasch 2 | Püree 3, Knödel 2, Pommes 2 |
 | 2025 | Noah | Hirten 39, Lasagne 34, Aglio olio 23 | Truthahnschnitzel 24, Champignonschnitzel 22, Schweinsfilet 22 | Reis 51, Püree 27, Kartoffelgratin 23 |
@@ -793,21 +793,21 @@ Trefferquote je Kategorie, je nachdem ob der getippte Name zu den 5 bis dahin h�
 
 | Kategorie | Tipp in Top-5 | Tipp außerhalb Top-5 |
 |---|---|---|
-| Vorspeise | 12,8 % (n=375) | 7,3 % (n=1079) |
-| Hauptspeise | 10,1 % (n=487) | 7,6 % (n=968) |
-| Beilage | 28,6 % (n=872) | 10,8 % (n=582) |
+| Vorspeise | 12,8 % (n=375) | 7,3 % (n=1080) |
+| Hauptspeise | 10,0 % (n=488) | 7,6 % (n=968) |
+| Beilage | 28,5 % (n=873) | 10,8 % (n=582) |
 
 | Kategorie | 1–2 AT | 3–5 AT | 6–10 AT | 11–20 AT | 21–40 AT | > 40 AT | nie serviert |
 |---|---|---|---|---|---|---|---|
-| Vorspeise | 0,0 % (12) | 3,4 % (59) | 6,8 % (308) | 11,5 % (564) | 10,2 % (305) | 4,5 % (155) | 2,0 % (51) |
-| Hauptspeise | 0,0 % (9) | 4,3 % (94) | 4,9 % (309) | 10,0 % (578) | 10,3 % (292) | 8,7 % (103) | 10,0 % (70) |
-| Beilage | 25,8 % (89) | 28,5 % (481) | 20,1 % (378) | 17,6 % (318) | 14,7 % (116) | 4,9 % (61) | 0,0 % (11) |
+| Vorspeise | 0,0 % (12) | 3,4 % (59) | 6,8 % (308) | 11,5 % (565) | 10,2 % (305) | 4,5 % (155) | 2,0 % (51) |
+| Hauptspeise | 0,0 % (9) | 4,3 % (94) | 4,9 % (309) | 10,0 % (578) | 10,2 % (293) | 8,7 % (103) | 10,0 % (70) |
+| Beilage | 25,8 % (89) | 28,4 % (482) | 20,1 % (378) | 17,6 % (318) | 14,7 % (116) | 4,9 % (61) | 0,0 % (11) |
 
 - Vorspeise: Top-5-Tipps treffen 12,8 % vs 7,3 % (besser, Faktor 1,75).
-- Hauptspeise: Top-5-Tipps treffen 10,1 % vs 7,6 % (besser, Faktor 1,32).
-- Beilage: Top-5-Tipps treffen 28,6 % vs 10,8 % (besser, Faktor 2,64).
+- Hauptspeise: Top-5-Tipps treffen 10,0 % vs 7,6 % (besser, Faktor 1,31).
+- Beilage: Top-5-Tipps treffen 28,5 % vs 10,8 % (besser, Faktor 2,63).
 
-→ Tipps auf Gerichte, die erst vor 1–5 Arbeitstagen serviert wurden, treffen bei der Vorspeise nur 2,8 % (n=71) gegenüber 9,0 % sonst; Hauptspeise 3,9 % vs 8,8 %; Beilage 28,1 % vs 17,2 %.
+→ Tipps auf Gerichte, die erst vor 1–5 Arbeitstagen serviert wurden, treffen bei der Vorspeise nur 2,8 % (n=71) gegenüber 9,0 % sonst; Hauptspeise 3,9 % vs 8,8 %; Beilage 28,0 % vs 17,2 %.
 
 ### Strategie-Kennzahlen je Spieler und Jahr
 
@@ -817,7 +817,7 @@ Top-5-Anteil = Anteil der Tipps auf die 5 bis dahin häufigsten Gerichte; Vielfa
 |---|---|---|---|---|---|---|
 | 2026 | Johannes | 0,279 | 1 | 39 % | 3,83 | 16 % |
 | 2026 | Andreas | 0,277 | 2 | 40 % | 3,72 | 16 % |
-| 2026 | Johannes Paul III | 0,259 | 3 | 44 % | 3,93 | 20 % |
+| 2026 | Johannes Paul III | 0,258 | 3 | 44 % | 3,93 | 20 % |
 | 2026 | Noah | 0,247 | 4 | 51 % | 3,51 | 18 % |
 | 2026 | Lorenz | 0,200 | 5 | 53 % | 2,47 | 27 % |
 | 2025 | Noah | 0,242 | 1 | 36 % | 3,80 | 16 % |
@@ -827,13 +827,13 @@ Top-5-Anteil = Anteil der Tipps auf die 5 bis dahin häufigsten Gerichte; Vielfa
 | 2024 | Andreas | 0,191 | 2 | 26 % | 3,46 | 7 % |
 | 2024 | Noah | 0,103 | 3 | 30 % | 3,25 | 10 % |
 
-Korrelation mit Punkten/Tag über 7 Spieler-Jahre mit ≥ 100 Tagen (sehr kleine Stichprobe, nur Hinweis): Top-5-Anteil r=0,38, Vielfalt r=-0,28, kürzlich r=-0,24, V-Trefferquote r=0,30. Die Vorspeise zählt doppelt so viel wie H oder B (1 vs 0,5 Punkte); über die Spieler-Jahre erklärt die V-Trefferquote die Rangfolge aber nur schwach.
+Korrelation mit Punkten/Tag über 7 Spieler-Jahre mit ≥ 100 Tagen (sehr kleine Stichprobe, nur Hinweis): Top-5-Anteil r=0,37, Vielfalt r=-0,29, kürzlich r=-0,24, V-Trefferquote r=0,29. Die Vorspeise zählt doppelt so viel wie H oder B (1 vs 0,5 Punkte); über die Spieler-Jahre erklärt die V-Trefferquote die Rangfolge aber nur schwach.
 
 ### Notizen je Spieler
 
 - **Johannes 2026**: 0,28 Punkte/Tag (Rang 1/5 in 2026). Top-5-Anteil der Tipps 39 %, Vielfalt 3,8 bit, 16 % Tipps auf Gerichte, die in den letzten 5 Arbeitstagen serviert wurden. Stärkste Kategorie: Beilage (28 % Treffer). Regel-4-Verstöße: 5.
 - **Andreas 2026**: 0,28 Punkte/Tag (Rang 2/5 in 2026). Top-5-Anteil der Tipps 40 %, Vielfalt 3,7 bit, 16 % Tipps auf Gerichte, die in den letzten 5 Arbeitstagen serviert wurden. Stärkste Kategorie: Beilage (24 % Treffer). Regel-4-Verstöße: 2.
-- **Johannes Paul III 2026**: 0,26 Punkte/Tag (Rang 3/5 in 2026). Top-5-Anteil der Tipps 44 %, Vielfalt 3,9 bit, 20 % Tipps auf Gerichte, die in den letzten 5 Arbeitstagen serviert wurden. Stärkste Kategorie: Beilage (23 % Treffer). Regel-4-Verstöße: 2.
+- **Johannes Paul III 2026**: 0,26 Punkte/Tag (Rang 3/5 in 2026). Top-5-Anteil der Tipps 44 %, Vielfalt 3,9 bit, 20 % Tipps auf Gerichte, die in den letzten 5 Arbeitstagen serviert wurden. Stärkste Kategorie: Beilage (22 % Treffer). Regel-4-Verstöße: 2.
 - **Noah 2026**: 0,25 Punkte/Tag (Rang 4/5 in 2026). Top-5-Anteil der Tipps 51 %, Vielfalt 3,5 bit, 18 % Tipps auf Gerichte, die in den letzten 5 Arbeitstagen serviert wurden. Stärkste Kategorie: Beilage (24 % Treffer). Regel-4-Verstöße: 3.
 - **Lorenz 2026**: 0,20 Punkte/Tag (Rang 5/5 in 2026). Top-5-Anteil der Tipps 53 %, Vielfalt 2,5 bit, 27 % Tipps auf Gerichte, die in den letzten 5 Arbeitstagen serviert wurden. Stärkste Kategorie: Beilage (30 % Treffer).
 - **Noah 2025**: 0,24 Punkte/Tag (Rang 1/3 in 2025). Top-5-Anteil der Tipps 36 %, Vielfalt 3,8 bit, 16 % Tipps auf Gerichte, die in den letzten 5 Arbeitstagen serviert wurden. Stärkste Kategorie: Beilage (17 % Treffer).
