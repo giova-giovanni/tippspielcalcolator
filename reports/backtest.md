@@ -1,6 +1,6 @@
 # Backtest – Tippspiel Essen Wies
 
-_Automatisch erzeugt von `engine/backtest.py` am 2026-11-20T08:40:05+00:00._
+_Automatisch erzeugt von `engine/backtest.py` am 2026-11-20T09:27:02+00:00._
 
 ## Kurzfassung
 
@@ -136,21 +136,21 @@ Strategiewahl für *ensemble* (Validierung, erwartete Punkte = Summe der EV):
 | Johannes Paul III | 2026 | 8.8% | 10.4% | 22.4% | 2 |
 | Lorenz | 2026 | 0.0% | 10.0% | 30.0% | 0 |
 
-## Aufholjagd 2026 (Stand 2026-11-19, noch 23 Spieltage)
+## Aufholjagd 2026 (Stand 2026-11-19, noch 22 Spieltage)
 
-Noch 23 Spieltage. Andreas führt mit 54 Punkten, 3,5 vor Johannes Paul III. Mit den Tipps des Modells (0,33 Punkte/Tag im Backtest) liegt die Siegchance bei 17 % (in zwei Wochen vorne: 5 %); mit der bisherigen eigenen Form bei 3 %. Zum Überholen von Andreas braucht es im Schnitt 0,45 Punkte/Tag.
+Noch 22 Spieltage. Andreas führt mit 54 Punkten, 3,5 vor Johannes Paul III. Mit den Tipps des Modells (0,33 Punkte/Tag im Backtest) liegt die Siegchance bei 16 % (in zwei Wochen vorne: 5 %); mit der bisherigen eigenen Form bei 3 %. Zum Überholen von Andreas braucht es im Schnitt 0,46 Punkte/Tag.
 
 Monte Carlo: 20000 Saisonenden, jeder Spieltag = ein ganzer echter Tag der Saison (207 Tage, Punkte aller Spieler + Modell-Backtest, Korrelation bleibt erhalten). Neue Spieler (Lorenz) = Punkte eines zufälligen Stammspielers desselben Tages.
 
 | Spieler | Stand | Pkt/Tag | erwartet Ende | Siegchance (ich = Modell) | Siegchance (ich = eigene Form) |
 |---|---|---|---|---|---|
-| Andreas | 54.0 | 0.274 | 60.0 | 55.9% | 67.1% |
-| Johannes | 53.0 | 0.279 | 58.9 | 23.3% | 28.0% |
-| Johannes Paul III | 50.5 | 0.263 | 58.1 | 19.6% | 3.4% |
-| Lorenz | 50.0 | 0.200 | 55.8 | 0.3% | 0.4% |
-| Noah | 49.5 | 0.247 | 55.0 | 0.8% | 1.1% |
+| Andreas | 54.0 | 0.274 | 59.7 | 57.0% | 67.7% |
+| Johannes | 53.0 | 0.279 | 58.6 | 23.4% | 27.6% |
+| Johannes Paul III | 50.5 | 0.263 | 57.8 | 18.6% | 3.3% |
+| Lorenz | 50.0 | 0.200 | 55.5 | 0.3% | 0.4% |
+| Noah | 49.5 | 0.247 | 54.8 | 0.8% | 1.0% |
 
-Ich (Johannes Paul III) mit dem Modell: Platz 1 am Saisonende 17.4%, in 10 Spieltagen vorne 4.7%; vor Andreas am Ende 22.8%. Benötigt: 0.448 Pkt/Tag (Modell im Backtest 0.331).
+Ich (Johannes Paul III) mit dem Modell: Platz 1 am Saisonende 16.4%, in 10 Spieltagen vorne 4.9%; vor Andreas am Ende 21.4%. Benötigt: 0.456 Pkt/Tag (Modell im Backtest 0.331).
 
 ## Wahrscheinlichkeitsgüte (Log-Loss, Top-1/Top-3 ohne R4)
 
