@@ -490,7 +490,7 @@ date,year,weekday,status,vorspeise,hauptspeise,beilage,vorspeise_norm,hauptspeis
 2026-12-02,2026,Mi,pending,,,,,,,xlsx
 2026-12-03,2026,Do,pending,,,,,,,xlsx
 2026-12-04,2026,Fr,pending,,,,,,,xlsx
-2026-12-07,2026,Mo,pending,,,,,,,xlsx
+2026-12-07,2026,Mo,free,Frei,Frei,Frei,,,,form
 2026-12-08,2026,Di,free,Frei,Frei,Frei,,,,xlsx
 2026-12-09,2026,Mi,pending,,,,,,,xlsx
 2026-12-10,2026,Do,pending,,,,,,,xlsx
