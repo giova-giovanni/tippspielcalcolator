@@ -81,6 +81,7 @@ test('workouts.json: plan, workouts and exercises', () => {
   w.rules.forEach((r, i) => bilingual(r, `rules[${i}]`));
   bilingual(w.note, 'note');
   bilingual(w.zone2, 'zone2');
+  bilingual(w.zone2NoAge, 'zone2NoAge');
   for (const lang of ['de', 'it']) assert.ok(w.zone2[lang].includes('{lo}') && w.zone2[lang].includes('{hi}'));
   for (const wo of w.workouts) {
     bilingual(wo.name, `scheda ${wo.id}`);
@@ -120,12 +121,35 @@ test('i18n: same keys in DE and IT, every literal t(...) key exists', () => {
   // placeholders must match between languages
   const ph = (s) => (s.match(/\{\w+\}/g) || []).sort().join(',');
   for (const k of a) assert.equal(ph(de[k]), ph(it[k]), `segnaposto diversi in ${k}`);
+  // keys built at run time: t('piano.level.' + level) etc. -> every member must exist
+  const C = require('../../docs/piano-core.js');
+  const units = UNITS.filter(Boolean).flatMap((u) => [u + '.1', u + '.n']);
+  const DYNAMIC = {
+    'piano.level.': [...C.LEVELS, 'auto'],
+    'piano.src.': ['menu', 'entered', 'forecast', 'free', 'nomenu', 'unknown', 'locked', 'generic'],
+    'piano.lunch.noMenu.': ['free', 'nomenu', 'unknown', 'locked'],
+    'piano.portion.': C.PORTION_IDS,
+    'piano.why.': ['kcal_high', 'fried_combo', 'creamy_fatty', 'kcal_low', 'fried', 'kcal_mid', 'unknown'],
+    'piano.phase.': ['before', 'settle', 'cut', 'deload', 'check', 'after'],
+    'piano.dinner.clamped.': ['min', 'max'],
+    'piano.tag.': TAGS,
+    'piano.unit.': units,
+    'piano.act.': ['1_2', '1_3', '1_4', '1_45', '1_5', '1_55', '1_6', '1_7', '1_8'],
+    'piano.set.f.': ['sex', 'age', 'heightCm', 'startWeightKg', 'startDate', 'activity', 'deficit', 'proteinG', 'breakfastKcal', 'breakfastProt'],
+    'piano.check.': C.CHECKS
+  };
+  for (const [pre, members] of Object.entries(DYNAMIC)) {
+    for (const m of members) assert.ok(pre + m in de, `chiave mancante: ${pre + m}`);
+  }
+  for (const k of ['piano.more.piano', 'piano.more.tipp']) assert.ok(k in de, k); // used by app.js via t(group.title)
   for (const file of ['app.js', 'piano.js']) {
     const p = path.join(DOCS, file);
     if (!fs.existsSync(p)) continue;
     const src = fs.readFileSync(p, 'utf8');
     const used = new Set([...src.matchAll(/\bt\('((?:piano|tab)\.[\w.]+)'/g)].map((m) => m[1]));
-    const missing = [...used].filter((k) => !(k in de));
-    assert.deepEqual(missing, [], `${file}: chiavi usate ma non definite`);
+    for (const k of used) {
+      if (k.endsWith('.')) assert.ok(k in DYNAMIC, `${file}: famiglia di chiavi dinamica non controllata: ${k}`);
+      else assert.ok(k in de, `${file}: chiave usata ma non definita: ${k}`);
+    }
   }
 });

@@ -18,6 +18,10 @@
     "de": "Zone 2: Du kannst in ganzen Sätzen sprechen, etwa {lo}–{hi} Schläge pro Minute (60–70 % von 220 − Alter). Bei hohem Körpergewicht besser Crosstrainer und Ergometer; auf dem Laufband nur zügig gehen (mit Steigung, wenn möglich), vorerst nicht laufen.",
     "it": "Zona 2: riesci a parlare a frasi intere, circa {lo}–{hi} battiti al minuto (60–70 % di 220 − età). Con un peso elevato meglio ellittica e cyclette; sul tapis roulant solo camminata veloce (in pendenza se c'è), per ora niente corsa."
   },
+  "zone2NoAge": {
+    "de": "Zone 2: Du kannst in ganzen Sätzen sprechen (60–70 % der maximalen Herzfrequenz, 220 − Alter; das Alter im Profil eintragen, dann steht hier der Wert). Bei hohem Körpergewicht besser Crosstrainer und Ergometer; auf dem Laufband nur zügig gehen (mit Steigung, wenn möglich), vorerst nicht laufen.",
+    "it": "Zona 2: riesci a parlare a frasi intere (60–70 % della frequenza massima, 220 − età; con l'età nel profilo qui compare il valore). Con un peso elevato meglio ellittica e cyclette; sul tapis roulant solo camminata veloce (in pendenza se c'è), per ora niente corsa."
+  },
   "workouts": [
     {
       "id": "A", "minutes": 50,
