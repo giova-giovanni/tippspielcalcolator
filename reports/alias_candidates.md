@@ -23,7 +23,7 @@ Diese Paare erscheinen nicht unter den Fuzzy-Vorschlägen. „unklar“ = Entsch
 | Kartoffelstampf | Püree | 14 | 206 | Entscheidung Johannes Paul III: zwei verschiedene Gerichte (Stampf = grob, mit Stücken). |
 | Safranreis | Reis | 1 | 418 | eigene Beilage (zu Ossobuchi). |
 | Tomatenrisotto | Tomatenrisotto mit Mozzarella | 4 | 3 | unklar, bleibt getrennt. |
-| Röstinchen | Röstkartoffeln | 4 | 127 | unklar, bleibt getrennt. |
+| Röstinchen | Röstkartoffeln | 5 | 127 | unklar, bleibt getrennt. |
 | Paprika-Schweinegulasch | Schweinsgulasch | 1 | 15 | unklar, bleibt getrennt. |
 | Schweinsfilet mit Pfeffersoße | Schweinsfilet | 2 | 104 | eigene Variante. |
 | Spinatknödel mit Käsesoße | Spinatknödel | 5 | 18 | eigene Variante. |
@@ -143,7 +143,7 @@ Kandidaten: max(rapidfuzz `ratio`, `token_sort_ratio`) ≥ 88 auf kleingeschrieb
 | Gnocchi | Gnocchi mit Ragu | 60.9 | 9 | Variante? | 6 | 1 |
 | Gnocchi | Gnocchi mit Lachs | 58.3 | 10 | Variante? | 6 | 1 |
 | Spinatknödel | Spinatknödel mit Gorgonzolasoße | 55.8 | 19 | Variante? | 18 | 1 |
-| Gnocchi | Gnocchi mit Käsesoße | 51.9 | 13 | Variante? | 6 | 8 |
+| Gnocchi | Gnocchi mit Käsesoße | 51.9 | 13 | Variante? | 6 | 9 |
 | Ravioli | Ravioli mit Käsesoße | 51.9 | 13 | Variante? | 2 | 1 |
 | Gnocchi | Gnocchi mit Tomatensoße | 46.7 | 16 | Variante? | 6 | 25 |
 | Gnocchi | Gnocchi mit Kräutersauce | 45.2 | 17 | Variante? | 6 | 1 |
