@@ -1,0 +1,285 @@
+{
+  "version": 1,
+  "about": {
+    "de": "Abendessen nach Stufe: halber Teller Gemüse, reichlich Eiweiß, Kohlenhydrate je nach Stufe. Werte pro Portion, geschätzt.",
+    "it": "Cene per livello: metà piatto di verdure, proteina abbondante, carboidrati secondo il livello. Valori per porzione, stimati."
+  },
+  "levels": {
+    "red": {"kcal": [450, 650], "de": "Mageres Eiweiß und viel Gemüse, keine Nudeln und kein Brot.", "it": "Proteina magra e tanta verdura, niente pasta né pane."},
+    "yellow": {"kcal": [600, 800], "de": "Eiweiß, Gemüse und wenig Kohlenhydrate (40–60 g roh, oder 1 Scheibe Brot, oder 200 g Kartoffeln).", "it": "Proteina, verdura e pochi carboidrati (40–60 g crudi, oppure una fetta di pane, oppure 200 g di patate)."},
+    "green": {"kcal": [750, 1000], "de": "Eiweiß, Gemüse und eine volle Portion (80–100 g Nudeln oder Reis roh, oder 300 g Kartoffeln, oder 100 g Brot).", "it": "Proteina, verdura e una porzione piena (80–100 g di pasta o riso crudi, oppure 300 g di patate, oppure 100 g di pane)."}
+  },
+  "extras": {
+    "yogurt": {"kcal": 100, "prot": 15, "de": "ein Skyr oder griechisches Joghurt 0 %", "it": "uno skyr o uno yogurt greco 0 %"},
+    "frutto": {"kcal": 80, "prot": 1, "de": "ein Stück Obst", "it": "un frutto"}
+  },
+  "recipes": [
+    {
+      "id": "frittata-spinaci", "level": "red", "kcal": 530, "prot": 57, "minutes": 15, "servings": 1, "protein": "uova", "tags": [],
+      "name": {"de": "Frittata mit Spinat, dazu Hüttenkäse", "it": "Frittata con spinaci e fiocchi di latte"},
+      "ingredients": [
+        {"id": "uova", "de": "Eier", "it": "uova", "qty": 3, "unit": "pc", "aisle": "chilled"},
+        {"id": "albume", "de": "Eiklar", "it": "albume", "qty": 100, "unit": "ml", "aisle": "chilled"},
+        {"id": "spinaci-surg", "de": "TK-Spinat", "it": "spinaci surgelati", "qty": 300, "unit": "g", "aisle": "frozen"},
+        {"id": "fiocchi", "de": "Hüttenkäse", "it": "fiocchi di latte", "qty": 150, "unit": "g", "aisle": "chilled"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tsp", "aisle": "pantry"}
+      ],
+      "steps": {
+        "de": ["Spinat mit dem Öl in der Pfanne 5–6 Minuten erhitzen, bis das Wasser verdampft ist.", "Eier und Eiklar mit Salz und Pfeffer verquirlen.", "Über den Spinat gießen, zudecken und bei mittlerer bis kleiner Hitze 6–8 Minuten stocken lassen.", "Mit dem Hüttenkäse daneben servieren."],
+        "it": ["Scalda gli spinaci in padella con l'olio, 5–6 minuti, finché l'acqua evapora.", "Sbatti uova e albume con sale e pepe.", "Versa sugli spinaci, copri e cuoci a fuoco medio-basso 6–8 minuti.", "Servi con i fiocchi di latte a parte."]
+      }
+    },
+    {
+      "id": "pollo-verdure", "level": "red", "kcal": 450, "prot": 54, "minutes": 15, "servings": 1, "protein": "pollo", "tags": [],
+      "name": {"de": "Hühnerbrust vom Grill mit Gemüse", "it": "Pollo alla piastra con verdure"},
+      "ingredients": [
+        {"id": "pollo", "de": "Hühnerbrust", "it": "petto di pollo", "qty": 200, "unit": "g", "aisle": "meat"},
+        {"id": "verdure-surg", "de": "TK-Gemüse", "it": "verdure surgelate", "qty": 400, "unit": "g", "aisle": "frozen"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tbsp", "aisle": "pantry"},
+        {"id": "paprika", "de": "Paprikapulver oder Curry", "it": "paprika o curry", "qty": null, "unit": null, "aisle": "pantry"}
+      ],
+      "steps": {
+        "de": ["Gemüse mit der Hälfte des Öls zugedeckt in der Pfanne 8–10 Minuten garen.", "Hühnerbrust in dünne Scheiben schneiden und mit dem restlichen Öl in der Grillpfanne 3–4 Minuten pro Seite braten.", "Mit Salz, Pfeffer und Paprika oder Curry würzen."],
+        "it": ["Cuoci le verdure in padella con metà dell'olio e il coperchio, 8–10 minuti.", "Taglia il pollo a fette sottili e cuocilo sulla piastra con il resto dell'olio, 3–4 minuti per lato.", "Condisci con sale, pepe e paprika o curry."]
+      }
+    },
+    {
+      "id": "merluzzo-broccoli", "level": "red", "kcal": 440, "prot": 60, "minutes": 15, "servings": 1, "protein": "pesce", "tags": ["microonde"],
+      "name": {"de": "Kabeljau aus der Pfanne mit Brokkoli und Zitrone", "it": "Merluzzo in padella con broccoli e limone"},
+      "ingredients": [
+        {"id": "merluzzo-surg", "de": "TK-Kabeljau", "it": "merluzzo surgelato", "qty": 300, "unit": "g", "aisle": "frozen"},
+        {"id": "broccoli-surg", "de": "TK-Brokkoli", "it": "broccoli surgelati", "qty": 300, "unit": "g", "aisle": "frozen"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tbsp", "aisle": "pantry"},
+        {"id": "limone", "de": "Zitrone", "it": "limone", "qty": 0.5, "unit": "pc", "aisle": "produce"}
+      ],
+      "steps": {
+        "de": ["Brokkoli in der Mikrowelle (6–8 Minuten, zugedeckt mit etwas Wasser) oder in der Pfanne garen.", "Kabeljau mit dem Öl zugedeckt in der Pfanne 4–5 Minuten pro Seite braten (tiefgekühlt ein paar Minuten länger).", "Mit Zitrone, Salz und Pfeffer abschmecken."],
+        "it": ["Cuoci i broccoli al microonde (6–8 minuti, coperti con un dito d'acqua) o in padella.", "Cuoci il merluzzo in padella con l'olio e il coperchio, 4–5 minuti per lato (da surgelato qualche minuto in più).", "Condisci con limone, sale e pepe."]
+      }
+    },
+    {
+      "id": "insalatona-tonno", "level": "red", "kcal": 530, "prot": 50, "minutes": 10, "servings": 1, "protein": "tonno", "tags": [],
+      "name": {"de": "Großer Salat mit Thunfisch, Eiern und Kichererbsen", "it": "Insalatona con tonno, uova e ceci"},
+      "ingredients": [
+        {"id": "insalata", "de": "Salat (Beutel)", "it": "insalata in busta", "qty": 1, "unit": "bag", "aisle": "produce"},
+        {"id": "pomodori", "de": "Tomaten", "it": "pomodori", "qty": 2, "unit": "pc", "aisle": "produce"},
+        {"id": "cetriolo", "de": "Gurke", "it": "cetriolo", "qty": 1, "unit": "pc", "aisle": "produce"},
+        {"id": "tonno", "de": "Thunfisch natur", "it": "tonno al naturale", "qty": 2, "unit": "can", "aisle": "pantry"},
+        {"id": "uova", "de": "Eier", "it": "uova", "qty": 2, "unit": "pc", "aisle": "chilled"},
+        {"id": "ceci", "de": "Kichererbsen (abgetropft)", "it": "ceci (scolati)", "qty": 100, "unit": "g", "aisle": "pantry"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tsp", "aisle": "pantry"}
+      ],
+      "steps": {
+        "de": ["Eier 9 Minuten in kochendem Wasser hart kochen und kalt abschrecken (oder zwei bereits gekochte nehmen).", "Tomaten und Gurke schneiden, Thunfisch und Kichererbsen abtropfen lassen.", "Alles zum Salat geben und mit Öl, Essig oder Zitrone, Salz und Pfeffer anmachen."],
+        "it": ["Rassoda le uova: 9 minuti in acqua bollente, poi acqua fredda (oppure usane due già sode).", "Taglia pomodori e cetriolo, scola tonno e ceci.", "Unisci tutto all'insalata e condisci con olio, aceto o limone, sale e pepe."]
+      }
+    },
+    {
+      "id": "bresaola-rucola", "level": "red", "kcal": 390, "prot": 55, "minutes": 5, "servings": 1, "protein": "manzo", "tags": ["5min"],
+      "name": {"de": "Bresaola mit Rucola und Grana, danach ein Skyr", "it": "Bresaola con rucola e grana, poi uno skyr"},
+      "ingredients": [
+        {"id": "bresaola", "de": "Bresaola", "it": "bresaola", "qty": 100, "unit": "g", "aisle": "meat"},
+        {"id": "rucola", "de": "Rucola", "it": "rucola", "qty": 50, "unit": "g", "aisle": "produce"},
+        {"id": "grana", "de": "Grana", "it": "grana", "qty": 20, "unit": "g", "aisle": "chilled"},
+        {"id": "limone", "de": "Zitrone", "it": "limone", "qty": 0.5, "unit": "pc", "aisle": "produce"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tsp", "aisle": "pantry"},
+        {"id": "skyr", "de": "Skyr oder griechisches Joghurt 0 %", "it": "skyr o yogurt greco 0 %", "qty": 150, "unit": "g", "aisle": "chilled"}
+      ],
+      "steps": {
+        "de": ["Bresaola auf dem Teller auslegen, Rucola darauf.", "Grana in Spänen, Zitrone und einen Faden Öl dazugeben.", "Danach ein Skyr essen."],
+        "it": ["Stendi la bresaola nel piatto e mettici sopra la rucola.", "Aggiungi il grana a scaglie, il limone e un filo d'olio.", "Dopo, mangia uno skyr."]
+      }
+    },
+    {
+      "id": "minestrone-uova", "level": "red", "kcal": 490, "prot": 40, "minutes": 10, "servings": 1, "protein": "uova", "tags": ["microonde"],
+      "name": {"de": "Minestrone mit harten Eiern und Hüttenkäse", "it": "Minestrone con uova sode e fiocchi di latte"},
+      "ingredients": [
+        {"id": "minestrone-surg", "de": "TK-Minestrone", "it": "minestrone surgelato", "qty": 500, "unit": "g", "aisle": "frozen"},
+        {"id": "uova", "de": "Eier", "it": "uova", "qty": 2, "unit": "pc", "aisle": "chilled"},
+        {"id": "fiocchi", "de": "Hüttenkäse", "it": "fiocchi di latte", "qty": 150, "unit": "g", "aisle": "chilled"}
+      ],
+      "steps": {
+        "de": ["Minestrone im Topf oder in der Mikrowelle 8–10 Minuten erhitzen.", "Eier hart kochen (9 Minuten) oder bereits gekochte nehmen.", "Mit dem Hüttenkäse daneben oder in die Suppe gerührt servieren."],
+        "it": ["Scalda il minestrone in pentola o al microonde, 8–10 minuti.", "Rassoda le uova (9 minuti) o usa uova già sode.", "Servi con i fiocchi di latte a parte o mescolati nel minestrone."]
+      }
+    },
+    {
+      "id": "pollo-curry-riso", "level": "yellow", "kcal": 630, "prot": 65, "minutes": 20, "servings": 1, "protein": "pollo", "tags": [],
+      "name": {"de": "Curry-Hühnerbrust mit Basmatireis", "it": "Pollo al curry con riso basmati"},
+      "ingredients": [
+        {"id": "pollo", "de": "Hühnerbrust", "it": "petto di pollo", "qty": 200, "unit": "g", "aisle": "meat"},
+        {"id": "riso", "de": "Basmatireis", "it": "riso basmati", "qty": 60, "unit": "g", "aisle": "pantry"},
+        {"id": "zucchine", "de": "Zucchini", "it": "zucchine", "qty": 1, "unit": "pc", "aisle": "produce"},
+        {"id": "yogurt-greco", "de": "griechisches Joghurt 0 %", "it": "yogurt greco 0 %", "qty": 125, "unit": "g", "aisle": "chilled"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tbsp", "aisle": "pantry"},
+        {"id": "curry", "de": "Curry", "it": "curry", "qty": 1, "unit": "tsp", "aisle": "pantry"}
+      ],
+      "steps": {
+        "de": ["Reis in Salzwasser 10–12 Minuten kochen.", "Hühnerwürfel im Öl anbraten, Zucchiniwürfel dazugeben und 8 Minuten garen.", "Vom Herd nehmen, Joghurt und Curry einrühren.", "Mit dem Reis servieren."],
+        "it": ["Cuoci il riso in acqua salata, 10–12 minuti.", "Rosola il pollo a cubetti con l'olio, aggiungi la zucchina a dadini e cuoci 8 minuti.", "Fuori dal fuoco unisci lo yogurt e il curry e mescola.", "Servi con il riso."]
+      }
+    },
+    {
+      "id": "salmone-patate", "level": "yellow", "kcal": 660, "prot": 46, "minutes": 15, "servings": 1, "protein": "pesce", "tags": ["microonde"],
+      "name": {"de": "Lachs mit Kartoffeln aus der Mikrowelle und Salat", "it": "Salmone con patate al microonde e insalata"},
+      "ingredients": [
+        {"id": "salmone", "de": "Lachsfilet", "it": "filetto di salmone", "qty": 200, "unit": "g", "aisle": "meat"},
+        {"id": "patate", "de": "Kartoffeln", "it": "patate", "qty": 250, "unit": "g", "aisle": "produce"},
+        {"id": "insalata", "de": "Salat (Beutel)", "it": "insalata in busta", "qty": 0.5, "unit": "bag", "aisle": "produce"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tsp", "aisle": "pantry"}
+      ],
+      "steps": {
+        "de": ["Kartoffeln in Spalten schneiden und mit etwas Wasser zugedeckt in der Mikrowelle 8–10 Minuten garen.", "Lachs in einer beschichteten Pfanne 4 Minuten auf der Hautseite, dann 3 Minuten auf der anderen Seite braten.", "Mit Salat und einem Faden Öl servieren."],
+        "it": ["Taglia le patate a spicchi e cuocile al microonde in un contenitore coperto con un goccio d'acqua, 8–10 minuti.", "Cuoci il salmone in padella antiaderente, 4 minuti dal lato della pelle e 3 dall'altro.", "Servi con l'insalata e un filo d'olio."]
+      }
+    },
+    {
+      "id": "uova-pane", "level": "yellow", "kcal": 650, "prot": 46, "minutes": 10, "servings": 1, "protein": "uova", "tags": [],
+      "name": {"de": "Rührei mit Vollkornbrot und Gemüse, dazu Hüttenkäse", "it": "Uova strapazzate con pane integrale e verdure"},
+      "ingredients": [
+        {"id": "uova", "de": "Eier", "it": "uova", "qty": 4, "unit": "pc", "aisle": "chilled"},
+        {"id": "pane", "de": "Vollkornbrot", "it": "pane integrale", "qty": 2, "unit": "slice", "aisle": "bakery"},
+        {"id": "verdure-surg", "de": "Gemüse (TK oder Tomaten)", "it": "verdure (surgelate o pomodori)", "qty": 200, "unit": "g", "aisle": "frozen"},
+        {"id": "fiocchi", "de": "Hüttenkäse", "it": "fiocchi di latte", "qty": 100, "unit": "g", "aisle": "chilled"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tsp", "aisle": "pantry"}
+      ],
+      "steps": {
+        "de": ["Gemüse in der Pfanne erwärmen oder roh schneiden.", "Eier mit Salz verquirlen und im Öl bei kleiner Hitze unter Rühren stocken lassen.", "Brot toasten und mit dem Hüttenkäse daneben servieren."],
+        "it": ["Scalda le verdure in padella o tagliale crude.", "Sbatti le uova con sale e cuocile a fuoco basso con l'olio, mescolando.", "Tosta il pane e servi con i fiocchi di latte a parte."]
+      }
+    },
+    {
+      "id": "chili-magro", "level": "yellow", "kcal": 650, "prot": 50, "minutes": 30, "servings": 3, "protein": "manzo", "tags": ["batch"],
+      "name": {"de": "Mageres Chili (3 Portionen), dazu eine Scheibe Brot", "it": "Chili magro (3 porzioni) con una fetta di pane"},
+      "ingredients": [
+        {"id": "macinato", "de": "mageres Faschiertes (Truthahn oder Rind)", "it": "macinato magro (tacchino o manzo)", "qty": 500, "unit": "g", "aisle": "meat"},
+        {"id": "fagioli", "de": "Bohnen (Dose)", "it": "fagioli in scatola", "qty": 1, "unit": "can", "aisle": "pantry"},
+        {"id": "passata", "de": "Passata", "it": "passata di pomodoro", "qty": 700, "unit": "g", "aisle": "pantry"},
+        {"id": "peperoni", "de": "Paprikaschoten", "it": "peperoni", "qty": 2, "unit": "pc", "aisle": "produce"},
+        {"id": "cipolla", "de": "Zwiebel", "it": "cipolla", "qty": 1, "unit": "pc", "aisle": "produce"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tbsp", "aisle": "pantry"},
+        {"id": "spezie-chili", "de": "Chili, Paprika, Kreuzkümmel", "it": "chili, paprika, cumino", "qty": null, "unit": null, "aisle": "pantry"},
+        {"id": "pane", "de": "Vollkornbrot", "it": "pane integrale", "qty": 3, "unit": "slice", "aisle": "bakery"}
+      ],
+      "steps": {
+        "de": ["Zwiebel- und Paprikawürfel im Öl 5 Minuten anbraten.", "Faschiertes dazugeben und 5 Minuten anbraten.", "Passata, abgetropfte Bohnen und Gewürze dazugeben und 20 Minuten bei kleiner Hitze köcheln.", "In 3 Portionen teilen: eine in den Kühlschrank (2–3 Tage), die anderen einfrieren. Mit einer Scheibe Brot essen."],
+        "it": ["Rosola cipolla e peperoni a dadini con l'olio, 5 minuti.", "Aggiungi il macinato e rosolalo, 5 minuti.", "Unisci passata, fagioli scolati e spezie e cuoci 20 minuti a fuoco basso.", "Dividi in 3 porzioni: una in frigo (2–3 giorni), le altre in freezer. Mangialo con una fetta di pane."]
+      }
+    },
+    {
+      "id": "tonno-ceci", "level": "yellow", "kcal": 600, "prot": 46, "minutes": 5, "servings": 1, "protein": "tonno", "tags": ["5min"],
+      "name": {"de": "Thunfisch und Kichererbsen mit Tomaten und roter Zwiebel", "it": "Tonno e ceci con pomodori e cipolla rossa"},
+      "ingredients": [
+        {"id": "tonno", "de": "Thunfisch natur", "it": "tonno al naturale", "qty": 2, "unit": "can", "aisle": "pantry"},
+        {"id": "ceci", "de": "Kichererbsen (abgetropft)", "it": "ceci (scolati)", "qty": 200, "unit": "g", "aisle": "pantry"},
+        {"id": "pomodori", "de": "Tomaten", "it": "pomodori", "qty": 2, "unit": "pc", "aisle": "produce"},
+        {"id": "cipolla-rossa", "de": "rote Zwiebel", "it": "cipolla rossa", "qty": 0.5, "unit": "pc", "aisle": "produce"},
+        {"id": "pane", "de": "Vollkornbrot", "it": "pane integrale", "qty": 1, "unit": "slice", "aisle": "bakery"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tbsp", "aisle": "pantry"}
+      ],
+      "steps": {
+        "de": ["Thunfisch und Kichererbsen abtropfen lassen.", "Tomaten und rote Zwiebel schneiden.", "Alles mit Öl, Salz, Pfeffer und Oregano mischen.", "Mit einer Scheibe Brot essen."],
+        "it": ["Scola tonno e ceci.", "Taglia pomodori e cipolla rossa.", "Mescola tutto con olio, sale, pepe e origano.", "Servi con una fetta di pane."]
+      }
+    },
+    {
+      "id": "wrap-pollo", "level": "yellow", "kcal": 670, "prot": 66, "minutes": 15, "servings": 1, "protein": "pollo", "tags": [],
+      "name": {"de": "Vollkorn-Wraps mit Hühnerbrust und Joghurtsoße", "it": "Wrap integrali con pollo e salsa allo yogurt"},
+      "ingredients": [
+        {"id": "wrap", "de": "Vollkorn-Wraps", "it": "wrap integrali", "qty": 2, "unit": "pc", "aisle": "bakery"},
+        {"id": "pollo", "de": "Hühnerbrust", "it": "petto di pollo", "qty": 200, "unit": "g", "aisle": "meat"},
+        {"id": "insalata", "de": "Salat (Beutel)", "it": "insalata in busta", "qty": 0.5, "unit": "bag", "aisle": "produce"},
+        {"id": "yogurt-greco", "de": "griechisches Joghurt 0 %", "it": "yogurt greco 0 %", "qty": 100, "unit": "g", "aisle": "chilled"},
+        {"id": "limone", "de": "Zitrone", "it": "limone", "qty": 0.5, "unit": "pc", "aisle": "produce"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tsp", "aisle": "pantry"}
+      ],
+      "steps": {
+        "de": ["Hühnerbrust in Streifen schneiden und im Öl 6–8 Minuten braten, mit Salz und Paprika würzen.", "Soße: Joghurt, Zitronensaft, Salz und Kräuter verrühren.", "Wraps 30 Sekunden in der Pfanne erwärmen und mit Salat, Huhn und Soße füllen."],
+        "it": ["Taglia il pollo a striscioline e cuocilo con l'olio, 6–8 minuti, con sale e paprika.", "Salsa: yogurt, succo di limone, sale ed erbe.", "Scalda i wrap 30 secondi in padella e farciscili con insalata, pollo e salsa."]
+      }
+    },
+    {
+      "id": "penne-tonno", "level": "green", "kcal": 810, "prot": 55, "minutes": 15, "servings": 1, "protein": "tonno", "tags": [],
+      "name": {"de": "Penne mit Thunfisch und Tomate, dazu Salat", "it": "Penne al tonno e pomodoro con insalata"},
+      "ingredients": [
+        {"id": "pasta", "de": "Nudeln (Penne)", "it": "pasta (penne)", "qty": 100, "unit": "g", "aisle": "pantry"},
+        {"id": "tonno", "de": "Thunfisch natur", "it": "tonno al naturale", "qty": 3, "unit": "can", "aisle": "pantry"},
+        {"id": "passata", "de": "Passata", "it": "passata di pomodoro", "qty": 150, "unit": "g", "aisle": "pantry"},
+        {"id": "grana", "de": "Grana", "it": "grana", "qty": 10, "unit": "g", "aisle": "chilled"},
+        {"id": "insalata", "de": "Salat (Beutel)", "it": "insalata in busta", "qty": 0.5, "unit": "bag", "aisle": "produce"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tbsp", "aisle": "pantry"}
+      ],
+      "steps": {
+        "de": ["Penne in Salzwasser kochen.", "Inzwischen die Passata mit der Hälfte des Öls in der Pfanne erhitzen und den abgetropften Thunfisch 5 Minuten mitziehen lassen.", "Nudeln abgießen, in der Soße schwenken und mit Grana bestreuen.", "Salat mit dem restlichen Öl dazu."],
+        "it": ["Cuoci le penne in acqua salata.", "Intanto scalda la passata in padella con metà dell'olio e aggiungi il tonno scolato, 5 minuti.", "Scola la pasta, saltala nel sugo e finisci con il grana.", "Insalata con il resto dell'olio."]
+      }
+    },
+    {
+      "id": "riso-pollo-wok", "level": "green", "kcal": 760, "prot": 59, "minutes": 20, "servings": 1, "protein": "pollo", "tags": [],
+      "name": {"de": "Gebratener Reis mit Hühnerbrust und Gemüse (Wok-Art)", "it": "Riso e pollo saltati con verdure (stile wok)"},
+      "ingredients": [
+        {"id": "riso", "de": "Basmatireis", "it": "riso basmati", "qty": 100, "unit": "g", "aisle": "pantry"},
+        {"id": "pollo", "de": "Hühnerbrust", "it": "petto di pollo", "qty": 200, "unit": "g", "aisle": "meat"},
+        {"id": "verdure-wok-surg", "de": "TK-Wokgemüse", "it": "verdure per wok surgelate", "qty": 300, "unit": "g", "aisle": "frozen"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1.5, "unit": "tbsp", "aisle": "pantry"},
+        {"id": "soia", "de": "Sojasoße", "it": "salsa di soia", "qty": 2, "unit": "tbsp", "aisle": "pantry"}
+      ],
+      "steps": {
+        "de": ["Reis kochen (oder Reis vom Vortag nehmen).", "Hühnerstreifen im sehr heißen Öl 5 Minuten braten.", "Gemüse dazugeben und 5–6 Minuten mitbraten.", "Reis und Sojasoße dazugeben und noch 2 Minuten schwenken."],
+        "it": ["Cuoci il riso (o usa riso avanzato del giorno prima).", "Salta il pollo a striscioline nell'olio molto caldo, 5 minuti.", "Aggiungi le verdure e cuoci 5–6 minuti.", "Unisci il riso e la salsa di soia e salta ancora 2 minuti."]
+      }
+    },
+    {
+      "id": "pasta-ragu-magro", "level": "green", "kcal": 750, "prot": 48, "minutes": 15, "batchMinutes": 40, "servings": 4, "protein": "manzo", "tags": ["batch"],
+      "name": {"de": "Nudeln mit magerem Ragù (Ragù für 4 Portionen) und Gemüse", "it": "Pasta al ragù magro (ragù per 4 porzioni) con verdure"},
+      "ingredients": [
+        {"id": "macinato", "de": "mageres Rinderfaschiertes", "it": "macinato magro di manzo", "qty": 600, "unit": "g", "aisle": "meat"},
+        {"id": "cipolla", "de": "Zwiebel", "it": "cipolla", "qty": 1, "unit": "pc", "aisle": "produce"},
+        {"id": "carota", "de": "Karotte", "it": "carota", "qty": 1, "unit": "pc", "aisle": "produce"},
+        {"id": "sedano", "de": "Stangensellerie", "it": "sedano", "qty": 1, "unit": "pc", "aisle": "produce"},
+        {"id": "passata", "de": "Passata", "it": "passata di pomodoro", "qty": 700, "unit": "g", "aisle": "pantry"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tbsp", "aisle": "pantry"},
+        {"id": "pasta", "de": "Nudeln", "it": "pasta", "qty": 400, "unit": "g", "aisle": "pantry"},
+        {"id": "verdure-surg", "de": "TK-Gemüse", "it": "verdure surgelate", "qty": 800, "unit": "g", "aisle": "frozen"}
+      ],
+      "steps": {
+        "de": ["Ragù (einmal): Zwiebel, Karotte und Sellerie fein hacken und im Öl 5 Minuten anbraten.", "Faschiertes dazugeben und anbraten, dann die Passata; 30–40 Minuten bei kleiner Hitze köcheln.", "In 4 Portionen teilen: eine in den Kühlschrank, die anderen einfrieren.", "Jeden Abend: 100 g Nudeln kochen, eine Portion Ragù erwärmen, Gemüse dazu."],
+        "it": ["Ragù (una volta): trita cipolla, carota e sedano e rosolali con l'olio, 5 minuti.", "Aggiungi il macinato e rosolalo, poi la passata; cuoci 30–40 minuti a fuoco basso.", "Dividi in 4 porzioni: una in frigo, le altre in freezer.", "Ogni sera: cuoci 100 g di pasta, scalda una porzione di ragù, verdure a parte."]
+      }
+    },
+    {
+      "id": "gnocchi-tacchino", "level": "green", "kcal": 760, "prot": 50, "minutes": 15, "servings": 1, "protein": "tacchino", "tags": [],
+      "name": {"de": "Gnocchi mit Tomatensoße, Truthahnbrust und Gemüse", "it": "Gnocchi al pomodoro con tacchino e verdure"},
+      "ingredients": [
+        {"id": "gnocchi", "de": "Gnocchi", "it": "gnocchi", "qty": 300, "unit": "g", "aisle": "chilled"},
+        {"id": "passata", "de": "Passata", "it": "passata di pomodoro", "qty": 150, "unit": "g", "aisle": "pantry"},
+        {"id": "tacchino", "de": "Truthahnbrust", "it": "petto di tacchino", "qty": 150, "unit": "g", "aisle": "meat"},
+        {"id": "verdure-surg", "de": "TK-Gemüse", "it": "verdure surgelate", "qty": 200, "unit": "g", "aisle": "frozen"},
+        {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": 1, "unit": "tsp", "aisle": "pantry"}
+      ],
+      "steps": {
+        "de": ["Truthahnbrust in Scheiben mit dem Öl 3 Minuten pro Seite braten und beiseitestellen.", "In derselben Pfanne Passata und Gemüse 6–8 Minuten erhitzen.", "Gnocchi in Salzwasser kochen, bis sie aufsteigen, in der Soße schwenken und mit dem Truthahn servieren."],
+        "it": ["Cuoci il tacchino a fettine in padella con l'olio, 3 minuti per lato, e tienilo da parte.", "Nella stessa padella scalda passata e verdure, 6–8 minuti.", "Cuoci gli gnocchi in acqua salata finché salgono a galla, saltali nel sugo e servi con il tacchino."]
+      }
+    }
+  ],
+  "shopping_base": [
+    {"id": "latte", "de": "teilentrahmte Milch", "it": "latte parzialmente scremato", "qty": 2, "unit": "l", "aisle": "chilled"},
+    {"id": "skyr", "de": "Skyr oder griechisches Joghurt 0 %", "it": "skyr o yogurt greco 0 %", "qty": 6, "unit": "pc", "aisle": "chilled"},
+    {"id": "frutta", "de": "Obst (Bananen, Äpfel, Clementinen)", "it": "frutta (banane, mele, clementine)", "qty": null, "unit": null, "aisle": "produce"},
+    {"id": "verdure-surg", "de": "TK-Gemüse (Spinat, Brokkoli, Fisolen oder Minestrone)", "it": "verdure surgelate (spinaci, broccoli, fagiolini o minestrone)", "qty": 3, "unit": "bag", "aisle": "frozen"},
+    {"id": "insalata", "de": "Salat (Beutel)", "it": "insalata in busta", "qty": 2, "unit": "bag", "aisle": "produce"},
+    {"id": "pomodori", "de": "Tomaten", "it": "pomodori", "qty": null, "unit": null, "aisle": "produce"},
+    {"id": "uova", "de": "Eier", "it": "uova", "qty": 10, "unit": "pc", "aisle": "chilled"},
+    {"id": "tonno", "de": "Thunfisch natur", "it": "tonno al naturale", "qty": 4, "unit": "can", "aisle": "pantry"},
+    {"id": "ceci-fagioli", "de": "Kichererbsen oder Bohnen (Dose)", "it": "ceci o fagioli in scatola", "qty": 2, "unit": "can", "aisle": "pantry"},
+    {"id": "fiocchi", "de": "Hüttenkäse", "it": "fiocchi di latte", "qty": 2, "unit": "pack", "aisle": "chilled"},
+    {"id": "pane", "de": "Vollkornbrot (in Scheiben einfrieren)", "it": "pane integrale (si congela a fette)", "qty": null, "unit": null, "aisle": "bakery"},
+    {"id": "riso", "de": "Basmatireis", "it": "riso basmati", "qty": null, "unit": null, "aisle": "pantry"},
+    {"id": "patate", "de": "Kartoffeln", "it": "patate", "qty": null, "unit": null, "aisle": "produce"},
+    {"id": "passata", "de": "Passata", "it": "passata di pomodoro", "qty": null, "unit": null, "aisle": "pantry"},
+    {"id": "olio", "de": "Olivenöl extra vergine", "it": "olio EVO", "qty": null, "unit": null, "aisle": "pantry"},
+    {"id": "limone", "de": "Zitronen", "it": "limoni", "qty": null, "unit": null, "aisle": "produce"},
+    {"id": "spezie", "de": "Gewürze (Curry, Paprika, Oregano)", "it": "spezie (curry, paprika, origano)", "qty": null, "unit": null, "aisle": "pantry"}
+  ]
+}
