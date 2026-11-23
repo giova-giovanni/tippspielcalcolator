@@ -190,7 +190,7 @@ ul.plain li + li, ol.plain-ol li + li { margin-top: 4px; }
 /* ---------------------------------------------------------------- tab bar */
 .tabbar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
-  display: grid; grid-template-columns: repeat(7, minmax(0, 1fr));
+  display: grid; grid-template-columns: repeat(var(--tabs, 6), minmax(0, 1fr));
   height: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
   background: var(--surface); border-top: 1px solid var(--border);
@@ -551,6 +551,14 @@ details.settings[open] > summary::after { content: "▴"; }
   .db-row.db-head { display: grid; font-size: 12px; font-weight: 700; color: var(--muted); padding: 0 12px; }
   .db-lbl { display: none; }
 }
+
+/* ---------------------------------------------------------------- Altro (menu) */
+.more-list { list-style: none; margin: 0; padding: 0; }
+.more-list li + li { border-top: 1px solid var(--grid); }
+.more-link { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 6px 2px; color: var(--text); text-decoration: none; font-weight: 650; }
+.more-link .ic { color: var(--accent); flex: none; }
+.more-label { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.more-chev { color: var(--muted); font-size: 24px; line-height: 1; }
 
 /* ---------------------------------------------------------------- modal / toast */
 .modal { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 16px; background: rgba(0, 0, 0, .45); }

@@ -219,8 +219,14 @@
     ok: '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',
     eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
     lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
-    edit: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/>'
+    edit: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/>',
+    piano: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/>',
+    training: '<path d="M6.5 7v10M17.5 7v10M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/>',
+    corpo: '<rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M8 10a5.5 5.5 0 0 1 8 0M12 10.5l1.5-2.5"/>',
+    altro: '<circle cx="5.5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="18.5" cy="12" r="1.2"/>'
   };
+  /** more constant icons (docs/piano.js) – constant markup only, never data */
+  function addIcons(map) { Object.keys(map || {}).forEach(function (k) { if (!ICONS[k]) ICONS[k] = String(map[k]); }); }
   function icon(name, cls) {
     var span = document.createElement('span');
     span.className = 'ic' + (cls ? ' ' + cls : '');
@@ -855,6 +861,8 @@
   }
 
   // ------------------------------------------------------------------ shell / router
+  // Routes = first hash segment (#/piano/corpo -> 'piano'); unknown ids fall back to the first one.
+  // The Piano (docs/piano.js) registers its route with TSP.addRoute().
   var ROUTES = [
     { id: 'heute', view: viewHeute },
     { id: 'woche', view: viewWoche },
@@ -862,20 +870,57 @@
     { id: 'rangliste', view: viewRangliste },
     { id: 'backtest', view: viewBacktest },
     { id: 'datenbank', view: viewDatenbank },
-    { id: 'eingabe', view: viewEingabe }
+    { id: 'eingabe', view: viewEingabe },
+    { id: 'altro', view: viewAltro, title: function () { return t('piano.tab.altro'); } }
   ];
+  // Tab bar: separate from the routes. A tab with `needs` is shown only when that route exists;
+  // the first tab whose match() accepts the current path is highlighted ('altro' catches the rest).
+  var TABS = [
+    { id: 'piano', href: '#/piano', icon: 'piano', label: 'piano.tab.oggi', needs: 'piano', match: function (p) { return p[0] === 'piano' && (!p[1] || p[1] === 'oggi'); } },
+    { id: 'heute', href: '#/heute', icon: 'heute', label: 'tab.heute', match: function (p) { return p[0] === 'heute'; } },
+    { id: 'woche', href: '#/woche', icon: 'woche', label: 'tab.woche', match: function (p) { return p[0] === 'woche' || (p[0] === 'piano' && p[1] === 'settimana'); } },
+    { id: 'training', href: '#/piano/training', icon: 'training', label: 'piano.tab.training', needs: 'piano', match: function (p) { return p[0] === 'piano' && p[1] === 'training'; } },
+    { id: 'corpo', href: '#/piano/corpo', icon: 'corpo', label: 'piano.tab.corpo', needs: 'piano', match: function (p) { return p[0] === 'piano' && p[1] === 'corpo'; } },
+    { id: 'altro', href: '#/altro', icon: 'altro', label: 'piano.tab.altro', match: function () { return true; } }
+  ];
+  var booted = false;
+  function hashParts() {
+    return (location.hash || '').replace(/^#\/?/, '').split('?')[0].split('/').filter(Boolean);
+  }
   function currentRoute() {
     var id = (location.hash || '').replace(/^#\/?/, '').split(/[?/]/)[0];
     for (var i = 0; i < ROUTES.length; i++) if (ROUTES[i].id === id) return ROUTES[i];
     return ROUTES[0];
   }
+  function hasRoute(id) { return ROUTES.some(function (r) { return r.id === id; }); }
+  /** route: {id, view, title?}; replaces a route with the same id */
+  function addRoute(route) {
+    ROUTES = ROUTES.filter(function (r) { return r.id !== route.id; }).concat([route]);
+    if (booted) render(true);
+  }
+  function visibleTabs() { return TABS.filter(function (x) { return !x.needs || hasRoute(x.needs); }); }
+  function activeTab() {
+    var p = hashParts();
+    var r = currentRoute();
+    if (p[0] !== r.id) p = [r.id]; // unknown hash -> fallback route
+    var tabs = visibleTabs();
+    for (var i = 0; i < tabs.length; i++) if (tabs[i].match(p)) return tabs[i].id;
+    return null;
+  }
+  /** start page: the Piano ("Oggi") unless chosen otherwise in its settings (or not available) */
+  function startHash() {
+    var st = store.getJSON('piano.settings', {}) || {};
+    return st.startPage !== 'heute' && hasRoute('piano') ? '#/piano' : '#/heute';
+  }
   function renderTabbar() {
     var nav = document.getElementById('tabbar');
-    var cur = currentRoute().id;
+    var tabs = visibleTabs();
+    var cur = activeTab();
     nav.setAttribute('aria-label', t('ui.nav'));
-    nav.replaceChildren.apply(nav, ROUTES.map(function (r) {
-      return h('a', { href: '#/' + r.id, class: 'tab' + (r.id === cur ? ' active' : ''), 'aria-current': r.id === cur ? 'page' : null },
-        icon(r.id), h('span', { class: 'tab-label' }, t('tab.' + r.id)));
+    nav.style.setProperty('--tabs', String(tabs.length));
+    nav.replaceChildren.apply(nav, tabs.map(function (x) {
+      return h('a', { href: x.href, class: 'tab' + (x.id === cur ? ' active' : ''), 'aria-current': x.id === cur ? 'page' : null },
+        icon(x.icon), h('span', { class: 'tab-label' }, t(x.label)));
     }));
   }
   function renderChrome() {
@@ -896,6 +941,8 @@
     }
     var bt = document.querySelector('.brand-text');
     if (bt) bt.textContent = t('app.title');
+    var brand = document.querySelector('.brand');
+    if (brand) brand.setAttribute('href', startHash());
     renderTabbar();
   }
   var renderSeq = 0;
@@ -919,7 +966,7 @@
     }).then(function (node) {
       if (seq !== renderSeq) return;
       view.replaceChildren(node);
-      document.title = t('tab.' + r.id) + ' · ' + t('app.title');
+      document.title = (r.title ? r.title() : t('tab.' + r.id)) + ' · ' + t('app.title');
       var q = mountQueue; mountQueue = [];
       q.forEach(function (fn) { try { fn(); } catch (e) { /* ignore */ } });
       if (keepScroll) window.scrollTo(0, y);
@@ -987,20 +1034,82 @@
     location.hash = '#/eingabe';
   }
 
+  // ------------------------------------------------------------------ tip of the day (Heute + Piano)
+  /** Target day, deadline, recommendation and the client-side R4 re-check of today.json. */
+  function tipSummary(d, ctx) {
+    var meta = ctx.meta || {};
+    var todayR = romeTodayISO();
+    var hasTarget = isISO(d.date);
+    var target = hasTarget ? d.date : todayR;
+    var deadlineHM = meta.deadline || '12:00';
+    var dlJson = Date.parse(d.deadline || '');
+    var rec = d.recommendation || {};
+    var hist = historyOf(ctx, ctx.me);
+    var max = ctx.r4.max;
+    var clientBlock = function (c, dish) {
+      return ctx.r4.violations(c, dish, target, hist[c]).map(function (v) { return violationText(v, max); });
+    };
+    var issues = [];
+    if (rec.vorspeise) {
+      CATS.forEach(function (c) {
+        var r = rec[c] || {};
+        clientBlock(c, r.dish).forEach(function (txt) { issues.push(catName(c) + ': ' + r.dish + ' – ' + txt); });
+      });
+    }
+    return {
+      todayR: todayR, hasTarget: hasTarget, target: target, isToday: target === todayR, deadlineHM: deadlineHM,
+      dl: hasTarget && isNum(dlJson) ? dlJson : deadlineFor(target, deadlineHM),
+      rec: rec, hasRec: !!rec.vorspeise, issues: issues, hist: hist, max: max, clientBlock: clientBlock,
+      copy: rec.vorspeise ? (rec.copy_text || CATS.map(function (c) { return (rec[c] || {}).dish || '–'; }).join(' / ')) : ''
+    };
+  }
+  /** Countdown to the deadline S.dl: value + label nodes; start(host) ticks every second while the view
+   *  is shown and sets the classes 'urgent' (< 30 min) and 'over' on host. */
+  function countdown(S, id) {
+    var val = h('div', { class: 'cd-value', id: id || null, 'aria-live': 'off' }, '––:––:––');
+    var label = h('div', { class: 'cd-label' });
+    var host = null;
+    var tick = function () {
+      var left = S.dl - Date.now();
+      if (left <= 0) {
+        val.textContent = t('cd.over');
+        host.classList.add('over');
+        host.classList.remove('urgent');
+        label.textContent = t('cd.overSub', { time: S.deadlineHM });
+        return false;
+      }
+      var s = Math.floor(left / 1000);
+      var days = Math.floor(s / 86400); s -= days * 86400;
+      var hh = Math.floor(s / 3600); s -= hh * 3600;
+      var mm = Math.floor(s / 60); s -= mm * 60;
+      val.textContent = (days ? t('cd.days', { n: days }) + ' ' : '') + pad(hh) + ':' + pad(mm) + ':' + pad(s);
+      host.classList.toggle('urgent', left < 30 * 60 * 1000);
+      label.textContent = S.isToday ? t('cd.until', { time: S.deadlineHM })
+        : t('cd.untilDay', { day: S.target === addDays(S.todayR, 1) ? t('cd.tomorrow') : fmtDate(S.target, { weekday: 'long' }), time: S.deadlineHM });
+      return true;
+    };
+    return {
+      val: val, label: label,
+      start: function (el) {
+        host = el;
+        if (tick()) {
+          var iv = setInterval(function () { if (!tick()) clearInterval(iv); }, 1000);
+          cleanups.push(function () { clearInterval(iv); });
+        }
+      }
+    };
+  }
+
   // ================================================================== VIEW: Heute
   function viewHeute() {
     return Promise.all([load('today'), loadCtx()]).then(function (rs) {
       var T = rs[0], ctx = rs[1];
       if (T.status !== 'ok') return missingState(T, 'today.empty.title', 'today.empty.text');
       var d = T.data || {};
-      var meta = ctx.meta || {};
-      var todayR = romeTodayISO();
-      var hasTarget = isISO(d.date);
-      var target = hasTarget ? d.date : todayR;
-      var rec = d.recommendation || {};
+      var S = tipSummary(d, ctx);
+      var todayR = S.todayR, hasTarget = S.hasTarget, target = S.target, rec = S.rec, deadlineHM = S.deadlineHM;
       var alts = d.alternatives || {};
       var out = h('div', { class: 'stack' });
-      var deadlineHM = meta.deadline || '12:00';
       var gen = Date.parse(d.generated_at || '');
 
       // ---- season over: no target day, no countdown
@@ -1050,56 +1159,23 @@
       if (notes.childNodes.length) out.appendChild(notes);
 
       // ---- hero: target day + countdown to its deadline (12:00 Europe/Rome)
-      var isTodayTarget = target === todayR;
-      var dlJson = Date.parse(d.deadline || '');
-      var dl = hasTarget && isNum(dlJson) ? dlJson : deadlineFor(target, deadlineHM);
-      var cdVal = h('div', { class: 'cd-value', id: 'countdown', 'aria-live': 'off' }, '––:––:––');
-      var cdLabel = h('div', { class: 'cd-label' });
+      var isTodayTarget = S.isToday;
+      var cd = countdown(S, 'countdown');
       var hero = h('section', { class: 'hero' + (isTodayTarget ? '' : ' ahead') },
         h('div', { class: 'hero-date' },
           h('div', { class: 'hero-kicker' }, isTodayTarget ? t('today.kicker') : t('today.kickerFor')),
           h('div', { class: 'hero-day' }, fmtLong(target))),
-        h('div', { class: 'cd' }, cdVal, cdLabel));
-      var tick = function () {
-        var left = dl - Date.now();
-        if (left <= 0) {
-          cdVal.textContent = t('cd.over');
-          hero.classList.add('over');
-          hero.classList.remove('urgent');
-          cdLabel.textContent = t('cd.overSub', { time: deadlineHM });
-          return false;
-        }
-        var s = Math.floor(left / 1000);
-        var days = Math.floor(s / 86400); s -= days * 86400;
-        var hh = Math.floor(s / 3600); s -= hh * 3600;
-        var mm = Math.floor(s / 60); s -= mm * 60;
-        cdVal.textContent = (days ? t('cd.days', { n: days }) + ' ' : '') + pad(hh) + ':' + pad(mm) + ':' + pad(s);
-        hero.classList.toggle('urgent', left < 30 * 60 * 1000);
-        cdLabel.textContent = isTodayTarget ? t('cd.until', { time: deadlineHM })
-          : t('cd.untilDay', { day: target === addDays(todayR, 1) ? t('cd.tomorrow') : fmtDate(target, { weekday: 'long' }), time: deadlineHM });
-        return true;
-      };
-      if (tick()) {
-        var iv = setInterval(function () { if (!tick()) clearInterval(iv); }, 1000);
-        cleanups.push(function () { clearInterval(iv); });
-      }
+        h('div', { class: 'cd' }, cd.val, cd.label));
+      cd.start(hero);
       out.appendChild(hero);
 
-      // ---- client-side R4 re-check (fresh tips/pending submissions)
-      var hist = historyOf(ctx, ctx.me);
-      var max = ctx.r4.max;
-      var clientBlock = function (c, dish) {
-        return ctx.r4.violations(c, dish, target, hist[c]).map(function (v) { return violationText(v, max); });
-      };
+      // ---- client-side R4 re-check (fresh tips/pending submissions), see tipSummary()
+      var clientBlock = S.clientBlock;
 
       // ---- recommendation
       var recCard;
       if (rec && rec.vorspeise) {
-        var issues = [];
-        CATS.forEach(function (c) {
-          var r = rec[c] || {};
-          clientBlock(c, r.dish).forEach(function (txt) { issues.push(catName(c) + ': ' + r.dish + ' – ' + txt); });
-        });
+        var issues = S.issues;
         var rows = CATS.map(function (c) {
           var r = rec[c] || {};
           return h('div', { class: 'rec-row' },
@@ -1108,7 +1184,7 @@
             h('div', { class: 'rec-p', title: t('today.prob') }, h('span', { class: 'big-num' }, fmtPct(r.p)), h('span', { class: 'muted tiny' }, t('today.prob'))),
             h('div', { class: 'rec-dish', lang: 'de' }, r.dish || '–'));
         });
-        var copy = rec.copy_text || CATS.map(function (c) { return (rec[c] || {}).dish || '–'; }).join(' / ');
+        var copy = S.copy;
         recCard = h('section', { class: 'card rec' },
           h('div', { class: 'rec-head' }, h('h2', { class: 'card-title' }, t('today.rec')),
             chip(tOr('strategy.' + (rec.strategy || 'week_planner'), rec.strategy), 'accent')),
@@ -2274,6 +2350,54 @@
     });
   }
 
+  // ================================================================== VIEW: Altro (menu of the remaining pages)
+  var MORE = [
+    { group: 'tipp', href: '#/statistik', icon: 'statistik', label: 'tab.statistik' },
+    { group: 'tipp', href: '#/rangliste', icon: 'rangliste', label: 'tab.rangliste' },
+    { group: 'tipp', href: '#/backtest', icon: 'backtest', label: 'tab.backtest' },
+    { group: 'tipp', href: '#/datenbank', icon: 'datenbank', label: 'tab.datenbank' },
+    { group: 'tipp', href: '#/eingabe', icon: 'eingabe', label: 'tab.eingabe' }
+  ];
+  /** link: {group: 'piano'|'tipp', href, icon, label (i18n key)} */
+  function addMoreLink(link) { MORE.push(link); }
+  function viewAltro() {
+    var out = h('div', { class: 'stack' }, h('div', { class: 'page-head' }, h('h1', null, t('piano.tab.altro'))));
+    [{ id: 'piano', title: 'piano.more.piano' }, { id: 'tipp', title: 'piano.more.tipp' }].forEach(function (g) {
+      var links = MORE.filter(function (m) { return m.group === g.id; });
+      if (!links.length) return;
+      out.appendChild(h('section', { class: 'card more-card' },
+        h('h2', { class: 'card-title' }, t(g.title)),
+        h('ul', { class: 'more-list' }, links.map(function (m) {
+          return h('li', null, h('a', { class: 'more-link', href: m.href },
+            icon(m.icon), h('span', { class: 'more-label' }, t(m.label)), h('span', { class: 'more-chev', 'aria-hidden': 'true' }, '›')));
+        }))));
+    });
+    return out;
+  }
+
+  // ------------------------------------------------------------------ Piano storage (local only)
+  /** localStorage limited to the keys tsp.piano.* – personal data of the Piano never leaves the device. */
+  var pstore = {
+    get: function (k, d) { return store.get('piano.' + k, d); },
+    set: function (k, v) { store.set('piano.' + k, v); },
+    getJSON: function (k, d) { return store.getJSON('piano.' + k, d); },
+    setJSON: function (k, v) { store.setJSON('piano.' + k, v); },
+    keys: function () {
+      var out = [], pre = LS + 'piano.';
+      try {
+        for (var i = 0; i < localStorage.length; i++) {
+          var k = localStorage.key(i);
+          if (k && k.indexOf(pre) === 0) out.push(k.slice(pre.length));
+        }
+      } catch (e) { /* storage blocked */ }
+      return out.sort();
+    },
+    clear: function () { this.keys().forEach(function (k) { store.set('piano.' + k, null); }); },
+    available: function () {
+      try { localStorage.setItem(LS + 'piano.__t', '1'); localStorage.removeItem(LS + 'piano.__t'); return true; } catch (e) { return false; }
+    }
+  };
+
   // ------------------------------------------------------------------ boot
   function setLang(l) {
     lang = l === 'it' ? 'it' : 'de';
@@ -2307,16 +2431,32 @@
       if (document.visibilityState === 'visible' && window.__tspHiddenAt && Date.now() - window.__tspHiddenAt > 30 * 60 * 1000) reloadData();
       if (document.visibilityState === 'hidden') window.__tspHiddenAt = Date.now();
     });
-    if (!location.hash) history.replaceState(null, '', '#/heute');
+    // empty hash (manifest start_url "./") -> start page chosen in the Piano settings
+    if (!location.hash) history.replaceState(null, '', startHash());
+    booted = true;
     render(false);
   }
 
-  // test hooks (pure functions only – no secrets)
   window.TSP = {
+    // test hooks (pure functions only – no secrets)
     parseCSV: parseCSV, serializeCSV: serializeCSV, upsertCsv: upsertCsv, menuValues: menuValues, tipValues: tipValues,
     utf8ToB64: utf8ToB64, b64ToUtf8: b64ToUtf8, R4: R4, romeTodayISO: romeTodayISO, romeToUtc: romeToUtc,
     deadlineFor: deadlineFor, commitRow: commitRow, fold: fold, isoWeek: isoWeek, decryptEnvelope: decryptEnvelope,
-    tipHits: tipHits, canonPlayer: canonPlayer
+    tipHits: tipHits, canonPlayer: canonPlayer,
+    // shared helpers for the Piano (docs/piano.js) – same look, same data loader (decryption included)
+    CATS: CATS, h: h, appendKids: appendKids, icon: icon, addIcons: addIcons, notice: notice, card: card, chip: chip,
+    segmented: segmented, selectEl: selectEl, table: table, emptyState: emptyState, bar: bar, toast: toast,
+    copyText: copyText, copyButton: copyButton, catBadge: catBadge, catName: catName,
+    t: t, tOr: tOr, lang: function () { return lang; }, locale: locale, pick: pick,
+    fmtNum: fmtNum, fmtPct: fmtPct, fmtDate: fmtDate, fmtDM: fmtDM, fmtDMY: fmtDMY, fmtLong: fmtLong, fmtWdDM: fmtWdDM,
+    wdShort: wdShort, wdLong: wdLong, pad: pad, isNum: isNum, isISO: isISO, addDays: addDays, weekdayOf: weekdayOf,
+    mondayOf: mondayOf, zonedParts: zonedParts,
+    load: load, okData: okData, loadCtx: loadCtx, menuOf: menuOf, lockedState: lockedState, reloadData: reloadData,
+    tipSummary: tipSummary, countdown: countdown,
+    chartBox: chartBox, axisOpts: axisOpts, tooltipOpts: tooltipOpts, themeColors: themeColors,
+    addRoute: addRoute, addMoreLink: addMoreLink, hashParts: hashParts, mount: mount, rerender: rerender,
+    onCleanup: function (fn) { cleanups.push(fn); },
+    pstore: pstore
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
