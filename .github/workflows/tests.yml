@@ -31,3 +31,18 @@ jobs:
 
       - name: pytest
         run: python -m pytest -q
+
+  # JS-Tests des Piano (docs/piano-core.js, docs/piano/*.json, docs/i18n.js) – ohne Abhängigkeiten.
+  # Node >= 22: Glob in Anführungszeichen (die Form "node --test tests/js" akzeptiert keinen Ordner).
+  node:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: node --test
+        run: node --test "tests/js/*.test.js"

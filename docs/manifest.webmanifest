@@ -2,7 +2,7 @@
   "name": "Tippspiel Essen",
   "short_name": "Tippspiel",
   "description": "Privates Tippspiel-Dashboard",
-  "start_url": "./#/heute",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
