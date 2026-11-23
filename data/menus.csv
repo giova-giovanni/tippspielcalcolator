@@ -480,7 +480,7 @@ date,year,weekday,status,vorspeise,hauptspeise,beilage,vorspeise_norm,hauptspeis
 2026-11-18,2026,Mi,served,Truthahn-Gemüse-Risotto,Schweinsschopf,Wedges,Truthahn-Gemüse-Risotto,Schweinsschopf,Wedges,form
 2026-11-19,2026,Do,served,Hirten,Hühnerbrust,Spatzlen,Hirten,Hühnerbrust,Spatzlen,form
 2026-11-20,2026,Fr,served,Gnocchi mit Käsesoße,Sparerips,Röstinchen,Gnocchi mit Käsesoße,Sparerips,Röstinchen,form
-2026-11-23,2026,Mo,served,Arrabbiata,Champignonschnitzel,Reis,,,,form
+2026-11-23,2026,Mo,served,Arrabbiata,Champignonschnitzel,Reis,Arrabbiata,Champignonschnitzel,Reis,form
 2026-11-24,2026,Di,pending,,,,,,,xlsx
 2026-11-25,2026,Mi,pending,,,,,,,xlsx
 2026-11-26,2026,Do,pending,,,,,,,xlsx
