@@ -61,7 +61,7 @@ Workflow in `.github/workflows/`:
 |---|---|---|
 | `daily.yml` | lun–ven 05:17 UTC (06:17 CET / 07:17 CEST) + run di riserva 07:47 UTC + manuale | `python -m engine.pipeline --daily` (salta il backtest se esiste già), commit + push; il run di riserva non fa niente se `today.json` è già stato aggiornato oggi |
 | `on-data.yml` | push su `main` che tocca `data/**`, `engine/**`, `requirements.txt` o il workflow stesso + manuale (opzioni *tune*, *force_ingest*) | pipeline completa, commit + push; `pytest` in un job separato, in parallelo |
-| `tests.yml` | pull request e push su branch diversi da `main` | `pytest` |
+| `tests.yml` | pull request e push su branch diversi da `main` | `pytest` e, in parallelo, i test JS del Piano (`node --test`) |
 
 I due workflow della pipeline condividono il gruppo di concorrenza `pipeline` (mai due esecuzioni
 in parallelo). In `on-data` i test girano in un job a parte: se un test fallisce il run diventa rosso
@@ -131,7 +131,7 @@ Il token resta **solo nel localStorage di quel browser/telefono** e viene inviat
 e su github.com *Settings → Developer settings → Personal access tokens → Fine-grained tokens →*
 token → *Delete* (subito invalido ovunque). Su dispositivi altrui cancellarlo dopo l'uso.
 
-## Come leggere il consiglio del giorno (scheda "Heute")
+## Come leggere il consiglio del giorno (scheda "Tipp", prima "Heute")
 
 - **Il tipp grande** in alto: V / H / B consigliati, con pulsante *Tipp kopieren* (testo
   `V / H / B` pronto da incollare nella chat).
@@ -153,6 +153,35 @@ token → *Delete* (subito invalido ovunque). Su dispositivi altrui cancellarlo 
   menù di oggi è già inserito, il consiglio vale per il **prossimo giorno lavorativo**.
 - La scheda **Woche** mostra la settimana: menù noti, mie giocate, previsioni per i giorni ancora
   aperti e quante volte posso ancora giocare ogni piatto.
+
+## Piano (giornata, cene, allenamento, peso)
+
+Il sito contiene anche il **Piano**: tab *Oggi*, *Training* e *Corpo*, impostazioni in *Altro*.
+La barra in basso è *Oggi · Tipp · Woche · Training · Corpo · Altro*; Statistik, Rangliste,
+Backtest, Daten ed Eingabe sono in *Altro*. Tutti i vecchi indirizzi (`#/heute`, `#/woche`, …)
+funzionano ancora.
+
+- **Oggi**: la giornata in ordine – colazione, Tipp compatto (con countdown e *Copia*), pranzo,
+  merenda nei giorni di allenamento, allenamento, cena, check della sera e serie dei giorni.
+  - Il **pranzo** viene dal menù del giorno (o appena inserito da *Eingabe*), altrimenti dalla
+    previsione del modello (etichetta «stima»): kcal/proteine stimate e livello rosso/giallo/verde.
+  - La **cena** segue il livello del pranzo (un livello in più nei giorni di allenamento).
+    Budget = obiettivo − colazione − merenda − caffè − pranzo, tra 500 e 1100 kcal, con 3 proposte
+    dal ricettario.
+  - Weekend, giorni liberi del Tippspiel o giorni impostati «a casa»: niente tracciamento del cibo.
+- **Training**: piano della settimana, regole e schede.
+- **Corpo**: pesate ogni 1–2 settimane, circonferenza vita, tendenza in kg/settimana.
+- **Privacy**: profilo, pesate e check restano **solo nel browser** (localStorage, chiavi
+  `tsp.piano.*`). Non finiscono nel repository e non vengono inviati da nessuna parte.
+  *Impostazioni del piano → I tuoi dati*: esporta (JSON), importa, cancella. Conviene esportare
+  ogni tanto e usare il sito dalla schermata Home: su iPhone Safari può cancellare i dati dei siti
+  non aperti per 7 giorni.
+- Contenuti statici (non personali) in `docs/piano/`:
+  - `dish_nutrition.json`: kcal, proteine e tag per piatto, più regole regex per i piatti nuovi;
+  - `dinners.json`: ricette e spesa base;
+  - `workouts.json`: schede.
+- Logica pura in `docs/piano-core.js`, testata con `node --test "tests/js/*.test.js"`.
+- Tutti i valori sono stime da tarare sull'andamento reale del peso.
 
 ## Regole implementate e scelte di interpretazione
 
@@ -289,6 +318,7 @@ python -m engine.analyze                         # solo statistiche (reports/ana
 python -m engine.race                            # simulazione della corsa al titolo (fine stagione)
 python -m engine.ingest --xlsx percorso.xlsx     # solo import Excel → CSV
 python -m pytest -q                              # test (nessuna rete, non modificano data/)
+node --test "tests/js/*.test.js"                 # test JS del Piano (Node >= 22, nessuna dipendenza)
 python -m http.server -d docs 8000               # anteprima del sito su http://localhost:8000
 ```
 
@@ -336,10 +366,14 @@ data/
 docs/                        sito GitHub Pages (index.html, app.js, i18n.js, style.css, …)
   data/*.json                generati dalla pipeline: meta, menus, tips, dishes, today, week,
                              stats, leaderboard, backtest
+  piano.js, piano-core.js,   Piano: viste, logica pura, stili
+  piano.css
+  piano/*.json               Piano: piatti (kcal/proteine), ricette, schede (statici)
 engine/                      motore Python: ingest, normalize, rules, dates, data, analyze,
                              model, backtest, race, recommend, site, output, pipeline
 reports/                     report Markdown generati (ingest, analisi, alias, backtest)
-tests/                       pytest
+tests/                       pytest; tests/js/ = test node del Piano
+CLAUDE.md                    note per Claude Code (architettura, comandi, regole)
 requirements.txt, pytest.ini
 index.html                   vecchio blog, non usato (si può cancellare)
 ```
