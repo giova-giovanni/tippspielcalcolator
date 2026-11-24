@@ -141,6 +141,7 @@ Kandidaten: max(rapidfuzz `ratio`, `token_sort_ratio`) ≥ 88 auf kleingeschrieb
 | Nudel mit Lachs | Nudel mit Lachs und Rahmsoße | 69.8 | 13 | Variante? | 14 | 1 |
 | Nudel mit Lachs | Nudel mit Lachs und Tomantensoße | 63.8 | 17 | Variante? | 14 | 1 |
 | Gnocchi | Gnocchi mit Ragu | 60.9 | 9 | Variante? | 6 | 1 |
+| Spinatravioli | Spinatravioli mit Schinken-Rahm | 59.1 | 18 | Variante? | 3 | 1 |
 | Gnocchi | Gnocchi mit Lachs | 58.3 | 10 | Variante? | 6 | 1 |
 | Spinatknödel | Spinatknödel mit Gorgonzolasoße | 55.8 | 19 | Variante? | 18 | 1 |
 | Gnocchi | Gnocchi mit Käsesoße | 51.9 | 13 | Variante? | 6 | 9 |
