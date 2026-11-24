@@ -398,11 +398,47 @@
       vorspeise_norm: '', hauptspeise_norm: '', beilage_norm: '', source: 'form'
     };
   }
-  function tipValues(date, player, v, hh, b) {
+  /** pts (optional): points typed by hand -> points_sheet, i.e. the official value (like the workbook's). */
+  function tipValues(date, player, v, hh, b, pts) {
     return {
       date: date, player: clean(player), vorspeise: clean(v), hauptspeise: clean(hh), beilage: clean(b),
-      points: '', points_sheet: '', source: 'form'
+      points: '', points_sheet: isNum(pts) ? String(pts) : '', source: 'form'
     };
+  }
+  /** Several rows into one CSV text (= one commit). */
+  function upsertCsvMany(text, list, keys, defaultHeader) {
+    var cur = text || '', inserted = 0, updated = 0;
+    list.forEach(function (values) {
+      var r = upsertCsv(cur, values, keys, defaultHeader);
+      cur = r.text;
+      if (r.action === 'insert') inserted++; else updated++;
+    });
+    return { text: cur, inserted: inserted, updated: updated };
+  }
+  /** 'V / H / B' as copied from a chat (optionally 'Name: V / H / B') -> [v, h, b]; null unless exactly 3 dishes. */
+  function parseTipLine(s) {
+    var x = clean(s).replace(/^[^:\/]{1,40}:\s*/, '');
+    var parts = x.split(/\s*\/\s*/).map(clean);
+    return parts.length === 3 && parts.every(Boolean) ? parts : null;
+  }
+  /** Points typed by hand ('1,5' or '1.5'): null = empty, NaN = invalid; 0…max in steps of 0.5. */
+  function parsePoints(s, max) {
+    var x = clean(s).replace(',', '.');
+    if (!x) return null;
+    if (!/^\d{1,2}(\.\d{1,2})?$/.test(x)) return NaN;
+    var v = Number(x);
+    if (v > (isNum(max) ? max : 3) || Math.abs(v * 2 - Math.round(v * 2)) > 1e-9) return NaN;
+    return v;
+  }
+  /** Can the other players' tips of day d be entered now? Rule 6: never before that day's deadline.
+   * -> 'ok' | 'bad' | 'weekend' | 'free' | 'future' | 'open' (today, deadline not over yet) */
+  function coDateCheck(d, todayIso, nowMs, deadlineMs, isFree) {
+    if (!isISO(d)) return 'bad';
+    if (weekdayOf(d) >= 5) return 'weekend';
+    if (isFree) return 'free';
+    if (d > todayIso) return 'future';
+    if (d === todayIso && !(nowMs >= deadlineMs)) return 'open';
+    return 'ok';
   }
 
   // ------------------------------------------------------------------ GitHub contents API
@@ -451,28 +487,40 @@
     return ghFetch(repoPath(cfg) + '/contents/' + path.split('/').map(encodeURIComponent).join('/'), cfg.token,
       { method: 'PUT', body: JSON.stringify(body) });
   }
-  /** GET -> upsert -> PUT; retries once on 409 (sha conflict) after refetching. */
-  function commitRow(cfg, kind, values, onStatus) {
+  /** GET -> upsert every row -> one PUT (one commit); retries once on 409 (sha conflict) after refetching.
+   * opts.skipUnchanged: no commit when the file would not change -> {action: 'none'}. */
+  function commitRows(cfg, kind, list, message, onStatus, opts) {
     onStatus = onStatus || function () {};
+    opts = opts || {};
     var path = kind === 'menu' ? 'data/menus.csv' : 'data/tips.csv';
     var keys = kind === 'menu' ? ['date'] : ['date', 'player'];
     var header = kind === 'menu' ? MENU_HEADER : TIP_HEADER;
-    var message = kind === 'menu'
-      ? 'Menü ' + values.date + ' via Website'
-      : 'Tipp ' + values.date + ' ' + values.player + ' via Website';
     function attempt(n) {
       onStatus(n ? 'retry' : 'load', path);
       return ghGetFile(cfg, path).then(function (f) {
-        var up = upsertCsv(f.exists ? f.text : '', values, keys, header);
+        var old = f.exists ? f.text : '';
+        var up = upsertCsvMany(old, list, keys, header);
+        var res = { path: path, inserted: up.inserted, updated: up.updated, commit: null };
+        if (opts.skipUnchanged && f.exists && up.text === old) { res.action = 'none'; return res; }
         onStatus('save', path);
         return ghPutFile(cfg, path, up.text, f.exists ? f.sha : undefined, message).then(function (r) {
-          if (r.ok) return { action: up.action, commit: (r.body && r.body.commit) || null, path: path };
+          if (r.ok) {
+            res.action = up.updated ? (up.inserted ? 'mixed' : 'update') : 'insert';
+            res.commit = (r.body && r.body.commit) || null;
+            return res;
+          }
           if (r.status === 409 && n === 0) return attempt(1);
           throw ghErr(r.status, r.body);
         });
       });
     }
     return attempt(0);
+  }
+  function commitRow(cfg, kind, values, onStatus) {
+    var message = kind === 'menu'
+      ? 'Menü ' + values.date + ' via Website'
+      : 'Tipp ' + values.date + ' ' + values.player + ' via Website';
+    return commitRows(cfg, kind, [values], message, onStatus);
   }
   function findRun(cfg, sha, tries) {
     if (!sha) return Promise.resolve(null);
@@ -634,7 +682,9 @@
       if (!p || !p.date || now - (p.at || 0) > 4 * 864e5) return false;
       if (p.kind === 'tip' && tips) {
         var r = (tips.rows || []).filter(function (x) { return x.date === p.date && fold(x.player) === fold(p.player); })[0];
-        if (r && fold(r.v) === fold(p.v) && fold(r.h) === fold(p.h) && fold(r.b) === fold(p.b)) return false;
+        // entries of the "other players" form also carry the points typed by hand (pts, null = automatic)
+        var samePts = !('pts' in p) || (isNum(p.pts) ? r && r.points_sheet === p.pts : r && r.points_sheet == null);
+        if (r && fold(r.v) === fold(p.v) && fold(r.h) === fold(p.h) && fold(r.b) === fold(p.b) && samePts) return false;
       }
       if (p.kind === 'menu' && menus) {
         var m = (menus.rows || []).filter(function (x) { return x.date === p.date; })[0];
@@ -747,6 +797,14 @@
     CATS.forEach(function (c) { var s = SHORT[c]; opts[c] = splitOpts(r[s + '_norm']).length ? splitOpts(r[s + '_norm']) : splitOpts(r[s]); });
     return { v: r.v, h: r.h, b: r.b, opts: opts, points: r.points, pending: false };
   }
+  /** Points of per-category hits (rule 9: V 1, H 0.5, B 0.5, all three = full_menu_total). */
+  function scoreHits(sc, hits) {
+    sc = sc || {};
+    var val = function (k, d) { return isNum(sc[k]) ? sc[k] : d; };
+    if (hits.vorspeise && hits.hauptspeise && hits.beilage) return val('full_menu_total', 3);
+    return (hits.vorspeise ? val('vorspeise', 1) : 0) + (hits.hauptspeise ? val('hauptspeise', 0.5) : 0) +
+      (hits.beilage ? val('beilage', 0.5) : 0);
+  }
   /** Per-category hits of a tip against a menu ({cat:[options]}), consistent with engine/rules.py score_tip. */
   function tipHits(ctx, tip, menu) {
     var sc = (ctx.meta && ctx.meta.scoring) || {};
@@ -760,13 +818,8 @@
     // rule 9.6 (generic "Fisch" outside Lent) needs the engine's fish list: trust its points when only that explains them
     var tipH = (tip.opts && tip.opts.hauptspeise) || splitOpts(tip.h);
     if (!hits.hauptspeise && isNum(tip.points) && tipH.some(function (o) { return fold(o) === 'fisch'; })) {
-      var score = function (hh) {
-        if (hh.vorspeise && hh.hauptspeise && hh.beilage) return isNum(sc.full_menu_total) ? sc.full_menu_total : 3;
-        return (hh.vorspeise ? (isNum(sc.vorspeise) ? sc.vorspeise : 1) : 0) + (hh.hauptspeise ? (isNum(sc.hauptspeise) ? sc.hauptspeise : 0.5) : 0) +
-          (hh.beilage ? (isNum(sc.beilage) ? sc.beilage : 0.5) : 0);
-      };
       var withH = { vorspeise: hits.vorspeise, hauptspeise: true, beilage: hits.beilage };
-      if (Math.abs(score(hits) - tip.points) > 1e-9 && Math.abs(score(withH) - tip.points) < 1e-9) hits.hauptspeise = true;
+      if (Math.abs(scoreHits(sc, hits) - tip.points) > 1e-9 && Math.abs(scoreHits(sc, withH) - tip.points) < 1e-9) hits.hauptspeise = true;
     }
     return hits;
   }
@@ -2157,7 +2210,8 @@
       out.appendChild(setCard);
 
       // ---------------- shared submit logic
-      function submit(kind, values, statusEl, btn) {
+      /** doCommit(cfg, onStatus) -> Promise of the commit result; saved(res) runs after the commit and returns the success text. */
+      function submitWith(statusEl, btn, doCommit, saved) {
         var c2 = settings(meta);
         if (!c2.token || !c2.owner || !c2.repo) {
           statusEl.replaceChildren(notice('danger', t('in.noToken')));
@@ -2167,20 +2221,18 @@
         }
         btn.disabled = true;
         var steps = { load: t('in.stepLoad'), save: t('in.stepSave'), retry: t('in.stepRetry') };
-        commitRow(c2, kind, values, function (step, path) {
+        doCommit(c2, function (step, path) {
           statusEl.replaceChildren(notice('info', steps[step] + ' ' + path + ' …'));
         }).then(function (res) {
-          addPending(kind === 'menu'
-            ? { kind: 'menu', date: values.date, v: values.vorspeise, h: values.hauptspeise, b: values.beilage, free: values.status === 'free', at: Date.now() }
-            : { kind: 'tip', date: values.date, player: values.player, v: values.vorspeise, h: values.hauptspeise, b: values.beilage, at: Date.now() });
+          if (res.action === 'none') { statusEl.replaceChildren(notice('info', t('co.nothing'))); return; }
+          var text = saved(res);
           var commit = res.commit || {};
           var actionsUrl = 'https://github.com/' + encodeURIComponent(c2.owner) + '/' + encodeURIComponent(c2.repo) + '/actions';
           var runLink = h('a', { href: actionsUrl, target: '_blank', rel: 'noopener noreferrer' }, t('in.actions'));
           var links = h('p', { class: 'small' },
             commit.html_url && /^https:\/\/github\.com\//.test(commit.html_url) ? h('a', { href: commit.html_url, target: '_blank', rel: 'noopener noreferrer' }, t('in.commit')) : null,
             commit.html_url ? ' · ' : null, runLink);
-          statusEl.replaceChildren(notice('ok', res.action === 'update' ? t('in.updated', { path: res.path }) : t('in.inserted', { path: res.path }),
-            h('div', null, links, h('p', { class: 'small' }, t('in.wait')))));
+          statusEl.replaceChildren(notice('ok', text, h('div', null, links, h('p', { class: 'small' }, t('in.wait')))));
           toast(t('in.okToast'), 'ok');
           findRun(c2, commit.sha, 5).then(function (url) {
             if (url) { runLink.href = url; runLink.textContent = t('in.run'); }
@@ -2188,6 +2240,14 @@
         }).catch(function (e) {
           statusEl.replaceChildren(notice('danger', ghErrorText(e)));
         }).then(function () { btn.disabled = false; });
+      }
+      function submit(kind, values, statusEl, btn) {
+        submitWith(statusEl, btn, function (c2, onStatus) { return commitRow(c2, kind, values, onStatus); }, function (res) {
+          addPending(kind === 'menu'
+            ? { kind: 'menu', date: values.date, v: values.vorspeise, h: values.hauptspeise, b: values.beilage, free: values.status === 'free', at: Date.now() }
+            : { kind: 'tip', date: values.date, player: values.player, v: values.vorspeise, h: values.hauptspeise, b: values.beilage, at: Date.now() });
+          return res.action === 'update' ? t('in.updated', { path: res.path }) : t('in.inserted', { path: res.path });
+        });
       }
       function dishInput(c, id, val) {
         return h('input', { type: 'text', id: id, list: 'dl-' + c, value: val || '', autocomplete: 'off', autocapitalize: 'sentences', enterkeyhint: 'next', maxlength: '120' });
@@ -2335,12 +2395,176 @@
       mount(validateTip);
       if (pre) mount(function () { tipForm.scrollIntoView({ block: 'start' }); });
 
+      // ---------------- (d) tips of the other players: one form, one commit for everyone
+      var others = (meta.players || []).filter(function (p) { return fold(p) !== fold(ctx.me); });
+      if (others.length) out.appendChild(othersForm(others));
+
+      function othersForm(players) {
+        var sc = meta.scoring || {};
+        var maxPts = isNum(sc.full_menu_total) ? sc.full_menu_total : 3;
+        var dlOf = function (d) { return deadlineFor(d, meta.deadline || '12:00'); };
+        var check = function (d) { return coDateCheck(d, romeTodayISO(), Date.now(), isISO(d) ? dlOf(d) : 0, isISO(d) && ctx.r4.free.has(d)); };
+        // default: today once its deadline is over, otherwise the working day before
+        var def = ctx.r4.isWorkday(todayR) && Date.now() >= dlOf(todayR) ? todayR : lastWorkday(addDays(todayR, -1));
+        var cDate = h('input', { type: 'date', id: 'co-date', value: def, max: todayR, required: true });
+        var cWd = h('span', { class: 'muted small' });
+        var cDay = h('div', { 'aria-live': 'polite' });
+        var cStatus = h('div', { class: 'form-status', 'aria-live': 'polite' });
+        var cBtn = h('button', { type: 'submit', class: 'btn primary big' }, t('co.save'));
+        var menuNow = null; // options of the chosen day's menu (points preview)
+        var rows = players.map(function (p, i) {
+          var r = { player: p, inp: {}, stored: null };
+          CATS.forEach(function (c) {
+            r.inp[c] = dishInput(c, 'co-' + i + '-' + SHORT[c]);
+            r.inp[c].setAttribute('aria-label', p + ': ' + catName(c));
+          });
+          r.pts = h('input', { type: 'text', id: 'co-' + i + '-p', inputmode: 'decimal', autocomplete: 'off', maxlength: '5',
+            placeholder: t('co.auto'), 'aria-label': p + ': ' + t('col.points') });
+          r.chips = h('span', { class: 'chips wrap' });
+          r.note = h('div', { class: 'co-note tiny' });
+          r.el = h('div', { class: 'co-player', role: 'group', 'aria-label': p },
+            h('div', { class: 'co-head' }, h('strong', null, p), r.chips),
+            h('div', { class: 'co-dishes' }, CATS.map(function (c) { return h('label', { class: 'co-line' }, catBadge(c), r.inp[c]); })),
+            h('label', { class: 'co-line co-pts' }, h('span', { class: 'small muted' }, t('col.points')), r.pts),
+            r.note);
+          // 'V / H / B' pasted (or typed) into the first field -> split into the three fields
+          r.inp.vorspeise.addEventListener('input', function () {
+            var parts = parseTipLine(r.inp.vorspeise.value);
+            if (parts) CATS.forEach(function (c, j) { r.inp[c].value = parts[j]; });
+          });
+          CATS.forEach(function (c) { r.inp[c].addEventListener('input', function () { syncPts(r); refreshRow(r); }); });
+          r.pts.addEventListener('input', function () { r.ptsTouched = true; refreshRow(r); });
+          return r;
+        });
+        var ptsText = function (x) { return x === null ? '' : String(x).replace('.', ','); };
+        /* The stored official points belong to the stored tip: once its dishes are changed (and the points field was
+         * not touched) the field goes back to automatic, and comes back if the dishes are restored. */
+        function syncPts(r) {
+          var st = r.stored;
+          if (r.ptsTouched || !st || st.pts === null) return;
+          var same = fold(st.v) === fold(r.inp.vorspeise.value) && fold(st.h) === fold(r.inp.hauptspeise.value) && fold(st.b) === fold(r.inp.beilage.value);
+          r.pts.value = same ? ptsText(st.pts) : '';
+        }
+        function stateOf(r) {
+          var s = { v: clean(r.inp.vorspeise.value), h: clean(r.inp.hauptspeise.value), b: clean(r.inp.beilage.value),
+            pts: parsePoints(r.pts.value, maxPts) };
+          s.dish = !!(s.v || s.h || s.b);
+          s.bad = typeof s.pts === 'number' && isNaN(s.pts);
+          s.empty = !s.dish && s.pts === null;
+          var st = r.stored;
+          s.same = !!st && fold(st.v) === fold(s.v) && fold(st.h) === fold(s.h) && fold(st.b) === fold(s.b) && st.pts === s.pts;
+          return s;
+        }
+        function refreshRow(r) {
+          var s = stateOf(r), chips = [], notes = [];
+          if (r.stored) chips.push(chip(r.stored.pending ? t('pending.chip') : t('co.stored'), r.stored.pending ? 'info' : 'ok'));
+          if (r.stored && !s.empty && !s.same) chips.push(chip(t('co.changed'), 'accent'));
+          if (s.dish && menuNow) {
+            var opts = {};
+            CATS.forEach(function (c) { opts[c] = canonOpts(ctx, c, r.inp[c].value); });
+            var hits = tipHits(ctx, { opts: opts }, menuNow), auto = scoreHits(sc, hits);
+            if (!isNum(s.pts) || Math.abs(s.pts - auto) > 1e-9) chips.push(chip(t('co.preview', { x: fmtPts(auto) }), 'muted-chip'));
+            notes.push(h('p', { class: 'muted' }, CATS.map(function (c) { return catShort(c) + (hits[c] ? ' ✓' : ' ✗'); }).join(' · ')));
+          }
+          if (isNum(s.pts)) chips.push(chip(t('co.official', { x: fmtPts(s.pts) }), 'accent'));
+          if (s.bad) notes.push(h('p', { class: 'warn-text' }, t('co.badPts', { max: fmtPts(maxPts) })));
+          else if (!s.dish && isNum(s.pts)) notes.push(h('p', { class: 'muted' }, t('co.ptsOnly')));
+          if (s.empty && r.stored) notes.push(h('p', { class: 'muted' }, t('co.keep')));
+          CATS.forEach(function (c) {
+            var list = (ctx.dishes || {})[c] || [];
+            var unknown = canonOpts(ctx, c, r.inp[c].value).filter(function (o) { return !list.some(function (x) { return fold(x) === fold(o); }); });
+            if (list.length && unknown.length) notes.push(h('p', { class: 'muted' }, t('in.unknownDish', { cat: catName(c), dish: unknown.join(' / ') })));
+          });
+          r.chips.replaceChildren.apply(r.chips, chips);
+          r.note.replaceChildren.apply(r.note, notes);
+        }
+        function storedOf(p, d) {
+          var pf = fold(p);
+          var pe = ctx.pending.filter(function (x) { return x.kind === 'tip' && x.date === d && fold(x.player) === pf; })[0];
+          if (pe) return { v: pe.v || '', h: pe.h || '', b: pe.b || '', pts: isNum(pe.pts) ? pe.pts : null, pending: true };
+          var row = ((ctx.tips && ctx.tips.rows) || []).filter(function (x) { return x.date === d && fold(x.player) === pf; })[0];
+          return row ? { v: row.v || '', h: row.h || '', b: row.b || '', pts: isNum(row.points_sheet) ? row.points_sheet : null, pending: false } : null;
+        }
+        function dayText(chk) {
+          if (chk === 'bad') return t('in.badDate');
+          if (chk === 'weekend') return t('in.weekendBlocked');
+          if (chk === 'free') return t('co.free');
+          if (chk === 'future') return t('co.future');
+          return t('co.open', { time: meta.deadline || '12:00' });
+        }
+        function loadDay() {
+          var d = cDate.value, chk = check(d);
+          menuNow = null;
+          if (chk === 'ok') {
+            var m = menuOf(ctx, d);
+            if (m && m.opts && (m.status === 'served' || m.status === 'unknown')) {
+              menuNow = m.opts;
+              cDay.replaceChildren(notice('info', t('co.menu', { menu: [m.raw.v, m.raw.h, m.raw.b].map(function (x) { return x || '–'; }).join(' / ') })));
+            } else {
+              cDay.replaceChildren(notice('warn', t('co.noMenu')));
+            }
+          } else {
+            cDay.replaceChildren(notice(chk === 'open' ? 'warn' : 'danger', dayText(chk)));
+          }
+          rows.forEach(function (r) {
+            r.stored = chk === 'ok' ? storedOf(r.player, d) : null;
+            r.ptsTouched = false;
+            var st = r.stored || { v: '', h: '', b: '', pts: null };
+            r.inp.vorspeise.value = st.v; r.inp.hauptspeise.value = st.h; r.inp.beilage.value = st.b;
+            r.pts.value = ptsText(st.pts);
+            refreshRow(r);
+          });
+        }
+        var form = h('form', {
+          class: 'card form', id: 'form-others', novalidate: true, onsubmit: function (e) {
+            e.preventDefault();
+            var d = cDate.value, chk = check(d);
+            if (chk !== 'ok') { cStatus.replaceChildren(notice('danger', dayText(chk))); return; }
+            var list = [], bad = [];
+            rows.forEach(function (r) {
+              var s = stateOf(r);
+              if (s.bad) bad.push(r.player);
+              else if (!s.empty && !s.same) list.push(tipValues(d, r.player, s.v, s.h, s.b, s.pts));
+            });
+            if (bad.length) { cStatus.replaceChildren(notice('danger', bad.join(', ') + ': ' + t('co.badPts', { max: fmtPts(maxPts) }))); return; }
+            if (!list.length) { cStatus.replaceChildren(notice('info', t('co.nothing'))); return; }
+            var message = 'Tipps ' + d + ' ' + list.map(function (v) { return v.player; }).join(', ') + ' via Website';
+            submitWith(cStatus, cBtn, function (c2, onStatus) {
+              return commitRows(c2, 'tip', list, message, onStatus, { skipUnchanged: true });
+            }, function (res) {
+              var at = Date.now();
+              list.forEach(function (v) {
+                addPending({ kind: 'tip', date: v.date, player: v.player, v: v.vorspeise, h: v.hauptspeise, b: v.beilage,
+                  pts: v.points_sheet === '' ? null : Number(v.points_sheet), at: at });
+              });
+              ctx.pending = pendingAll();
+              loadDay();
+              return t('co.saved', { n: list.length, path: res.path });
+            });
+          }
+        },
+          h('h2', { class: 'card-title' }, t('co.title')),
+          h('p', { class: 'muted small' }, t('co.sub')),
+          h('label', { class: 'field' }, h('span', null, t('col.date')), cDate, cWd),
+          cDay,
+          h('p', { class: 'muted tiny' }, t('co.paste')),
+          rows.map(function (r) { return r.el; }),
+          cBtn, cStatus,
+          h('p', { class: 'muted tiny' }, t('co.newPlayer')));
+        cDate.addEventListener('input', loadDay);
+        cDate.addEventListener('change', loadDay);
+        weekdayHint(cDate, cWd);
+        loadDay();
+        return form;
+      }
+
       // pending list
       if (ctx.pending.length) {
         out.appendChild(card(t('pending.title'), [
           h('ul', { class: 'plain pending-list' }, ctx.pending.map(function (p) {
             return h('li', null, h('strong', null, (p.kind === 'menu' ? t('pending.menu') : t('pending.tip', { player: p.player })) + ' ' + fmtWdDM(p.date) + ': '),
-              p.free ? statusName('free') : [p.v, p.h, p.b].map(function (s) { return s || '–'; }).join(' / '));
+              p.free ? statusName('free') : [p.v, p.h, p.b].map(function (s) { return s || '–'; }).join(' / '),
+              isNum(p.pts) ? ' (' + t('co.official', { x: fmtPts(p.pts) }) + ')' : null);
           })),
           h('p', { class: 'muted small' }, t('pending.explain')),
           h('button', { type: 'button', class: 'btn small', onclick: function () { store.set('pending', null); rerender(); } }, t('pending.clear'))
@@ -2443,6 +2667,8 @@
     utf8ToB64: utf8ToB64, b64ToUtf8: b64ToUtf8, R4: R4, romeTodayISO: romeTodayISO, romeToUtc: romeToUtc,
     deadlineFor: deadlineFor, commitRow: commitRow, fold: fold, isoWeek: isoWeek, decryptEnvelope: decryptEnvelope,
     tipHits: tipHits, canonPlayer: canonPlayer,
+    upsertCsvMany: upsertCsvMany, commitRows: commitRows, parseTipLine: parseTipLine, parsePoints: parsePoints,
+    coDateCheck: coDateCheck, scoreHits: scoreHits,
     // shared helpers for the Piano (docs/piano.js) – same look, same data loader (decryption included)
     CATS: CATS, h: h, appendKids: appendKids, icon: icon, addIcons: addIcons, notice: notice, card: card, chip: chip,
     segmented: segmented, selectEl: selectEl, table: table, emptyState: emptyState, bar: bar, toast: toast,

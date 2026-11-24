@@ -111,7 +111,7 @@
     'race.col.winOwn': 'Siegchance (eigene Form)', 'race.me.model': 'Ich mit dem Modell', 'race.me.own': 'Ich wie bisher',
     'race.p2w': 'In {d} Spieltagen vorne', 'race.pEnd': 'Platz 1 am Saisonende', 'race.pLeader': 'Am Ende vor {p}',
     'race.needed': 'Nötig: {x} Pkt/Tag (Modell: {m})', 'race.newbie': '{p}: zu wenige Tage – simuliert als durchschnittlicher Spieler.',
-    'race.adj': '{p}: {x} Startpunkte ({date})',
+    'race.adj': '{p}: {x} Punkte ohne Tipp – Start/Korrektur ({date})',
 
     'bt.empty.title': 'Noch kein Backtest', 'bt.empty.text': 'backtest.json fehlt – sie wird von der GitHub Action erzeugt.',
     'bt.title': 'Backtest', 'bt.sub': 'Wie hätte das Modell gespielt? Walk-forward: für jeden Tag nur mit Daten davor, unter Regel 4.',
@@ -173,6 +173,22 @@
     'pending.chip': 'wird verarbeitet', 'pending.title': 'Noch nicht verarbeitet', 'pending.menu': 'Menü', 'pending.tip': 'Tipp {player}',
     'pending.explain': 'Diese Eingaben sind im Repository, aber die Website-Daten sind noch nicht neu berechnet. Sie verschwinden hier automatisch.',
     'pending.clear': 'Liste leeren',
+
+    'co.title': 'Tipps der Mitspieler',
+    'co.sub': 'Die Tipps der anderen für einen Tag eintragen – alle mit einem Speichern (ein Commit). Die Punkte rechnet die Pipeline aus dem Menü; eine Zahl bei „Punkte“ gilt als offizieller Wert (wie im Excel). Leere Zeilen werden übersprungen.',
+    'co.paste': 'Tipp: „V / H / B“ (z. B. aus dem Chat) ins erste Feld einfügen – wird automatisch aufgeteilt.',
+    'co.save': 'Alle speichern', 'co.auto': 'auto',
+    'co.menu': 'Menü: {menu}', 'co.noMenu': 'Das Menü dieses Tages fehlt noch – die Punkte rechnet die Pipeline, sobald es eingetragen ist.',
+    'co.future': 'Dieser Tag liegt in der Zukunft – die Tipps der anderen erst nach dem Tippschluss eintragen (Regel 6).',
+    'co.open': 'Tippschluss heute um {time} – die Tipps der anderen erst danach eintragen (Regel 6).',
+    'co.free': 'Freier Tag – kein Tippspiel.',
+    'co.stored': 'gespeichert', 'co.changed': 'geändert', 'co.preview': '≈ {x} P.', 'co.official': '{x} P. offiziell',
+    'co.badPts': 'Punkte: 0 bis {max}, in Schritten von 0,5.',
+    'co.ptsOnly': 'Nur Punkte, ohne Tipp: zählen in der Rangliste, nicht in der Statistik.',
+    'co.keep': 'Leer gelassen: der gespeicherte Tipp bleibt.',
+    'co.nothing': 'Nichts zu speichern – keine neuen oder geänderten Zeilen.',
+    'co.saved': 'Gespeichert ✓ – {n} Zeile(n) in {path}, ein Commit.',
+    'co.newPlayer': 'Neuer Mitspieler? Den Namen oben bei „Mein Tipp“ im Feld „Spieler“ eintragen.',
 
     // ---- Piano (Tagesplan, Training, Abendessen, Gewicht) – Daten nur auf diesem Gerät
     'piano.tab.oggi': 'Mein Tag', 'piano.tab.training': 'Training', 'piano.tab.corpo': 'Körper', 'piano.tab.altro': 'Mehr',
@@ -408,7 +424,7 @@
     'race.col.winOwn': 'Prob. vittoria (forma propria)', 'race.me.model': 'Io con il modello', 'race.me.own': 'Io come finora',
     'race.p2w': 'In testa fra {d} giorni di gioco', 'race.pEnd': '1° a fine stagione', 'race.pLeader': 'Davanti a {p} alla fine',
     'race.needed': 'Servono: {x} pt/giorno (modello: {m})', 'race.newbie': '{p}: troppo pochi giorni – simulato come giocatore medio.',
-    'race.adj': '{p}: {x} punti di partenza ({date})',
+    'race.adj': '{p}: {x} punti senza tipp – partenza/correzione ({date})',
 
     'bt.empty.title': 'Ancora nessun backtest', 'bt.empty.text': 'Manca backtest.json – viene generato dalla GitHub Action.',
     'bt.title': 'Backtest', 'bt.sub': 'Come avrebbe giocato il modello? Walk-forward: per ogni giorno solo dati precedenti, con la regola 4.',
@@ -470,6 +486,22 @@
     'pending.chip': 'in elaborazione', 'pending.title': 'Non ancora elaborati', 'pending.menu': 'Menù', 'pending.tip': 'Tipp {player}',
     'pending.explain': 'Questi inserimenti sono nel repository, ma i dati del sito non sono ancora ricalcolati. Spariscono da qui automaticamente.',
     'pending.clear': 'Svuota elenco',
+
+    'co.title': 'Giocate dei colleghi',
+    'co.sub': 'Inserisci le giocate degli altri per un giorno – tutte con un solo salvataggio (un commit). I punti li calcola la pipeline dal menù; un numero in «Punti» vale come punteggio ufficiale (come nell\'Excel). Le righe vuote vengono saltate.',
+    'co.paste': 'Suggerimento: incolla «V / H / B» (es. dalla chat) nel primo campo – viene diviso da solo.',
+    'co.save': 'Salva tutti', 'co.auto': 'auto',
+    'co.menu': 'Menù: {menu}', 'co.noMenu': 'Manca ancora il menù di questo giorno – i punti li calcola la pipeline appena viene inserito.',
+    'co.future': 'Questo giorno è nel futuro – le giocate degli altri si inseriscono solo dopo la chiusura (regola 6).',
+    'co.open': 'Chiusura oggi alle {time} – le giocate degli altri si inseriscono solo dopo (regola 6).',
+    'co.free': 'Giorno libero – niente Tippspiel.',
+    'co.stored': 'salvato', 'co.changed': 'modificato', 'co.preview': '≈ {x} p.', 'co.official': '{x} p. ufficiali',
+    'co.badPts': 'Punti: da 0 a {max}, a passi di 0,5.',
+    'co.ptsOnly': 'Solo punti, senza tipp: contano in classifica, non nelle statistiche.',
+    'co.keep': 'Lasciata vuota: il tipp salvato resta.',
+    'co.nothing': 'Niente da salvare – nessuna riga nuova o modificata.',
+    'co.saved': 'Salvato ✓ – {n} riga/e in {path}, un solo commit.',
+    'co.newPlayer': 'Un nuovo giocatore? Scrivi il nome sopra in «Il mio tipp», nel campo «Giocatore».',
 
     // ---- Piano (giornata, allenamento, cene, peso) – dati solo su questo dispositivo
     'piano.tab.oggi': 'Oggi', 'piano.tab.training': 'Training', 'piano.tab.corpo': 'Corpo', 'piano.tab.altro': 'Altro',

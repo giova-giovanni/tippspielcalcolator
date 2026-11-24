@@ -314,6 +314,20 @@ details.settings > summary::after { content: "▾"; margin-left: auto; color: va
 details.settings[open] > summary::after { content: "▴"; }
 .inline-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 
+/* Eingabe – tips of the other players (one block per player) */
+.co-player { border-top: 1px solid var(--border); padding-top: 12px; }
+.co-player > * + * { margin-top: 8px; }
+.co-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-height: 28px; }
+.co-head strong { font-size: 16px; margin-right: auto; overflow-wrap: anywhere; }
+.co-dishes { display: grid; gap: 8px; }
+.co-line { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; align-items: center; min-width: 0; }
+.co-pts { grid-template-columns: auto minmax(0, 7em); justify-content: start; }
+.co-note:empty { display: none; }
+.co-note > * + * { margin-top: 2px; }
+@media (min-width: 760px) {
+  .co-dishes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
 /* segmented control */
 .seg { display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: var(--surface-2); width: 100%; }
 .seg-btn {
