@@ -20,7 +20,8 @@ const MINI = {
   dishes: {
     vorspeise: {
       'Pasta Rossa': { kcal: 500, prot: 15, tags: ['carbo'] },
-      'Pasta Panna': { kcal: 700, prot: 20, tags: ['cremoso', 'carbo'] }
+      'Pasta Panna': { kcal: 700, prot: 20, tags: ['cremoso', 'carbo'] },
+      'Carbonara': { kcal: 750, prot: 24, tags: ['cremoso', 'carne_grassa', 'carbo'] }
     },
     hauptspeise: {
       'Pollo': { kcal: 250, prot: 40, tags: ['magro'] },
@@ -96,47 +97,77 @@ test('dish lookup on the real table: exact, rules, category mean', () => {
 });
 
 // ------------------------------------------------------------------ lunch
-test('lunch estimate: portions and manual entry', () => {
+test('lunch estimate: solo primo, secondo + contorno, manual entry, older entries', () => {
   const picks = { vorspeise: 'Pasta Rossa', hauptspeise: 'Pollo', beilage: 'Riso' };
-  assert.equal(C.lunchEstimate(idx, picks, 'all').kcal, 1000);
-  assert.equal(C.lunchEstimate(idx, picks, 'noPrimo').kcal, 500);
+  const primo = C.lunchEstimate(idx, picks, 'primo');
+  assert.deepEqual([primo.kcal, primo.prot, primo.portion, primo.partial], [500, 15, 'primo', true]);
+  assert.deepEqual(primo.items.map((it) => it.factor), [1, 0, 0]);
+  const sec = C.lunchEstimate(idx, picks, 'secondo');
+  assert.deepEqual([sec.kcal, sec.prot], [500, 45]);
+  assert.deepEqual(sec.items.map((it) => it.factor), [0, 1, 1]);
+  assert.equal(C.lunchEstimate(idx, picks).portion, 'secondo'); // no choice -> secondo + contorno
+  assert.equal(C.lunchEstimate(idx, picks, 'noPrimo').portion, 'secondo'); // older entry, same meaning
+  // older entries with the first course are still read
+  assert.deepEqual([C.lunchEstimate(idx, picks, 'all').kcal, C.lunchEstimate(idx, picks, 'all').prot], [1000, 60]);
   assert.equal(C.lunchEstimate(idx, picks, 'halfPrimo').kcal, 750);
   assert.equal(C.lunchEstimate(idx, picks, 'bis').kcal, 1500);
-  assert.equal(C.lunchEstimate(idx, picks, 'all').prot, 60);
+  assert.equal(C.lunchEstimate(idx, picks, 'all').partial, false);
   const e = C.lunchEstimate(idx, picks, 'elsewhere', { kcal: '900' });
   assert.deepEqual([e.kcal, e.prot, e.protAssumed, e.manual], [900, C.ELSEWHERE_PROT, true, true]);
   assert.equal(C.lunchEstimate(idx, picks, 'elsewhere', { kcal: 900, prot: '45' }).prot, 45);
   assert.equal(C.lunchEstimate(idx, picks, 'elsewhere', {}).unknown, true); // no kcal yet
-  const partial = C.lunchEstimate(idx, { vorspeise: 'Pasta Rossa', hauptspeise: null, beilage: 'Riso' }, 'all');
-  assert.equal(partial.items.length, 2);
-  const unk = C.lunchEstimate(idx, null, 'all');
+  const partial = C.lunchEstimate(idx, { vorspeise: 'Pasta Rossa', hauptspeise: null, beilage: 'Riso' }, 'secondo');
+  assert.deepEqual([partial.items.length, partial.kcal], [2, 250]);
+  const unk = C.lunchEstimate(idx, null, 'primo');
   assert.equal(unk.unknown, true);
-  assert.equal(unk.kcal, idx.means.vorspeise.kcal + idx.means.hauptspeise.kcal + idx.means.beilage.kcal);
-  assert.equal(C.lunchEstimate(idx, { vorspeise: 'Qwerty' }, 'all').generic, true);
+  assert.equal(unk.kcal, idx.means.vorspeise.kcal);
+  assert.equal(C.lunchEstimate(idx, null, 'all').kcal, idx.means.vorspeise.kcal + idx.means.hauptspeise.kcal + idx.means.beilage.kcal);
+  assert.equal(C.lunchEstimate(idx, { vorspeise: 'Qwerty' }, 'primo').generic, true);
+  assert.equal(C.lunchEstimate(idx, { vorspeise: 'Qwerty', hauptspeise: 'Pollo' }, 'secondo').generic, false); // not eaten
+  assert.deepEqual([C.normPortion('noPrimo'), C.normPortion('elsewhere'), C.normPortion('xyz'), C.normPortion(undefined)], ['secondo', 'elsewhere', null, null]);
+  assert.deepEqual(['all', 'noPrimo', 'primo'].map(C.isLegacyPortion), [true, false, false]);
 });
 
-test('lunch level: red, green, yellow rules', () => {
-  const lv = (picks, portion) => C.classifyLunch(C.lunchEstimate(idx, picks, portion || 'all'));
-  // red by kcal (700 + 500 + 400 = 1600) – also matches the structural rules
-  assert.equal(lv({ vorspeise: 'Pasta Panna', hauptspeise: 'Salsiccia', beilage: 'Patatine' }).level, 'red');
-  // red: breaded main + fried side, only 1350 kcal
-  const fc = lv({ vorspeise: 'Pasta Rossa', hauptspeise: 'Cotoletta', beilage: 'Patatine' });
-  assert.deepEqual([fc.level, fc.reasons], ['red', ['fried_combo']]);
-  // red: creamy first + fatty meat, 1280 kcal
-  const cf = lv({ vorspeise: 'Pasta Panna', hauptspeise: 'Salsiccia', beilage: 'Insalata' });
-  assert.deepEqual([cf.level, cf.reasons], ['red', ['creamy_fatty']]);
-  // ... but not when the first course was skipped
-  assert.equal(lv({ vorspeise: 'Pasta Panna', hauptspeise: 'Salsiccia', beilage: 'Insalata' }, 'noPrimo').level, 'green');
-  // green: <= 1150 and nothing fried/breaded
-  assert.equal(lv({ vorspeise: 'Pasta Rossa', hauptspeise: 'Pollo', beilage: 'Riso' }).level, 'green');
-  // yellow: <= 1150 but breaded
-  assert.deepEqual(lv({ vorspeise: 'Pasta Rossa', hauptspeise: 'Cotoletta', beilage: 'Insalata' }).reasons, ['fried']);
-  // yellow: between the thresholds
-  assert.equal(lv({ vorspeise: 'Pasta Panna', hauptspeise: 'Pollo', beilage: 'Riso' }).level, 'yellow'); // 1200
-  assert.equal(C.classifyLunch(C.lunchEstimate(idx, null, 'all')).level, 'yellow'); // unknown menu
-  // manual kcal: thresholds only, boundaries included
+test('lunch level: one or two courses (650 / 850 kcal), older entries with all three (1150 / 1450)', () => {
+  const lv = (picks, portion) => C.classifyLunch(C.lunchEstimate(idx, picks, portion));
+  assert.deepEqual(C.lunchLimits(C.lunchEstimate(idx, null, 'primo')), { red: 850, green: 650 });
+  // solo primo
+  assert.equal(lv({ vorspeise: 'Pasta Rossa' }, 'primo').level, 'green'); // 500
+  assert.deepEqual(lv({ vorspeise: 'Pasta Panna' }, 'primo').reasons, ['kcal_mid']); // 700, creamy but no fatty meat
+  const carb = lv({ vorspeise: 'Carbonara' }, 'primo'); // creamy with fatty meat in the dish itself
+  assert.deepEqual([carb.level, carb.reasons], ['red', ['creamy_fatty']]);
+  // secondo + contorno
+  const fc = lv({ hauptspeise: 'Cotoletta', beilage: 'Patatine' }, 'secondo'); // 850 + breaded + fried
+  assert.deepEqual([fc.level, fc.reasons], ['red', ['kcal_high', 'fried_combo']]);
+  assert.equal(lv({ hauptspeise: 'Pollo', beilage: 'Insalata' }, 'secondo').level, 'green'); // 330
+  assert.deepEqual(lv({ hauptspeise: 'Cotoletta', beilage: 'Insalata' }, 'secondo').reasons, ['fried']); // 530, breaded
+  assert.equal(lv({ hauptspeise: 'Salsiccia', beilage: 'Riso' }, 'secondo').level, 'yellow'); // 750
+  // the course not eaten never counts: creamy first + fatty meat only matters when both are eaten
+  const menu = { vorspeise: 'Pasta Panna', hauptspeise: 'Salsiccia', beilage: 'Insalata' };
+  assert.equal(lv(menu, 'secondo').level, 'green'); // 580
+  assert.deepEqual(lv(menu, 'all').reasons, ['creamy_fatty']); // older entry, all three
+  // older entries: old thresholds
+  assert.equal(lv({ vorspeise: 'Pasta Rossa', hauptspeise: 'Pollo', beilage: 'Riso' }, 'all').level, 'green'); // 1000
+  assert.equal(lv({ vorspeise: 'Pasta Panna', hauptspeise: 'Pollo', beilage: 'Riso' }, 'all').level, 'yellow'); // 1200
+  assert.equal(C.classifyLunch(C.lunchEstimate(idx, null, 'secondo')).level, 'yellow'); // unknown menu
+  // manual kcal (eaten elsewhere): thresholds of one or two courses, boundaries included
   const man = (k) => C.lunchLevel(C.lunchEstimate(idx, null, 'elsewhere', { kcal: k }));
-  assert.deepEqual([man(1450), man(1449), man(1151), man(1150)], ['red', 'yellow', 'yellow', 'green']);
+  assert.deepEqual([man(850), man(849), man(651), man(650)], ['red', 'yellow', 'yellow', 'green']);
+});
+
+test('lunch choices: suggestion = fewer kcal, more protein, nothing fried or fatty', () => {
+  const a = C.lunchChoices(idx, { vorspeise: 'Pasta Rossa', hauptspeise: 'Pollo', beilage: 'Riso' });
+  assert.deepEqual([a.primo.est.kcal, a.secondo.est.kcal, a.secondo.est.prot], [500, 500, 45]);
+  assert.equal(a.suggested, 'secondo'); // same kcal, three times the protein
+  const b = C.lunchChoices(idx, { vorspeise: 'Pasta Rossa', hauptspeise: 'Cotoletta', beilage: 'Patatine' });
+  assert.equal(b.suggested, 'primo'); // breaded + fried side
+  assert.equal(b.secondo.cls.level, 'red');
+  const c = C.lunchChoices(idx, { vorspeise: null, hauptspeise: 'Salsiccia', beilage: 'Riso' });
+  assert.deepEqual([c.primo.available, c.secondo.available, c.suggested], [false, true, 'secondo']);
+  const d = C.lunchChoices(idx, { vorspeise: 'Pasta Rossa', hauptspeise: null, beilage: null });
+  assert.deepEqual([d.primo.available, d.secondo.available, d.suggested], [true, false, 'primo']);
+  const u = C.lunchChoices(idx, null); // menu unknown: both possible (category means)
+  assert.ok(u.primo.available && u.secondo.available && u.suggested);
 });
 
 // ------------------------------------------------------------------ dinner
@@ -146,6 +177,19 @@ test('dinner level follows the lunch, one level up on training days', () => {
   assert.equal(C.dinnerLevel('yellow', true), 'green');
   assert.equal(C.dinnerLevel('green', true), 'green');
   assert.equal(C.dinnerLevel('???', false), 'yellow');
+});
+
+test('pasta as the whole lunch: no full carb portion again in the evening (except after training)', () => {
+  const picks = { vorspeise: 'Pasta Rossa', hauptspeise: 'Pollo', beilage: 'Riso' };
+  assert.equal(C.carbLunch(C.lunchEstimate(idx, picks, 'primo')), true);
+  assert.equal(C.carbLunch(C.lunchEstimate(idx, picks, 'secondo')), false);
+  assert.equal(C.carbLunch(C.lunchEstimate(idx, picks, 'elsewhere', { kcal: 600 })), false);
+  assert.equal(C.carbLunch(C.lunchEstimate(idx, null, 'primo')), true); // unknown first course: pasta & co.
+  assert.equal(C.dinnerLevel('green', false, true), 'yellow');
+  assert.equal(C.dinnerLevel('green', false, false), 'green');
+  assert.equal(C.dinnerLevel('green', true, true), 'green'); // training day
+  assert.equal(C.dinnerLevel('yellow', true, true), 'green');
+  assert.equal(C.dinnerLevel('red', false, true), 'red');
 });
 
 test('dinner budget and protein gap', () => {

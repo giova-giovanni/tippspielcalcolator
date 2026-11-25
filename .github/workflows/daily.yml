@@ -27,8 +27,10 @@ jobs:
     outputs:
       sha: ${{ steps.push.outputs.sha }}
     steps:
+      # Stand des Branches beim Start (nicht der auslösende Commit), wie in on-data.yml.
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref }}
           fetch-depth: 0
 
       # Ersatzlauf: nichts tun, wenn today.json heute (Europe/Rome) schon neu geschrieben wurde –

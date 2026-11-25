@@ -39,8 +39,13 @@ jobs:
     outputs:
       sha: ${{ steps.push.outputs.sha }}
     steps:
+      # Stand des Branches beim Start, nicht der auslösende Commit: ein wartender Lauf (Eingabe kurz
+      # nach einer anderen) rechnet so mit dem Commit des vorigen Bot-Laufs weiter. Mit dem auslösenden
+      # Commit kollidierte sein Ergebnis mit dem des Bots, wurde verworfen, und kein weiterer Lauf kam
+      # (Bot-Pushes lösen keine Workflows aus) – so fehlte am 25.11.2026 das Menü des Tages.
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref }}
           fetch-depth: 0
 
       - uses: actions/setup-python@v5

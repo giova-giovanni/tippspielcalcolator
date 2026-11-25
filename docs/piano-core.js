@@ -25,10 +25,25 @@
     age: [14, 100], heightCm: [120, 230], kg: [35, 350], proteinG: [40, 300],
     breakfastKcal: [0, 1500], breakfastProt: [0, 100], waistCm: [40, 250]
   };
+  /** level thresholds (kcal): all three courses (older entries) vs. one or two courses */
   var LUNCH = { red: 1450, green: 1150 };
-  /** factor of the Vorspeise for "what I really had" (Hauptspeise and Beilage always 1) */
-  var PORTIONS = { all: 1, noPrimo: 0, halfPrimo: 0.5, bis: 2 };
-  var PORTION_IDS = ['all', 'noPrimo', 'halfPrimo', 'bis', 'elsewhere'];
+  var LUNCH_PART = { red: 850, green: 650 };
+  /**
+   * "What I really had" -> factor per course. At lunch it is either the first course alone (primo) or
+   * main course + side (secondo + contorno), never all three. all / noPrimo / halfPrimo / bis are
+   * older entries, still read (noPrimo = secondo).
+   */
+  var PORTIONS = {
+    primo: { vorspeise: 1, hauptspeise: 0, beilage: 0 },
+    secondo: { vorspeise: 0, hauptspeise: 1, beilage: 1 },
+    all: { vorspeise: 1, hauptspeise: 1, beilage: 1 },
+    noPrimo: { vorspeise: 0, hauptspeise: 1, beilage: 1 },
+    halfPrimo: { vorspeise: 0.5, hauptspeise: 1, beilage: 1 },
+    bis: { vorspeise: 2, hauptspeise: 1, beilage: 1 }
+  };
+  /** choices offered in the app */
+  var PORTION_IDS = ['primo', 'secondo', 'elsewhere'];
+  var LEGACY_PORTIONS = ['all', 'noPrimo', 'halfPrimo', 'bis'];
   var ELSEWHERE_PROT = 30;
   var EXTRAS = { yogurt: { id: 'yogurt', kcal: 100, prot: 15 }, frutto: { id: 'frutto', kcal: 80, prot: 1 } };
   var EXTRA_MIN = 150;
@@ -185,28 +200,35 @@
   }
 
   // ---------------------------------------------------------------- lunch
+  /** Stored choice -> one of PORTIONS / 'elsewhere'; noPrimo (older entries) = secondo; anything else null. */
+  function normPortion(p) {
+    if (p === 'noPrimo') return 'secondo';
+    return p === 'elsewhere' || Object.prototype.hasOwnProperty.call(PORTIONS, p) ? p : null;
+  }
+  function isLegacyPortion(p) { return LEGACY_PORTIONS.indexOf(p) >= 0 && p !== 'noPrimo'; }
   /**
    * Estimate of the lunch actually eaten.
    * picks: {vorspeise, hauptspeise, beilage} (dish names, null = no dish in that category);
-   * portion: all | noPrimo | halfPrimo | bis (= double Vorspeise) | elsewhere (manual kcal/prot).
+   * portion: primo (first course only) | secondo (main course + side) | elsewhere (manual kcal/prot) |
+   * older entries all | noPrimo | halfPrimo | bis. Without a valid portion: secondo.
    * picks === null means "menu unknown": category means, level yellow by default.
    */
   function lunchEstimate(idx, picks, portion, manual) {
-    portion = PORTION_IDS.indexOf(portion) >= 0 ? portion : 'all';
+    portion = normPortion(portion) || 'secondo';
     if (portion === 'elsewhere') {
       var mk = parseNum(manual && manual.kcal), mp = parseNum(manual && manual.prot);
       if (isNum(mk) && mk >= 0) {
         return {
-          portion: portion, items: [], manual: true, unknown: false, generic: false,
+          portion: portion, items: [], manual: true, unknown: false, generic: false, partial: true,
           kcal: Math.round(mk), prot: isNum(mp) && mp >= 0 ? Math.round(mp) : ELSEWHERE_PROT, protAssumed: !(isNum(mp) && mp >= 0)
         };
       }
       // no kcal entered yet: behave like an unknown menu
-      var u = lunchEstimate(idx, null, 'all');
+      var u = lunchEstimate(idx, null, 'secondo');
       u.portion = portion;
       return u;
     }
-    var fV = PORTIONS[portion];
+    var fac = PORTIONS[portion];
     var items = [], kcal = 0, prot = 0, generic = false, unknown = picks === null || picks === undefined;
     CATS.forEach(function (c) {
       var info;
@@ -217,37 +239,81 @@
         info = picks[c] ? dishInfo(idx, c, picks[c]) : null;
       }
       if (!info) return;
-      var f = c === 'vorspeise' ? fV : 1;
+      var f = fac[c];
       items.push({ cat: c, name: info.name, kcal: info.kcal, prot: info.prot, tags: info.tags, source: info.source, factor: f });
       kcal += info.kcal * f;
       prot += info.prot * f;
-      if (info.source === 'default') generic = true;
+      if (info.source === 'default' && f > 0) generic = true;
     });
-    return { portion: portion, items: items, kcal: Math.round(kcal), prot: Math.round(prot), generic: generic, unknown: unknown, manual: false };
+    return {
+      portion: portion, items: items, kcal: Math.round(kcal), prot: Math.round(prot), generic: generic, unknown: unknown,
+      manual: false, partial: portion !== 'all', eaten: items.some(function (it) { return it.factor > 0; })
+    };
   }
   function hasTag(it, tag) { return !!(it && it.tags && it.tags.indexOf(tag) >= 0); }
   function friedOrBreaded(it) { return hasTag(it, 'fritto') || hasTag(it, 'impanato'); }
+  /** kcal thresholds of an estimate: all three courses (older entries) or one/two courses. */
+  function lunchLimits(est) { return est && est.portion === 'all' ? LUNCH : LUNCH_PART; }
   /**
-   * Level of the lunch: red if kcal >= 1450, or fried/breaded Hauptspeise + fried Beilage, or creamy
-   * Vorspeise + fatty-meat Hauptspeise; green if kcal <= 1150 and nothing fried/breaded; yellow otherwise.
-   * Only dishes actually eaten count (e.g. "senza primo" ignores the Vorspeise). Unknown menu -> yellow.
-   * Returns {level, reasons[]}.
+   * Level of the lunch, only the dishes actually eaten count. Thresholds: one or two courses (solo primo,
+   * secondo + contorno, elsewhere) red from 850 kcal, green up to 650; all three (older entries) 1450 / 1150.
+   * red: kcal >= red, or fried/breaded Hauptspeise + fried Beilage, or a creamy Vorspeise with fatty meat
+   * (in the Vorspeise itself, e.g. Carbonara, or as Hauptspeise); green: kcal <= green and nothing
+   * fried/breaded; yellow otherwise. Unknown menu -> yellow. Returns {level, reasons[], limits}.
    */
   function classifyLunch(est) {
-    if (!est || est.unknown || !isNum(est.kcal)) return { level: 'yellow', reasons: ['unknown'] };
+    var lim = lunchLimits(est);
+    if (!est || est.unknown || !isNum(est.kcal)) return { level: 'yellow', reasons: ['unknown'], limits: lim };
     var by = {};
     est.items.forEach(function (it) { if (it.factor > 0) by[it.cat] = it; });
     var eaten = CATS.map(function (c) { return by[c]; }).filter(Boolean);
     var reasons = [];
-    if (est.kcal >= LUNCH.red) reasons.push('kcal_high');
+    if (est.kcal >= lim.red) reasons.push('kcal_high');
     if (friedOrBreaded(by.hauptspeise) && hasTag(by.beilage, 'fritto')) reasons.push('fried_combo');
-    if (hasTag(by.vorspeise, 'cremoso') && hasTag(by.hauptspeise, 'carne_grassa')) reasons.push('creamy_fatty');
-    if (reasons.length) return { level: 'red', reasons: reasons };
+    if (hasTag(by.vorspeise, 'cremoso') && (hasTag(by.hauptspeise, 'carne_grassa') || hasTag(by.vorspeise, 'carne_grassa'))) reasons.push('creamy_fatty');
+    if (reasons.length) return { level: 'red', reasons: reasons, limits: lim };
     var fried = eaten.some(friedOrBreaded);
-    if (est.kcal <= LUNCH.green && !fried) return { level: 'green', reasons: ['kcal_low'] };
-    return { level: 'yellow', reasons: [fried ? 'fried' : 'kcal_mid'] };
+    if (est.kcal <= lim.green && !fried) return { level: 'green', reasons: ['kcal_low'], limits: lim };
+    return { level: 'yellow', reasons: [fried ? 'fried' : 'kcal_mid'], limits: lim };
   }
   function lunchLevel(est) { return classifyLunch(est).level; }
+  /** Pasta & co. as the whole lunch (solo primo / bis, tag "carbo"): the dinner then keeps carbs low. */
+  function carbLunch(est) {
+    if (!est || (est.portion !== 'primo' && est.portion !== 'bis')) return false;
+    return est.items.some(function (it) { return it.cat === 'vorspeise' && it.factor > 0 && (hasTag(it, 'carbo') || it.source === 'default'); });
+  }
+  /** penalty points per eaten dish (lunch suggestion) */
+  var CHOICE_PENALTY = { fritto: 100, impanato: 100, carne_grassa: 100, cremoso: 50 };
+  /** kcal - 10 x protein + penalties for fried/breaded/fatty/creamy dishes: lower = better for the plan */
+  function choiceScore(est) {
+    var s = est.kcal - 10 * est.prot;
+    est.items.forEach(function (it) {
+      if (!(it.factor > 0)) return;
+      var seen = {};
+      (it.tags || []).forEach(function (tg) {
+        if (CHOICE_PENALTY[tg] && !seen[tg]) { s += CHOICE_PENALTY[tg]; seen[tg] = true; }
+      });
+    });
+    return s;
+  }
+  /**
+   * The two lunch choices for a menu: {primo, secondo} -> {est, cls, available, score}, and `suggested`:
+   * the lower choiceScore (fewer kcal, more protein, nothing fried, breaded, fatty or creamy). A choice is
+   * available when the menu has its courses (primo: a Vorspeise; secondo: a Hauptspeise or a Beilage).
+   */
+  function lunchChoices(idx, picks) {
+    var out = {};
+    var known = !(picks === null || picks === undefined);
+    ['primo', 'secondo'].forEach(function (p) {
+      var est = lunchEstimate(idx, picks, p);
+      var cls = classifyLunch(est);
+      var available = est.eaten && (!known || (p === 'primo' ? !!picks.vorspeise : !!(picks.hauptspeise || picks.beilage)));
+      out[p] = { est: est, cls: cls, available: available, score: choiceScore(est) };
+    });
+    var a = out.primo, b = out.secondo;
+    out.suggested = a.available && (!b.available || a.score < b.score) ? 'primo' : (b.available ? 'secondo' : null);
+    return out;
+  }
 
   // ---------------------------------------------------------------- dinner
   function shiftLevel(level, n) {
@@ -255,10 +321,16 @@
     if (i < 0) i = 1;
     return LEVELS[clamp(i + n, 0, LEVELS.length - 1)];
   }
-  /** Dinner follows the lunch level; on training days it goes up one level (red -> yellow -> green). */
-  function dinnerLevel(lunchLvl, training) {
+  /**
+   * Dinner follows the lunch level; on training days it goes up one level (red -> yellow -> green).
+   * carbs = the lunch was pasta & co. only (see carbLunch): no full carb portion again in the evening
+   * (at most yellow), except on training days.
+   */
+  function dinnerLevel(lunchLvl, training, carbs) {
     var l = LEVELS.indexOf(lunchLvl) >= 0 ? lunchLvl : 'yellow';
-    return training ? shiftLevel(l, 1) : l;
+    var out = training ? shiftLevel(l, 1) : l;
+    if (carbs && !training && out === 'green') out = 'yellow';
+    return out;
   }
   /**
    * Dinner budget = target - breakfast - snack (training days only) - coffees - lunch, limited to 500–1100.
@@ -488,16 +560,17 @@
   }
 
   return {
-    CATS: CATS, LEVELS: LEVELS, DEFAULT_GOALS: DEFAULT_GOALS, LIMITS: LIMITS, LUNCH: LUNCH,
-    PORTION_IDS: PORTION_IDS, ELSEWHERE_PROT: ELSEWHERE_PROT, EXTRAS: EXTRAS, CHECKS: CHECKS,
+    CATS: CATS, LEVELS: LEVELS, DEFAULT_GOALS: DEFAULT_GOALS, LIMITS: LIMITS, LUNCH: LUNCH, LUNCH_PART: LUNCH_PART,
+    PORTION_IDS: PORTION_IDS, LEGACY_PORTIONS: LEGACY_PORTIONS, ELSEWHERE_PROT: ELSEWHERE_PROT, EXTRAS: EXTRAS, CHECKS: CHECKS,
     CHECKS_OK: CHECKS_OK, SCHEDULE: SCHEDULE, STORE_KEYS: STORE_KEYS, SCHEMA: SCHEMA,
     isNum: isNum, clamp: clamp, roundTo: roundTo, fold: fold, parseNum: parseNum,
     parseISO: parseISO, isISO: isISO, isoOf: isoOf, addDays: addDays, daysBetween: daysBetween,
     weekdayOf: weekdayOf, mondayOf: mondayOf, isWeekend: isWeekend,
     bmr: bmr, goalsWithDefaults: goalsWithDefaults, targets: targets, zone2: zone2,
     validateProfile: validateProfile, validateGoals: validateGoals,
-    dishIndex: dishIndex, dishInfo: dishInfo, lunchEstimate: lunchEstimate,
-    classifyLunch: classifyLunch, lunchLevel: lunchLevel,
+    dishIndex: dishIndex, dishInfo: dishInfo, normPortion: normPortion, isLegacyPortion: isLegacyPortion,
+    lunchEstimate: lunchEstimate, classifyLunch: classifyLunch, lunchLevel: lunchLevel, lunchLimits: lunchLimits,
+    carbLunch: carbLunch, lunchChoices: lunchChoices,
     shiftLevel: shiftLevel, dinnerLevel: dinnerLevel, dinnerBudget: dinnerBudget, proteinGap: proteinGap,
     extraFor: extraFor, proposeDinners: proposeDinners, recentDinners: recentDinners,
     isTrainingDay: isTrainingDay, trainingToday: trainingToday, dayScore: dayScore, streak: streak,

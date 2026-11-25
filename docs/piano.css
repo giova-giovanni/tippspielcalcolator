@@ -81,6 +81,21 @@ a.chip { text-decoration: none; align-self: flex-start; margin-top: 4px; white-s
 .p-dish-row.off .p-dish { text-decoration: line-through; color: var(--muted); }
 .p-kcal { font-variant-numeric: tabular-nums; color: var(--text-2); font-size: 14px; white-space: nowrap; }
 .p-total { font-size: 16px; }
+/* the lunch choice: solo primo | secondo + contorno (two big buttons) */
+.p-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.p-opt {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-height: 44px; min-width: 0; padding: 10px 12px;
+  border-radius: 12px; border: 1px solid var(--axis); background: var(--surface); color: var(--text);
+  font: inherit; text-align: left; cursor: pointer; touch-action: manipulation;
+}
+.p-opt.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-soft); }
+.p-opt.assumed { border-style: dashed; border-color: var(--accent); }
+.p-opt:disabled { opacity: .5; cursor: default; }
+.p-opt-title { font-weight: 800; }
+.p-opt-dish, .p-opt-meta { font-size: 13px; color: var(--text-2); overflow-wrap: anywhere; }
+.p-opt-meta { font-variant-numeric: tabular-nums; }
+.p-opt-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.p-lunchline { font-variant-numeric: tabular-nums; }
 
 /* ---------------------------------------------------------------- dinner */
 .p-budget { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; background: var(--surface-2); border-radius: 12px; padding: 10px; }
@@ -134,5 +149,5 @@ details.p-workout > summary { flex-wrap: nowrap; }
 .p-data .danger-btn { align-self: flex-start; }
 
 @media (forced-colors: active) {
-  .p-choice.on, .p-dot.ok .p-dot-m { forced-color-adjust: none; background: Highlight; color: HighlightText; }
+  .p-choice.on, .p-opt.on, .p-dot.ok .p-dot-m { forced-color-adjust: none; background: Highlight; color: HighlightText; }
 }

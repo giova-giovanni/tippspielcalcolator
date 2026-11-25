@@ -64,7 +64,9 @@ Workflow in `.github/workflows/`:
 | `tests.yml` | pull request e push su branch diversi da `main` | `pytest` e, in parallelo, i test JS (Piano e scheda Eingabe, `node --test`) |
 
 I due workflow della pipeline condividono il gruppo di concorrenza `pipeline` (mai due esecuzioni
-in parallelo). In `on-data` i test girano in un job a parte: se un test fallisce il run diventa rosso
+in parallelo) e ogni run parte dallo **stato attuale del branch**, non dal commit che l'ha avviato: un run
+rimasto in coda (es. menù inserito pochi secondi dopo le giocate dei colleghi) riparte così dal commit del
+bot del run precedente invece di andarci in conflitto ed essere scartato. In `on-data` i test girano in un job a parte: se un test fallisce il run diventa rosso
 (e GitHub manda un'e-mail), ma i nuovi menù/tipp arrivano comunque sul sito. Prima `pytest` girava
 prima del commit, e un test legato ai dati del 09.10.2026 bloccava ogni inserimento dal sito; ora i
 test che usano i dati reali lavorano su uno snapshot fisso (`SNAPSHOT_DAY` / `SNAPSHOT_LAST_SERVED`).
@@ -126,6 +128,10 @@ Tre modi, combinabili. Ogni push su `main` in `data/**` avvia `on-data`, che ric
      - Solo punti senza piatti = riga "punti senza tipp": conta in classifica, non nelle statistiche.
      - Regola 6: le giocate degli altri si possono salvare solo per giorni passati o per oggi dopo le
        12:00; righe vuote o invariate non vengono scritte (niente commit se non cambia nulla).
+   - Ogni inserimento compare subito sul sito come «in elaborazione» e sparisce quando i dati ricalcolati
+     lo contengono (di solito 2–5 minuti). Se dopo **15 minuti** non è ancora nei dati, il sito lo dice
+     (avviso giallo) e offre **Ricalcola ora** (riavvia `on-data`; serve il token con *Actions: Read and
+     write*) e il link a GitHub Actions (*on-data → Run workflow*).
      - Un giocatore nuovo si inserisce una volta con "Mein Tipp" (campo *Spieler*); da lì compare tra i
        colleghi. Il prossimo Excel caricato sovrascrive queste righe dove ha contenuto (vince l'Excel).
 
@@ -136,7 +142,8 @@ Tre modi, combinabili. Ogni push su `main` in `data/**` avvia `on-data`, che ric
 2. Nome a piacere, **scadenza** (es. 90 giorni o 1 anno).
 3. *Repository access → Only select repositories →* solo questo repository.
 4. *Permissions → Repository permissions → Contents: Read and write* (nient'altro è necessario;
-   opzionale *Actions: Read-only* perché il sito possa linkare l'esecuzione partita).
+   opzionale *Actions: Read-only* perché il sito possa linkare l'esecuzione partita, oppure *Actions:
+   Read and write* perché il pulsante **Ricalcola ora** possa riavviare `on-data` dal sito).
 5. *Generate token*, copiarlo e incollarlo nel sito: *Einstellungen → GitHub-Token*.
 
 Il token resta **solo nel localStorage di quel browser/telefono** e viene inviato solo a
@@ -162,8 +169,15 @@ token → *Delete* (subito invalido ovunque). Su dispositivi altrui cancellarlo 
   distribuisce i "jolly" della regola 4 sui giorni rimanenti della settimana (a volte conviene tenere un
   piatto per un giorno migliore). *Gierig* (greedy) è la migliore combinazione valida solo per oggi;
   entrambe sono mostrate.
-- **Countdown fino alle 12:00** (ora di Roma). Dopo le 12:00, nel weekend, in un giorno libero o se il
-  menù di oggi è già inserito, il consiglio vale per il **prossimo giorno lavorativo**.
+- **Countdown fino alle 12:00** (ora di Roma).
+- **Tipp di oggi / Tipp di domani** (switch in alto, anche nella card del Piano): fino alle **17:00** si vede
+  il tipp di oggi – anche dopo la chiusura delle 12:00 e dopo l'inserimento del menù – con la card
+  **Risultato di oggi** (menù contro il mio tipp, ✓/✗ e punti) e, se il mio tipp non è ancora registrato,
+  il pulsante per inserirlo già precompilato. Dalle 17:00 si vede il tipp del prossimo giorno di gioco
+  (venerdì → lunedì). Lo switch manuale vale per la giornata; torna automatico a mezzanotte o dopo 30
+  minuti con la pagina in background. Prima delle 12:00 il tipp di domani è **provvisorio** (menù di oggi
+  stimato, mio tipp di oggi = il consigliato) e viene ricalcolato appena si inserisce il menù di oggi.
+  Nel weekend o in un giorno libero c'è solo il tipp del prossimo giorno di gioco.
 - La scheda **Woche** mostra la settimana: menù noti, mie giocate, previsioni per i giorni ancora
   aperti e quante volte posso ancora giocare ogni piatto.
 
@@ -177,10 +191,18 @@ funzionano ancora.
 - **Oggi**: la giornata in ordine – colazione, Tipp compatto (con countdown e *Copia*), pranzo,
   merenda nei giorni di allenamento, allenamento, cena, check della sera e serie dei giorni.
   - Il **pranzo** viene dal menù del giorno (o appena inserito da *Eingabe*), altrimenti dalla
-    previsione del modello (etichetta «stima»): kcal/proteine stimate e livello rosso/giallo/verde.
-  - La **cena** segue il livello del pranzo (un livello in più nei giorni di allenamento).
-    Budget = obiettivo − colazione − merenda − caffè − pranzo, tra 500 e 1100 kcal, con 3 proposte
-    dal ricettario.
+    previsione del modello (etichetta «stima»). Il pranzo si registra come **solo primo** oppure
+    **secondo + contorno** (non tutti e tre): due pulsanti con kcal/proteine e livello di ciascuna scelta, più
+    «Mangiato altrove» (kcal a mano). Finché non si sceglie vale quella **consigliata** (meno kcal, più
+    proteine, niente fritti/impanati/grassi/cremosi: `kcal − 10·proteine` + penalità).
+  - Livello del pranzo (conta solo quello che si mangia): rosso da 850 kcal, o secondo impanato/fritto +
+    contorno fritto, o primo cremoso con carne grassa (es. Carbonara); verde fino a 650 kcal senza fritti
+    né impanati; altrimenti giallo. (Vecchi inserimenti con tutti e tre i piatti: 1450 / 1150 kcal.)
+  - La **cena** segue il livello del pranzo (un livello in più nei giorni di allenamento); dopo **solo il
+    primo** (pasta & co.) la sera al massimo giallo – proteine e verdure, pochi carboidrati – tranne nei
+    giorni di allenamento. Budget = obiettivo − colazione − merenda − caffè − pranzo, tra 500 e 1100 kcal;
+    proteine mancanti = obiettivo − colazione − merenda − pranzo; 3 proposte dal ricettario (le più vicine
+    alle proteine mancanti, + skyr/frutto se avanzano più di 150 kcal).
   - Weekend, giorni liberi del Tippspiel o giorni impostati «a casa»: niente tracciamento del cibo.
 - **Training**: piano della settimana, regole e schede.
 - **Corpo**: pesate ogni 1–2 settimane, circonferenza vita, tendenza in kg/settimana.
@@ -201,7 +223,7 @@ funzionano ancora.
 | Regola | Implementazione |
 |---|---|
 | R2 – pranzi aziendali esclusi | giorni `Frei` = `status: free`, non sono giorni di gioco (né per i punti né per la regola 4) |
-| R3 – giocate entro le 12:00 | countdown sul sito; dopo le 12:00 il consiglio passa al prossimo giorno lavorativo |
+| R3 – giocate entro le 12:00 | countdown sul sito; dopo le 12:00 il motore calcola il prossimo giorno lavorativo, il sito mostra il tipp di oggi fino alle 17:00 (switch *Tipp di oggi / Tipp di domani*) |
 | R4 – stesso piatto max 2× per settimana lavorativa, mai giorni consecutivi | `engine/rules.py::R4`, per categoria, sulle **mie** giocate; consiglio e pianificatore sono sempre conformi |
 | R5 – un solo piatto per categoria | il consiglio contiene esattamente un piatto per V, H, B |
 | R6 – niente sbirciare / copiare | le giocate degli altri **non** vengono mai usate dal modello (nemmeno come feature); quelle degli altri per date future, e per oggi prima delle 12:00, non vengono pubblicate in `docs/data/tips.json` (dopo la chiusura sì: nessuno può più giocare); dal sito si possono inserire solo dopo la chiusura del giorno |
@@ -312,6 +334,24 @@ Dettagli, calibrazione e intervalli: [`reports/backtest.md`](reports/backtest.md
 - **Regola 6 nel sito**: le giocate degli altri di oggi compaiono in `tips.json` (Datenbank) dopo le
   12:00, non più solo dal giorno dopo; prima delle 12:00 restano nascoste come prima.
 
+## Aggiornamento 25.11.2026
+
+- **Bug: menù del giorno perso nel ricalcolo.** Il menù del 25.11 (inserito dal sito pochi secondi dopo
+  le giocate dei colleghi) era salvato bene in `data/menus.csv`, ma il sito ha continuato a
+  mostrare dati calcolati senza: il run di `on-data` del menù partiva dal *suo* commit, andava in conflitto
+  con il commit del bot del run precedente e veniva scartato; i push del bot non avviano altri run, quindi
+  nessuno ricalcolava. Effetto: per giovedì il sito consigliava **Lasagne** (servita proprio quel giorno)
+  invece di **Nudel mit Ragu**. Correzione: `on-data.yml` e `daily.yml` fanno il checkout dello stato
+  attuale del branch (`ref: ${{ github.ref }}`), così un run in coda riparte dal commit del bot precedente.
+  In più il sito segnala gli inserimenti non elaborati dopo 15 minuti (pulsante *Ricalcola ora*).
+- **Test sempre rosso in `on-data`**: `test_season_end_and_deadline` dipendeva dal calendario reale (dal
+  24.11 il 21–23.12 sono liberi); ora usa un calendario indipendente dai dati.
+- **Tipp di oggi / Tipp di domani** (vedi [Come leggere il consiglio del giorno](#come-leggere-il-consiglio-del-giorno-scheda-tipp-prima-heute)):
+  la pipeline scrive anche `docs/data/today_alt.json` (`engine/site.py::alt_tip`, mai con i tipp degli
+  altri): prima delle 12:00 il tipp provvisorio del prossimo giorno, dopo il tipp di oggi così come il sito
+  l'ha mostrato (copiato dal `today.json` precedente, altrimenti ricalcolato come la mattina).
+- **Piano**: pranzo = solo primo **oppure** secondo + contorno, con soglie e cena adattate (vedi sopra).
+
 ## Privacy e limiti di GitHub Free
 
 - **GitHub Pages con un account Free funziona solo con repository pubblici.** Un repository privato con
@@ -394,8 +434,8 @@ data/
   model_params.json          parametri del modello (da --tune)
   state.json                 hash dell'ultimo Excel importato
 docs/                        sito GitHub Pages (index.html, app.js, i18n.js, style.css, …)
-  data/*.json                generati dalla pipeline: meta, menus, tips, dishes, today, week,
-                             stats, leaderboard, backtest
+  data/*.json                generati dalla pipeline: meta, menus, tips, dishes, today, today_alt,
+                             week, stats, leaderboard, backtest
   piano.js, piano-core.js,   Piano: viste, logica pura, stili
   piano.css
   piano/*.json               Piano: piatti (kcal/proteine), ricette, schede (statici)

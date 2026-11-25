@@ -335,6 +335,15 @@ details.settings[open] > summary::after { content: "▴"; }
   font-size: 14px; font-weight: 650; color: var(--text-2); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .seg-btn.active { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+/* today's tip | the next one */
+.tip-switch > * + * { margin-top: 4px; }
+.tip-seg .seg-btn { min-height: 44px; font-size: 15px; }
+.tip-seg .seg-btn.active { color: var(--info); }
+/* result of today's tip (menu vs. tip) */
+.res-head, .res-row { display: grid; grid-template-columns: 26px minmax(0, 1.1fr) minmax(0, 1fr) 24px; gap: 6px; align-items: center; }
+.res-rows { display: flex; flex-direction: column; gap: 6px; }
+.res-menu, .res-tip { min-width: 0; font-size: 15px; overflow-wrap: break-word; hyphens: auto; }
+.res-menu { font-weight: 650; }
 .controls { display: flex; flex-direction: column; gap: 10px; padding: 10px; }
 .controls > * + * { margin-top: 0; }
 @media (min-width: 640px) {
