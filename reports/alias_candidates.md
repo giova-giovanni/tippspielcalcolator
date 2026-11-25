@@ -20,7 +20,7 @@ Diese Paare erscheinen nicht unter den Fuzzy-Vorschlägen. „unklar“ = Entsch
 
 | A | B | n(A) | n(B) | Warum |
 |---|---|---|---|---|
-| Kartoffelstampf | Püree | 14 | 208 | Entscheidung Johannes Paul III: zwei verschiedene Gerichte (Stampf = grob, mit Stücken). |
+| Kartoffelstampf | Püree | 14 | 209 | Entscheidung Johannes Paul III: zwei verschiedene Gerichte (Stampf = grob, mit Stücken). |
 | Safranreis | Reis | 1 | 429 | eigene Beilage (zu Ossobuchi). |
 | Tomatenrisotto | Tomatenrisotto mit Mozzarella | 4 | 3 | unklar, bleibt getrennt. |
 | Röstinchen | Röstkartoffeln | 5 | 128 | unklar, bleibt getrennt. |

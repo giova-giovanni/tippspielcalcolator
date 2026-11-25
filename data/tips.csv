@@ -1551,8 +1551,8 @@ date,player,vorspeise,hauptspeise,beilage,points,points_sheet,source
 2026-11-24,Johannes Paul III,Lasagne,Leberkas,Pommes,1,1,xlsx
 2026-11-24,Lorenz,Tortellini mit Schinken-Rahm,Currywurst,Pommes,0.5,0.5,xlsx
 2026-11-24,Noah,Carbonara,Truthahngeschnetzeltes,Püree,0,0,xlsx
-2026-11-25,Andreas,Nudel Mammarosa,Truthahngeschnetzeltes,Püree,,,form
-2026-11-25,Johannes,Nudel mit Thunfischsoße,Schweinsfilet,Plent,,,form
-2026-11-25,Johannes Paul III,Schlutzer,Schweinsfilet,Püree,,,form
-2026-11-25,Lorenz,Nudel Mammarosa,Truthahngeschnetzeltes,Püree,,,form
-2026-11-25,Noah,Lasagne,Schweinsfilet,Spatzlen,,,form
+2026-11-25,Andreas,Nudel Mammarosa,Truthahngeschnetzeltes,Püree,0.5,,form
+2026-11-25,Johannes,Nudel mit Thunfischsoße,Schweinsfilet,Plent,0,,form
+2026-11-25,Johannes Paul III,Schlutzer,Schweinsfilet,Püree,0.5,,form
+2026-11-25,Lorenz,Nudel Mammarosa,Truthahngeschnetzeltes,Püree,0.5,,form
+2026-11-25,Noah,Lasagne,Schweinsfilet,Spatzlen,1,,form
