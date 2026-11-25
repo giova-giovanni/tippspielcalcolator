@@ -1041,9 +1041,56 @@
     return emptyState(r && r.status === 'error' ? t('ui.error') : t(titleKey), r && r.status === 'error' ? null : t(textKey),
       [extra, h('button', { class: 'btn', type: 'button', onclick: reloadData }, t('ui.retry'))]);
   }
+  /* An entry is normally in the site data ~2–5 minutes after saving (GitHub Action + Pages). Still pending
+   * after PENDING_STUCK_MIN minutes = the recalculation got lost (failed run, discarded result, Actions off):
+   * say so, with a button that restarts on-data (token with "Actions: Read and write") and the Actions link. */
+  var PENDING_STUCK_MIN = 15;
+  function pendingAge(ctx) {
+    var ats = ctx.pending.map(function (p) { return p.at; }).filter(isNum);
+    return ats.length ? Math.max(0, (Date.now() - Math.min.apply(null, ats)) / 60000) : 0;
+  }
+  function agoText(min) {
+    if (min < 120) return t('ago.min', { n: Math.floor(min) });
+    return min < 48 * 60 ? t('ago.hours', { n: Math.floor(min / 60) }) : t('ago.days', { n: Math.floor(min / 1440) });
+  }
+  function ghDispatch(cfg, workflow) {
+    return ghFetch(repoPath(cfg) + '/actions/workflows/' + encodeURIComponent(workflow) + '/dispatches', cfg.token,
+      { method: 'POST', body: JSON.stringify({ ref: cfg.branch || 'main' }) }).then(function (r) {
+      if (r.ok) return true;
+      throw ghErr(r.status, r.body);
+    });
+  }
+  function recalcControls(meta) {
+    var cfg = settings(meta);
+    var status = h('p', { class: 'small', 'aria-live': 'polite' });
+    var row = h('div', { class: 'btn-row' });
+    if (cfg.token && cfg.owner && cfg.repo) {
+      var btn = h('button', { type: 'button', class: 'btn small primary' }, t('recalc.btn'));
+      btn.addEventListener('click', function () {
+        btn.disabled = true;
+        status.textContent = t('recalc.sending');
+        ghDispatch(cfg, 'on-data.yml').then(function () {
+          status.textContent = t('recalc.ok');
+        }, function (e) {
+          status.textContent = e && (e.status === 403 || e.status === 404) ? t('recalc.noPerm') : ghErrorText(e);
+          btn.disabled = false;
+        });
+      });
+      row.appendChild(btn);
+    }
+    if (cfg.owner && cfg.repo) {
+      row.appendChild(h('a', {
+        class: 'btn small', target: '_blank', rel: 'noopener noreferrer',
+        href: 'https://github.com/' + encodeURIComponent(cfg.owner) + '/' + encodeURIComponent(cfg.repo) + '/actions/workflows/on-data.yml'
+      }, t('in.actions')));
+    }
+    return h('div', null, row, status);
+  }
   function pendingBanner(ctx) {
     var n = ctx.pending.length;
     if (!n) return null;
+    var age = pendingAge(ctx);
+    if (age >= PENDING_STUCK_MIN) return notice('warn', t('pending.stuck', { n: n, ago: agoText(age) }), recalcControls(ctx.meta));
     return notice('info', t('pending.banner', { n: n }));
   }
   function catBadge(c) { return h('span', { class: 'cat-badge cat-' + SHORT[c], title: catName(c) }, catShort(c)); }
@@ -1153,17 +1200,98 @@
     };
   }
 
+  // ------------------------------------------------------------------ today's tip / the next one
+  // The site has two tips: today.json (the engine's target) and today_alt.json (today's tip once the
+  // target has moved on, or the provisional tip of the next game day before today's deadline).
+  var NEXT_TIP_FROM = 17 * 60; // Rome time (minutes): from 17:00 the next game day's tip comes first
+  var tipPick = { day: null, which: null }; // manual switch, valid for the day it was set
+  /**
+   * Pure core of tipDays (todayR = Rome date, minutes = Rome time of day, pick = manual {day, which}).
+   * -> {today, next, which, auto, manual, d}: today = the tip whose date is today, next = the earliest tip
+   * after today (both chosen by date, never by role, so a stale file cannot show a wrong day). which = the
+   * manual choice of that day, else today's tip until 17:00, then the next one. d = the tip to show
+   * (falls back to main when no tip matches, e.g. stale data or season over).
+   */
+  function pickTipDay(main, alt, todayR, minutes, pick) {
+    var list = [main, alt].filter(function (x) { return x && isISO(x.date) && x.recommendation && x.recommendation.vorspeise; });
+    var today = list.filter(function (x) { return x.date === todayR; })[0] || null;
+    var next = list.filter(function (x) { return x.date > todayR; }).sort(function (a, b) { return a.date < b.date ? -1 : 1; })[0] || null;
+    var auto = today && (minutes < NEXT_TIP_FROM || !next) ? 'today' : (next ? 'next' : null);
+    var which = auto;
+    if (pick && pick.day === todayR && (pick.which === 'today' ? today : (pick.which === 'next' ? next : null))) which = pick.which;
+    var d = which === 'today' ? today : (which === 'next' ? next : (main || alt || null));
+    return { today: today, next: next, which: which, auto: auto, manual: which !== auto, d: d, todayR: todayR };
+  }
+  function tipDays(main, alt) {
+    var p = zonedParts(Date.now());
+    return pickTipDay(main, alt, romeTodayISO(), p.h * 60 + p.mi, tipPick);
+  }
+  function tipLabel(TD, w) {
+    var x = TD[w];
+    if (w === 'today') return t('tipd.today');
+    var day = wdLong(weekdayOf(x.date));
+    return x.date === addDays(TD.todayR, 1) ? t('tipd.tomorrow') : t('tipd.day', { day: lang === 'it' ? day.toLowerCase() : day });
+  }
+  /** "Tipp di oggi | Tipp di domani" – only when both exist */
+  function tipSwitch(TD) {
+    if (!TD.today || !TD.next) return null;
+    var wrap = segmented([{ value: 'today', label: tipLabel(TD, 'today') }, { value: 'next', label: tipLabel(TD, 'next') }], TD.which, function (v) {
+      tipPick = { day: TD.todayR, which: v };
+      rerender();
+    }, t('tipd.label'));
+    wrap.classList.add('tip-seg');
+    return wrap;
+  }
+  /** Today's result once the menu is known: {menu, tip (mine or null), hits, points}; null without a served menu. */
+  function tipResult(ctx, date) {
+    var m = menuOf(ctx, date);
+    if (!m || m.status !== 'served' || !m.opts) return null;
+    var tip = tipOf(ctx, ctx.me, date);
+    var sc = (ctx.meta && ctx.meta.scoring) || {};
+    var hits = tip ? tipHits(ctx, tip, m.opts) : null;
+    return { menu: m, tip: tip, hits: hits, points: tip ? (isNum(tip.points) && !tip.pending ? tip.points : scoreHits(sc, hits)) : null };
+  }
+  function resultCard(ctx, S) {
+    var R = tipResult(ctx, S.target);
+    if (!R) return null;
+    var rec = S.rec || {};
+    var sc = (ctx.meta && ctx.meta.scoring) || {};
+    var recTip = { opts: {} };
+    CATS.forEach(function (c) { recTip.opts[c] = canonOpts(ctx, c, (rec[c] || {}).dish); });
+    var recHits = rec.vorspeise ? tipHits(ctx, recTip, R.menu.opts) : null;
+    var same = R.tip && rec.vorspeise && CATS.every(function (c) { return fold(R.tip[SHORT[c]]) === fold((rec[c] || {}).dish); });
+    var hit = function (ok) { return h('span', { class: 'hit ' + (ok ? 'yes' : 'no'), title: ok ? t('week.hit') : t('week.miss') }, ok ? '✓' : '✗'); };
+    var rows = CATS.map(function (c) {
+      return h('div', { class: 'res-row' }, catBadge(c),
+        h('span', { class: 'res-menu', lang: 'de' }, (R.menu.opts[c] || []).join(' / ') || '–'),
+        h('span', { class: 'res-tip', lang: 'de' }, R.tip ? (R.tip[SHORT[c]] || '–') : ((rec[c] || {}).dish || '–')),
+        R.tip ? hit(R.hits[c]) : (recHits ? hit(recHits[c]) : h('span')));
+    });
+    var pts = R.tip ? R.points : (recHits ? scoreHits(sc, recHits) : null);
+    return h('section', { class: 'card result' },
+      h('h2', { class: 'card-title' }, t('res.title'), ' ', chip(t('pts', { n: fmtPts(pts) }), pts > 0 ? 'ok' : 'muted-chip')),
+      h('div', { class: 'res-head small muted' }, h('span', null, ''), h('span', null, t('res.menu')), h('span', null, R.tip ? t('res.mine') : t('res.rec')), h('span', null, '')),
+      h('div', { class: 'res-rows' }, rows),
+      R.tip && !same && rec.vorspeise && recHits ? h('p', { class: 'small muted' }, t('res.recWas', {
+        tip: CATS.map(function (c) { return (rec[c] || {}).dish + (recHits[c] ? ' ✓' : ''); }).join(' / '), n: fmtPts(scoreHits(sc, recHits))
+      })) : null,
+      R.tip ? null : h('div', null, notice('warn', t('res.noTip')),
+        h('button', { type: 'button', class: 'btn primary', onclick: function () { goPrefill(S.target, { v: (rec.vorspeise || {}).dish, h: (rec.hauptspeise || {}).dish, b: (rec.beilage || {}).dish }); } },
+          icon('edit'), t('res.enter'))));
+  }
+
   // ================================================================== VIEW: Heute
   function viewHeute() {
-    return Promise.all([load('today'), loadCtx()]).then(function (rs) {
+    return Promise.all([load('today'), loadCtx(), load('today_alt')]).then(function (rs) {
       var T = rs[0], ctx = rs[1];
       if (T.status !== 'ok') return missingState(T, 'today.empty.title', 'today.empty.text');
-      var d = T.data || {};
+      var TD = tipDays(T.data || {}, okData(rs[2]));
+      var d = TD.d || T.data || {};
       var S = tipSummary(d, ctx);
       var todayR = S.todayR, hasTarget = S.hasTarget, target = S.target, rec = S.rec, deadlineHM = S.deadlineHM;
       var alts = d.alternatives || {};
       var out = h('div', { class: 'stack' });
-      var gen = Date.parse(d.generated_at || '');
+      var gen = Date.parse((T.data || {}).generated_at || d.generated_at || ''); // data state = the latest run
 
       // ---- season over: no target day, no countdown
       if (d.season_over && (!hasTarget || !rec.vorspeise)) {
@@ -1178,21 +1306,28 @@
         return out;
       }
 
+      // ---- today's tip | the next one (switch; automatic: today's until 17:00)
+      var sw = tipSwitch(TD);
+      if (sw) out.appendChild(h('div', { class: 'tip-switch' }, sw,
+        h('p', { class: 'muted tiny' }, TD.manual ? t('tipd.manual') : t('tipd.auto'))));
+
       // ---- staleness / context notices
       var notes = h('div', { class: 'stack-sm' });
       if (d.season_over) notes.appendChild(notice('info', t('today.seasonOver')));
       var dlToday = deadlineFor(todayR, deadlineHM);
+      var provisional = target > todayR && d.provisional === true;
       if (target < todayR) {
         notes.appendChild(notice('danger', t('stale.past', { date: fmtLong(target) })));
-      } else if (target > todayR) {
+      } else if (target > todayR && !TD.today) {
         var why = weekdayOf(todayR) >= 5 ? 'weekend'
           : (ctx.r4.free.has(todayR) ? 'free'
             : (Date.now() >= dlToday ? 'deadline'
               : ((menuOf(ctx, todayR) || {}).status === 'served' ? 'menu' : null)));
         notes.appendChild(notice('info', why ? t('today.next.' + why, { date: fmtLong(target) }) : t('today.notToday', { date: fmtLong(target) })));
-      } else if (Date.now() >= dlToday) {
-        notes.appendChild(notice('info', t('today.overWait')));
+      } else if (target === todayR && Date.now() >= dlToday) {
+        notes.appendChild(notice('info', TD.next ? t('tipd.overNext', { day: tipLabel(TD, 'next') }) : t('today.overWait')));
       }
+      if (provisional) notes.appendChild(notice('warn', t('tipd.provisional')));
       if (isNum(gen)) {
         // the daily job runs on working-day mornings: data is stale when it predates the latest working day
         var ageH = (Date.now() - gen) / 36e5;
@@ -1202,7 +1337,11 @@
         if (staleGen && ageH > 3) notes.appendChild(notice('warn', t('stale.generated', { ago: ageH > 48 ? t('ago.days', { n: Math.floor(ageH / 24) }) : t('ago.hours', { n: Math.floor(ageH) }) })));
       }
       // menus of past game days not entered yet: the model does not know the recent rotation
-      var miss = (d.missing_menus || []).filter(function (x) { return isISO(x) && !(menuOf(ctx, x) || {}).pending; });
+      // (today's menu of a provisional tip is not missing: lunch has not been served yet)
+      var miss = (d.missing_menus || []).filter(function (x) {
+        var m = menuOf(ctx, x);
+        return isISO(x) && !(m && m.pending) && !(m && m.status === 'served') && !(provisional && x === todayR);
+      });
       if (miss.length) {
         notes.appendChild(notice(miss.length >= 3 ? 'danger' : 'warn', t('stale.menus', { n: miss.length, dates: miss.map(fmtDM).join(', ') }),
           h('a', { href: '#/eingabe' }, t('stale.menusLink'))));
@@ -1221,6 +1360,12 @@
         h('div', { class: 'cd' }, cd.val, cd.label));
       cd.start(hero);
       out.appendChild(hero);
+
+      // ---- today after lunch: menu vs. my tip (or the recommendation, if mine is not entered yet)
+      if (S.isToday) {
+        var res = resultCard(ctx, S);
+        if (res) out.appendChild(res);
+      }
 
       // ---- client-side R4 re-check (fresh tips/pending submissions), see tipSummary()
       var clientBlock = S.clientBlock;
@@ -1341,8 +1486,14 @@
         ]));
       }
 
-      // ---- week plan
+      // ---- week plan (today's tip kept after lunch: its plan for the later days is outdated – those days
+      // come from the current plan of the next tip)
       var wp = (d.week_plan || []).filter(function (x) { return x && x.date; });
+      if (d.role === 'today' && TD.next) {
+        wp = wp.filter(function (x) { return x.date <= todayR; }).concat((TD.next.week_plan || []).filter(function (x) {
+          return x && isISO(x.date) && x.date > todayR && sameWeek(x.date, todayR);
+        }));
+      }
       if (wp.length) {
         out.appendChild(card(t('today.plan'), [
           h('p', { class: 'muted small' }, t('today.planSub')),
@@ -2652,7 +2803,11 @@
     }
     document.addEventListener('visibilitychange', function () {
       // coming back to the tab after a while (e.g. next morning): refresh data
-      if (document.visibilityState === 'visible' && window.__tspHiddenAt && Date.now() - window.__tspHiddenAt > 30 * 60 * 1000) reloadData();
+      // (the manual "today / tomorrow" tip choice ends too: back to the automatic one, e.g. today's tip in the morning)
+      if (document.visibilityState === 'visible' && window.__tspHiddenAt && Date.now() - window.__tspHiddenAt > 30 * 60 * 1000) {
+        tipPick = { day: null, which: null };
+        reloadData();
+      }
       if (document.visibilityState === 'hidden') window.__tspHiddenAt = Date.now();
     });
     // empty hash (manifest start_url "./") -> start page chosen in the Piano settings
@@ -2668,7 +2823,7 @@
     deadlineFor: deadlineFor, commitRow: commitRow, fold: fold, isoWeek: isoWeek, decryptEnvelope: decryptEnvelope,
     tipHits: tipHits, canonPlayer: canonPlayer,
     upsertCsvMany: upsertCsvMany, commitRows: commitRows, parseTipLine: parseTipLine, parsePoints: parsePoints,
-    coDateCheck: coDateCheck, scoreHits: scoreHits,
+    coDateCheck: coDateCheck, scoreHits: scoreHits, pickTipDay: pickTipDay, ghDispatch: ghDispatch,
     // shared helpers for the Piano (docs/piano.js) – same look, same data loader (decryption included)
     CATS: CATS, h: h, appendKids: appendKids, icon: icon, addIcons: addIcons, notice: notice, card: card, chip: chip,
     segmented: segmented, selectEl: selectEl, table: table, emptyState: emptyState, bar: bar, toast: toast,
@@ -2678,7 +2833,8 @@
     wdShort: wdShort, wdLong: wdLong, pad: pad, isNum: isNum, isISO: isISO, addDays: addDays, weekdayOf: weekdayOf,
     mondayOf: mondayOf, zonedParts: zonedParts,
     load: load, okData: okData, loadCtx: loadCtx, menuOf: menuOf, lockedState: lockedState, reloadData: reloadData,
-    tipSummary: tipSummary, countdown: countdown,
+    tipSummary: tipSummary, countdown: countdown, tipDays: tipDays, tipSwitch: tipSwitch, tipResult: tipResult,
+    fmtPts: fmtPts, catShort: catShort,
     chartBox: chartBox, axisOpts: axisOpts, tooltipOpts: tooltipOpts, themeColors: themeColors,
     addRoute: addRoute, addMoreLink: addMoreLink, hashParts: hashParts, mount: mount, rerender: rerender,
     onCleanup: function (fn) { cleanups.push(fn); },

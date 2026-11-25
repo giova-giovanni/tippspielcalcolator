@@ -44,6 +44,7 @@
       "Spinatknödel": {"kcal": 550, "prot": 18, "tags": ["carbo"]},
       "Plentauflauf": {"kcal": 600, "prot": 18, "tags": ["cremoso", "carbo"]},
       "Spinatravioli": {"kcal": 600, "prot": 20, "tags": ["carbo"]},
+      "Spinatravioli mit Schinken-Rahm": {"kcal": 740, "prot": 25, "tags": ["cremoso", "carbo"]},
       "Spinatknödel mit Käsesoße": {"kcal": 700, "prot": 22, "tags": ["cremoso", "carbo"]},
       "Gnocchi mit Gorgonzolasoße": {"kcal": 750, "prot": 18, "tags": ["cremoso", "carbo"]},
       "Putanesca": {"kcal": 540, "prot": 15, "tags": ["carbo"]},

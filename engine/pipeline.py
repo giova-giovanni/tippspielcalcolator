@@ -79,11 +79,14 @@ def main(argv=None) -> int:
         backtest.run(ds, today=today)
         print(f"[{time.time() - t0:5.1f}s] Backtest fertig")
 
-    from . import recommend
-    recommend.run(ds, today=today, now=now if not a.today else None)
-    print(f"[{time.time() - t0:5.1f}s] Empfehlung fertig")
+    from . import recommend, site
+    rec_now = now if not a.today else None
+    prev = site.previous_tips()   # before today.json is rewritten: today's tip survives the deadline
+    main = recommend.run(ds, today=today, now=rec_now)
+    alt = site.write_alt(ds, today, rec_now, main, prev)
+    print(f"[{time.time() - t0:5.1f}s] Empfehlung fertig ({main.get('date')}; "
+          f"zweiter Tipp: {alt.get('role') or '-'} {alt.get('date') or ''})")
 
-    from . import site
     site.run(ds, today=today, now=now)
     print(f"[{time.time() - t0:5.1f}s] Website-Daten geschrieben ({'verschlüsselt' if os.environ.get('SITE_PASSPHRASE') else 'unverschlüsselt'})")
     return 0

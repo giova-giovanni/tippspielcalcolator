@@ -149,10 +149,11 @@
   }
 
   // ------------------------------------------------------------------ lunch of a day
-  /** most probable dish per category (not the tip, which is bound by rule 4) */
-  function forecastFor(Td, Wd, iso) {
+  /** most probable dish per category (not the tip, which is bound by rule 4); tips = today.json + today_alt.json */
+  function forecastFor(tips, Wd, iso) {
     var opts = null;
-    if (Td && Td.date === iso && Td.alternatives) {
+    var Td = (tips || []).filter(function (x) { return x && x.date === iso && x.alternatives; })[0];
+    if (Td) {
       opts = {};
       CATS.forEach(function (c) {
         var best = null;
@@ -169,21 +170,25 @@
     return opts && CATS.some(function (c) { return opts[c].length; }) ? opts : null;
   }
   /** source of the lunch menu: real menu (menus.json or just entered in Eingabe) -> forecast -> unknown */
-  function lunchSource(ctx, Td, Wd, iso) {
+  function lunchSource(ctx, tips, Wd, iso) {
     if (ctx.locked) return { kind: 'locked' };
     var m = T.menuOf(ctx, iso);
     if (m && m.status === 'free') return { kind: 'free' };
     if (m && m.status === 'served' && m.opts && CATS.some(function (c) { return (m.opts[c] || []).length; })) {
       return { kind: m.pending ? 'entered' : 'menu', opts: m.opts };
     }
-    var fc = forecastFor(Td, Wd, iso);
+    var fc = forecastFor(tips, Wd, iso);
     if (fc) return { kind: 'forecast', opts: fc };
-    if (Td && Td.season_over) return { kind: 'nomenu' };
+    if ((tips || []).some(function (x) { return x && x.season_over; })) return { kind: 'nomenu' };
     return { kind: 'unknown' };
   }
+  /**
+   * Lunch of a day: menu (or forecast), the choice "solo primo" / "secondo + contorno" (never all three),
+   * estimate and level. Until the choice is made the suggested one is assumed (assumed = true).
+   */
   function lunchOf(iso, env) {
     var lu = dayOf(iso).lunch || {};
-    var src = lunchSource(env.ctx, env.Td, env.Wd, iso);
+    var src = lunchSource(env.ctx, env.tips, env.Wd, iso);
     var picks = null;
     if (src.opts) {
       picks = {};
@@ -193,20 +198,33 @@
         picks[c] = chosen && o.indexOf(chosen) >= 0 ? chosen : (o[0] || null);
       });
     }
-    var est = C.lunchEstimate(env.idx, picks, lu.portion || 'all', { kcal: lu.kcal, prot: lu.prot });
+    var choices = C.lunchChoices(env.idx, picks);
+    var stored = C.normPortion(lu.portion);
+    var portion = stored || choices.suggested || 'secondo';
+    var est = C.lunchEstimate(env.idx, picks, portion, { kcal: lu.kcal, prot: lu.prot });
     var cls = C.classifyLunch(est);
     var overridden = C.LEVELS.indexOf(lu.level) >= 0;
-    return { src: src, picks: picks, est: est, cls: cls, level: overridden ? lu.level : cls.level, overridden: overridden, lu: lu };
+    return {
+      src: src, picks: picks, est: est, cls: cls, level: overridden ? lu.level : cls.level, overridden: overridden, lu: lu,
+      choices: choices, portion: portion, assumed: !stored, carbs: C.carbLunch(est)
+    };
+  }
+  /** "Solo primo (Lasagne)" / "Secondo + contorno (Hühnerbrust + Reis)" */
+  function portionText(L0) {
+    var p = L0.portion;
+    var names = L0.est.items.filter(function (it) { return it.factor > 0 && it.name; }).map(function (it) { return it.name; });
+    return t('piano.portion.' + p) + (names.length && p !== 'elsewhere' ? ' (' + names.join(' + ') + ')' : '');
   }
 
   // ================================================================== VIEW: Oggi
   function loadEnv() {
     return Promise.all([
       T.loadCtx(), T.load('today'), T.load('week'),
-      optional(content('dish_nutrition')), optional(content('dinners')), optional(content('workouts'))
+      optional(content('dish_nutrition')), optional(content('dinners')), optional(content('workouts')), T.load('today_alt')
     ]).then(function (rs) {
+      var Td = T.okData(rs[1]), Ta = T.okData(rs[6]);
       return {
-        ctx: rs[0], T: rs[1], Td: T.okData(rs[1]), Wd: T.okData(rs[2]),
+        ctx: rs[0], T: rs[1], Td: Td, Ta: Ta, tips: [Td, Ta].filter(Boolean), Wd: T.okData(rs[2]),
         table: rs[3], idx: dishIndexOf(rs[3]), dinners: rs[4], workouts: rs[5]
       };
     });
@@ -353,17 +371,29 @@
 
   function tippCard(env, now) {
     if (!env.T || env.T.status !== 'ok') return null;
-    var d = env.T.data || {};
+    // today's tip until 17:00, then the next game day's (switch: TSP.tipDays / tipSwitch, as on the Tipp page)
+    var TD = T.tipDays(env.Td || {}, env.Ta);
+    var d = TD.d || {};
     if (!d.recommendation || !d.recommendation.vorspeise) return null;
     var S = T.tipSummary(d, env.ctx);
     var cd = T.countdown(S);
+    var R = S.isToday ? T.tipResult(env.ctx, S.target) : null;
+    var resLine = null;
+    if (R) {
+      resLine = h('p', { class: 'small p-tipp-res' }, R.tip
+        ? t('piano.tipp.result', { n: T.fmtPts(R.points), hits: CATS.filter(function (c) { return R.hits[c]; }).map(T.catShort).join(' ') || '–' })
+        : t('piano.tipp.noTip'));
+    }
     var el = h('section', { class: 'card p-tipp' + (S.isToday ? '' : ' ahead') + (now ? ' p-now' : '') },
       head('heute', S.isToday ? t('piano.tipp.today') : t('piano.tipp.next', { day: T.fmtWdDM(S.target) }), null, null, now),
+      T.tipSwitch(TD),
       h('div', { class: 'p-tipp-body' },
         h('ul', { class: 'p-tipp-dishes' }, CATS.map(function (c) {
           return h('li', null, T.catBadge(c), h('span', { class: 'p-tipp-dish', lang: 'de' }, (S.rec[c] || {}).dish || '–'));
         })),
         h('div', { class: 'cd p-cd' }, cd.val, cd.label)),
+      d.provisional ? h('p', { class: 'muted small' }, t('tipd.provisionalShort')) : null,
+      resLine,
       S.issues.length ? notice('danger', t('today.recBlocked')) : null,
       h('div', { class: 'btn-row' }, T.copyButton(S.copy, t('today.copy'), 'primary'),
         h('a', { class: 'btn', href: '#/heute' }, t('piano.tipp.details'))));
@@ -376,7 +406,10 @@
   function lunchCard(iso, env, L0, now) {
     var est = L0.est, lu = L0.lu;
     var srcKind = L0.src.kind;
-    var setLunch = function (mut) { saveDay(iso, function (d) { d.lunch = d.lunch || {}; mut(d.lunch); }); T.rerender(); };
+    var setLunch = function (mut) {
+      saveDay(iso, function (d) { d.lunch = d.lunch || {}; mut(d.lunch); if (!Object.keys(d.lunch).length) delete d.lunch; });
+      T.rerender();
+    };
     var nodes = [];
     nodes.push(head('lunch', t('piano.lunch.title'), '12:00', levelBadge(L0.level), now));
     var srcRow = h('div', { class: 'p-src' }, chip(t('piano.src.' + srcKind), SRC_CHIP[srcKind] || ''),
@@ -391,21 +424,45 @@
           setLunch(function (l) { l.pick = l.pick || {}; l.pick[c] = v; });
         }, T.catName(c)) : h('span', { class: 'p-dish', lang: 'de' }, L0.picks[c] || '–');
         if (opts.length > 1) hasPick = true;
-        var kc = it ? Math.round(it.kcal * it.factor) : null;
-        return h('li', { class: 'p-dish-row' + (it && it.factor === 0 ? ' off' : '') }, T.catBadge(c), label,
-          h('span', { class: 'p-kcal' }, it ? (it.factor === 0 ? '0' : fmtInt(kc)) + ' kcal' : '–'));
+        // kcal of the dish itself; struck through once the choice is made and the dish was not eaten
+        var off = !!it && !L0.assumed && !(it.factor > 0);
+        var kc = it ? Math.round(it.kcal * (it.factor > 0 ? it.factor : 1)) : null;
+        return h('li', { class: 'p-dish-row' + (off ? ' off' : '') }, T.catBadge(c), label,
+          h('span', { class: 'p-kcal' }, it ? fmtInt(kc) + ' kcal' : '–'));
       })));
       if (hasPick) nodes.push(h('p', { class: 'muted tiny' }, t('piano.lunch.pickHint')));
     } else {
       nodes.push(h('p', { class: 'muted small' }, t('piano.lunch.noMenu.' + srcKind)));
       if (srcKind === 'unknown') nodes.push(h('a', { class: 'small', href: '#/eingabe' }, t('piano.lunch.enterMenu')));
     }
-    // "what I really had"
-    nodes.push(h('div', { class: 'p-sub' }, h('div', { class: 'p-label' }, t('piano.lunch.actual')),
-      choices(C.PORTION_IDS.map(function (v) { return { value: v, label: t('piano.portion.' + v) }; }), lu.portion || 'all', function (v) {
-        setLunch(function (l) { if (v === 'all') delete l.portion; else l.portion = v; });
-      }, t('piano.lunch.actual'))));
-    if ((lu.portion || 'all') === 'elsewhere') {
+    // what I take: the first course alone or main course + side – never all three (or elsewhere)
+    var ch = L0.choices;
+    var chosen = L0.assumed ? null : L0.portion;
+    var optBtn = function (p) {
+      var c = ch[p];
+      var on = chosen === p;
+      var names = L0.picks ? c.est.items.filter(function (it) { return it.factor > 0 && it.name; }).map(function (it) { return it.name; }).join(' + ') : '';
+      return h('button', {
+        type: 'button', class: 'p-opt' + (on ? ' on' : '') + (L0.assumed && L0.portion === p ? ' assumed' : ''),
+        'aria-pressed': String(on), disabled: c.available ? null : true,
+        onclick: function () { setLunch(function (l) { l.portion = p; }); }
+      },
+        h('span', { class: 'p-opt-title' }, t('piano.portion.' + p)),
+        names ? h('span', { class: 'p-opt-dish', lang: 'de' }, names) : null,
+        h('span', { class: 'p-opt-meta' }, fmtInt(c.est.kcal) + ' kcal · ' + fmtInt(c.est.prot) + ' g ' + t('piano.prot')),
+        h('span', { class: 'p-opt-chips' }, levelBadge(c.cls.level),
+          L0.picks && ch.suggested === p ? chip(t('piano.lunch.suggested'), 'ok') : null));
+    };
+    var elsewhereOn = chosen === 'elsewhere';
+    nodes.push(h('div', { class: 'p-sub' }, h('div', { class: 'p-label' }, t('piano.lunch.choose')),
+      h('div', { class: 'p-opts', role: 'group', 'aria-label': t('piano.lunch.choose') }, optBtn('primo'), optBtn('secondo')),
+      h('div', { class: 'p-choices' }, h('button', {
+        type: 'button', class: 'p-choice' + (elsewhereOn ? ' on' : ''), 'aria-pressed': String(elsewhereOn),
+        onclick: function () { setLunch(function (l) { if (elsewhereOn) delete l.portion; else l.portion = 'elsewhere'; }); }
+      }, t('piano.portion.elsewhere'))),
+      L0.assumed ? h('p', { class: 'muted small' }, t('piano.lunch.assumed', { what: t('piano.portion.' + L0.portion) })) : null,
+      C.isLegacyPortion(lu.portion) ? h('p', { class: 'muted small' }, t('piano.lunch.legacy', { what: t('piano.portion.' + lu.portion) })) : null));
+    if (chosen === 'elsewhere') {
       var kIn = numInput('lunch-kcal', lu.kcal, { integer: true, placeholder: 'kcal' });
       var pIn = numInput('lunch-prot', lu.prot, { integer: true, placeholder: String(C.ELSEWHERE_PROT) });
       var save = function () {
@@ -424,8 +481,9 @@
     var totals = T.isNum(est.kcal) ? t('piano.lunch.total', { kcal: fmtInt(est.kcal), prot: fmtInt(est.prot) }) : t('piano.lunch.totalUnknown');
     nodes.push(h('div', { class: 'p-total' }, h('strong', null, totals),
       est.protAssumed ? h('span', { class: 'muted small' }, ' ' + t('piano.lunch.protAssumed')) : null));
+    var lim = L0.cls.limits || C.LUNCH_PART;
     nodes.push(h('p', { class: 'small' }, levelBadge(L0.level), ' ',
-      L0.overridden ? t('piano.lunch.manualLevel') : L0.cls.reasons.map(function (r) { return t('piano.why.' + r); }).join(' · ')));
+      L0.overridden ? t('piano.lunch.manualLevel') : L0.cls.reasons.map(function (r) { return t('piano.why.' + r, { red: lim.red, green: lim.green }); }).join(' · ')));
     nodes.push(h('details', { class: 'p-more' }, h('summary', null, t('piano.lunch.changeLevel')),
       choices([{ value: '', label: t('piano.level.auto') }].concat(C.LEVELS.map(function (l) { return { value: l, label: t('piano.level.' + l) }; })),
         L0.overridden ? lu.level : '', function (v) { setLunch(function (l) { if (v) l.level = v; else delete l.level; }); }, t('piano.lunch.changeLevel')),
@@ -477,12 +535,18 @@
 
   function dinnerCard(env, iso, L0, training, tg, g, now) {
     var lunchLvl = L0.level;
-    var lvl = C.dinnerLevel(lunchLvl, training);
+    var lvl = C.dinnerLevel(lunchLvl, training, L0.carbs);
+    var capped = lvl !== C.dinnerLevel(lunchLvl, training);
     var nodes = [head('dinner', t('piano.dinner.title'), '19:15', levelBadge(lvl), now)];
     var data = env.dinners;
-    nodes.push(h('p', { class: 'small' }, t(training && lvl !== lunchLvl ? 'piano.dinner.levelUp' : 'piano.dinner.levelSame', {
-      lunch: t('piano.level.' + lunchLvl), dinner: t('piano.level.' + lvl)
-    }) + (data && data.levels && data.levels[lvl] ? ' ' + L(data.levels[lvl]) : '')));
+    // what the dinner is based on: the lunch really chosen (or the suggested one until the choice is made)
+    if (T.isNum(L0.est.kcal) && !L0.est.unknown) {
+      nodes.push(h('p', { class: 'small p-lunchline' }, t('piano.dinner.lunchLine', { what: portionText(L0), kcal: fmtInt(L0.est.kcal), prot: fmtInt(L0.est.prot) }),
+        L0.assumed ? h('span', { class: 'muted' }, ' ' + t('piano.dinner.lunchAssumed')) : null));
+    }
+    var why = capped ? t('piano.dinner.carbCap', { dinner: t('piano.level.' + lvl) })
+      : t(training && lvl !== lunchLvl ? 'piano.dinner.levelUp' : 'piano.dinner.levelSame', { lunch: t('piano.level.' + lunchLvl), dinner: t('piano.level.' + lvl) });
+    nodes.push(h('p', { class: 'small' }, why + (data && data.levels && data.levels[lvl] ? ' ' + L(data.levels[lvl]) : '')));
     var budget = null, gap = null;
     var lunchKcal = T.isNum(L0.est.kcal) ? L0.est.kcal : null;
     if (tg && lunchKcal !== null) {
