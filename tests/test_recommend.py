@@ -293,7 +293,16 @@ def test_no_now_means_no_deadline(ds):
     assert obj["date"] == "2026-10-09" and obj["is_today"] is True
 
 
+def _without_free_days_from(ds, day: dt.date) -> Dataset:
+    """Free days from ``day`` on turned back into open days: the season end is tested on a calendar
+    that does not depend on the live data (since the Excel of 24.11.2026, 21–23.12.2026 are free)."""
+    menus = [Menu(m.date, "pending", ["", "", ""], {c: [] for c in CATEGORIES}, m.source)
+             if m.date >= day and m.status == "free" else m for m in ds.menus]
+    return Dataset(menus, list(ds.tips), ds.norm, ds.config)
+
+
 def test_season_end_and_deadline(ds):
+    ds = _without_free_days_from(ds, dt.date(2026, 12, 14))
     d = dt.date(2026, 12, 22)
     assert _target_day(ds, d, _at(d, 13, 0)) == (dt.date(2026, 12, 23), False)
     last = dt.date(2026, 12, 23)
