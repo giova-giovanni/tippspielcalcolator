@@ -9,6 +9,7 @@ from . import CATEGORIES
 from .data import Dataset
 from .dates import WEEKDAYS_DE, is_lent
 from .output import write_site_json
+from .recommend import deadline_passed
 
 
 def _repo_info(cfg) -> dict:
@@ -54,9 +55,13 @@ def run(ds: Dataset, today: dt.date, now: dt.datetime | None = None) -> None:
     write_site_json("menus", {"rows": rows, "free_days_ahead": free_future})
 
     # Rule 6: other players' tips of today (or later) are never published before the deadline.
+    # After today's deadline (12:00 Rome) nobody can tip for today any more, so today's tips of the
+    # others - e.g. entered from the website after lunch - are shown right away. Without ``now``
+    # no deadline check: hidden, as before.
+    today_open = not deadline_passed(today, now, cfg)
     trows = []
     for t in ds.tips:
-        if t.date >= today and t.player != ds.me:
+        if t.player != ds.me and (t.date > today or (t.date == today and today_open)):
             continue
         trows.append({"date": t.date.isoformat(), "player": t.player,
                       "v": t.raw[0], "h": t.raw[1], "b": t.raw[2],

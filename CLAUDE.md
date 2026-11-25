@@ -11,6 +11,8 @@ dati personali restano solo nel browser.
 - `docs/` (vanilla JS, niente framework/npm/build):
   - `app.js`: Tippspiel, router (`ROUTES` per il primo segmento dell'hash, `TABS` per la barra),
     helper (`h()`, `t()`, `store`), loader `load()` con decrittazione, `window.TSP` per il Piano;
+    scheda Eingabe: `commitRows()` scrive più righe CSV con un solo commit (giocate dei colleghi,
+    solo dopo le 12:00 del giorno – regola 6); funzioni pure testate in `tests/js/eingabe.test.js`;
   - `i18n.js`: testi DE/IT; `style.css`: variabili chiaro/scuro;
   - Piano: `piano-core.js` (logica pura senza DOM: `window.PianoCore` + `module.exports`),
     `piano.js` (viste `#/piano`, `#/piano/corpo`, `#/piano/training`, `#/piano/impostazioni`,

@@ -61,7 +61,7 @@ Workflow in `.github/workflows/`:
 |---|---|---|
 | `daily.yml` | lun–ven 05:17 UTC (06:17 CET / 07:17 CEST) + run di riserva 07:47 UTC + manuale | `python -m engine.pipeline --daily` (salta il backtest se esiste già), commit + push; il run di riserva non fa niente se `today.json` è già stato aggiornato oggi |
 | `on-data.yml` | push su `main` che tocca `data/**`, `engine/**`, `requirements.txt` o il workflow stesso + manuale (opzioni *tune*, *force_ingest*) | pipeline completa, commit + push; `pytest` in un job separato, in parallelo |
-| `tests.yml` | pull request e push su branch diversi da `main` | `pytest` e, in parallelo, i test JS del Piano (`node --test`) |
+| `tests.yml` | pull request e push su branch diversi da `main` | `pytest` e, in parallelo, i test JS (Piano e scheda Eingabe, `node --test`) |
 
 I due workflow della pipeline condividono il gruppo di concorrenza `pipeline` (mai due esecuzioni
 in parallelo). In `on-data` i test girano in un job a parte: se un test fallisce il run diventa rosso
@@ -115,6 +115,19 @@ Tre modi, combinabili. Ogni push su `main` in `data/**` avvia `on-data`, che ric
 3. **Sito → scheda "Eingabe"**: inserire il menù del giorno e/o la propria giocata dal telefono. Il sito
    fa un commit su `data/menus.csv` / `data/tips.csv` tramite l'API di GitHub con un token personale;
    il push avvia `on-data` e dopo ~2 minuti il sito mostra i dati aggiornati.
+   - **Tipps der Mitspieler / Giocate dei colleghi** (stessa scheda, sotto "Mein Tipp"): per un giorno,
+     una riga per ogni altro giocatore (V / H / B + punti facoltativi) e **un solo salvataggio = un
+     commit** per tutti; la classifica si aggiorna senza aspettare l'Excel.
+     - "V / H / B" incollato nel primo campo (es. dalla chat, anche con "Nome:" davanti) viene diviso
+       nei tre campi; anteprima dei punti (≈) calcolata dal menù di quel giorno.
+     - Campo **Punkte** vuoto = punti calcolati dalla pipeline; un numero (0–3, passi di 0,5) finisce in
+       `points_sheet` e vale come punteggio ufficiale, come quello dell'Excel. Se si cambia il tipp di
+       una riga già salvata, i suoi vecchi punti ufficiali vengono tolti (tornano se si rimette il tipp).
+     - Solo punti senza piatti = riga "punti senza tipp": conta in classifica, non nelle statistiche.
+     - Regola 6: le giocate degli altri si possono salvare solo per giorni passati o per oggi dopo le
+       12:00; righe vuote o invariate non vengono scritte (niente commit se non cambia nulla).
+     - Un giocatore nuovo si inserisce una volta con "Mein Tipp" (campo *Spieler*); da lì compare tra i
+       colleghi. Il prossimo Excel caricato sovrascrive queste righe dove ha contenuto (vince l'Excel).
 
 ### Token personale (fine-grained PAT) per la scheda "Eingabe"
 
@@ -191,7 +204,7 @@ funzionano ancora.
 | R3 – giocate entro le 12:00 | countdown sul sito; dopo le 12:00 il consiglio passa al prossimo giorno lavorativo |
 | R4 – stesso piatto max 2× per settimana lavorativa, mai giorni consecutivi | `engine/rules.py::R4`, per categoria, sulle **mie** giocate; consiglio e pianificatore sono sempre conformi |
 | R5 – un solo piatto per categoria | il consiglio contiene esattamente un piatto per V, H, B |
-| R6 – niente sbirciare / copiare | le giocate degli altri **non** vengono mai usate dal modello (nemmeno come feature); quelle degli altri per oggi o date future non vengono pubblicate in `docs/data/tips.json` |
+| R6 – niente sbirciare / copiare | le giocate degli altri **non** vengono mai usate dal modello (nemmeno come feature); quelle degli altri per date future, e per oggi prima delle 12:00, non vengono pubblicate in `docs/data/tips.json` (dopo la chiusura sì: nessuno può più giocare); dal sito si possono inserire solo dopo la chiusura del giorno |
 | R9.1–9.3 – punteggio | V = 1, H = 0,5, B = 0,5, menù completo = 3 (`rules.score_tip`, identico all'Excel) |
 | R9.5 – seconde opzioni | **conta qualsiasi opzione annunciata** (così è tenuto l'Excel, es. righe `Pommes / Kartoffelsalat`); configurabile con `scoring.alt_options_count` |
 | R9.6 – "Fisch" | fuori Quaresima "Fisch" vale per ogni piatto di pesce tranne Scombri; in Quaresima nome esatto |
@@ -220,6 +233,7 @@ Scelte di interpretazione:
 - **Punti senza tipp** (blocco giocatore con punti ma V/H/B vuoti) = punti di partenza o correzione:
   es. Lorenz, entrato il 02.11.2026 con **48 punti di partenza** (scritti il 30.10). Contano nella
   classifica e nella simulazione, non come giorno giocato (né nei punti/giorno né nelle statistiche).
+  Lo stesso vale per una riga dei colleghi salvata dal sito con i soli punti.
 - **Nome del giocatore cambiato nell'Excel**: da novembre 2026 la colonna "Johannes Paul III" si chiama
   "Giovanni". `config.json → player_aliases` (`"Giovanni": "Johannes Paul III"`) li unisce; l'ingest
   confronta i nomi dopo l'alias, quindi le righe nuove sostituiscono quelle vecchie invece di duplicarle.
@@ -282,6 +296,22 @@ Dettagli, calibrazione e intervalli: [`reports/backtest.md`](reports/backtest.md
   giocando come finora ≈ 1 %**. Servirebbero ≈ 0,49 punti/giorno, il modello ne fa 0,33 nel backtest.
   `python -m engine.race` stampa la simulazione aggiornata.
 
+## Aggiornamento 24.11.2026
+
+- **Excel al 24.11**: giocate di tutti dal 17 al 24.11. Menù e giocate di Johannes Paul III di quei
+  giorni coincidono con quelli inseriti dal sito. Nell'Excel il 16.11 ha ora la Vorspeise
+  `Aglio olio / Nudel mit Ragu` (e la giocata di Johannes di quel giorno è scritta allo stesso modo):
+  nessun punto cambia. Il 21, 22 e 23.12 sono liberi → ultimo giorno di gioco il 18.12.
+  Classifica ufficiale al 24.11: Andreas 57,5, Johannes 56,5, Johannes Paul III 54,5, Lorenz 53,5,
+  Noah 51 (il ricalcolo del motore dà gli stessi totali).
+- **Rimonta al 24.11** (16 giorni rimasti, −3 da Andreas): seguendo il modello ≈ 15 % di finire primo
+  (≈ 8 % in testa fra due settimane), giocando come finora ≈ 3 %; servirebbero ≈ 0,5 punti/giorno, il
+  modello ne fa 0,35 nel backtest.
+- **Giocate dei colleghi dal sito** (scheda Eingabe, vedi [Come aggiornare i dati](#come-aggiornare-i-dati)):
+  tutte le giocate di un giorno con un solo commit, così la classifica non aspetta il prossimo Excel.
+- **Regola 6 nel sito**: le giocate degli altri di oggi compaiono in `tips.json` (Datenbank) dopo le
+  12:00, non più solo dal giorno dopo; prima delle 12:00 restano nascoste come prima.
+
 ## Privacy e limiti di GitHub Free
 
 - **GitHub Pages con un account Free funziona solo con repository pubblici.** Un repository privato con
@@ -318,7 +348,7 @@ python -m engine.analyze                         # solo statistiche (reports/ana
 python -m engine.race                            # simulazione della corsa al titolo (fine stagione)
 python -m engine.ingest --xlsx percorso.xlsx     # solo import Excel → CSV
 python -m pytest -q                              # test (nessuna rete, non modificano data/)
-node --test "tests/js/*.test.js"                 # test JS del Piano (Node >= 22, nessuna dipendenza)
+node --test "tests/js/*.test.js"                 # test JS di Piano ed Eingabe (Node >= 22, nessuna dipendenza)
 python -m http.server -d docs 8000               # anteprima del sito su http://localhost:8000
 ```
 
@@ -372,7 +402,7 @@ docs/                        sito GitHub Pages (index.html, app.js, i18n.js, sty
 engine/                      motore Python: ingest, normalize, rules, dates, data, analyze,
                              model, backtest, race, recommend, site, output, pipeline
 reports/                     report Markdown generati (ingest, analisi, alias, backtest)
-tests/                       pytest; tests/js/ = test node del Piano
+tests/                       pytest; tests/js/ = test node (Piano, testi, scheda Eingabe)
 CLAUDE.md                    note per Claude Code (architettura, comandi, regole)
 requirements.txt, pytest.ini
 index.html                   vecchio blog, non usato (si può cancellare)
