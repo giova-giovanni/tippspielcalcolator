@@ -7,18 +7,26 @@ dati personali restano solo nel browser.
 ## Architettura
 
 - `engine/` (Python 3.11): `python -m engine.pipeline` = ingest → analyze → backtest → recommend →
-  site; scrive `docs/data/*.json` (cifrati AES-GCM se c'è `SITE_PASSPHRASE`).
+  site; scrive `docs/data/*.json` (cifrati AES-GCM se c'è `SITE_PASSPHRASE`). `today.json` = giorno
+  scelto dal motore; `today_alt.json` (`site.alt_tip`) = secondo tipp: prima delle 12:00 il prossimo
+  giorno (provvisorio), dopo il tipp di oggi come il sito l'ha mostrato (dal `today.json` precedente).
 - `docs/` (vanilla JS, niente framework/npm/build):
   - `app.js`: Tippspiel, router (`ROUTES` per il primo segmento dell'hash, `TABS` per la barra),
     helper (`h()`, `t()`, `store`), loader `load()` con decrittazione, `window.TSP` per il Piano;
     scheda Eingabe: `commitRows()` scrive più righe CSV con un solo commit (giocate dei colleghi,
     solo dopo le 12:00 del giorno – regola 6); funzioni pure testate in `tests/js/eingabe.test.js`;
+    tipp del giorno: `pickTipDay()` sceglie per data tra `today.json` e `today_alt.json` (tipp di oggi
+    fino alle 17:00, poi il prossimo; switch manuale), testato in `tests/js/tipp.test.js`; inserimenti
+    non elaborati dopo 15 min → avviso + `ghDispatch()` (riavvia `on-data`);
   - `i18n.js`: testi DE/IT; `style.css`: variabili chiaro/scuro;
   - Piano: `piano-core.js` (logica pura senza DOM: `window.PianoCore` + `module.exports`),
     `piano.js` (viste `#/piano`, `#/piano/corpo`, `#/piano/training`, `#/piano/impostazioni`,
-    registrate con `TSP.addRoute`), `piano.css`, contenuti statici `piano/*.json`.
-- `.github/workflows/`: `daily.yml` e `on-data.yml` (pipeline + commit del bot su `main`),
-  `tests.yml` (pytest + node per PR e branch).
+    registrate con `TSP.addRoute`), `piano.css`, contenuti statici `piano/*.json`. Pranzo = `primo`
+    (solo primo) o `secondo` (secondo + contorno), mai tutti e tre; `all`/`noPrimo`/`halfPrimo`/`bis`
+    sono vecchi valori ancora letti.
+- `.github/workflows/`: `daily.yml` e `on-data.yml` (pipeline + commit del bot su `main`; checkout
+  dello stato attuale del branch, non del commit che ha avviato il run), `tests.yml` (pytest + node per
+  PR e branch).
 
 ## Comandi
 
