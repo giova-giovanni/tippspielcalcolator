@@ -1517,13 +1517,37 @@ date,player,vorspeise,hauptspeise,beilage,points,points_sheet,source
 2026-11-13,Lorenz,Nudel mit Thunfischsoße,Wienerschnitzel,Reis,0.5,0.5,xlsx
 2026-11-13,Noah,Nudel mit Thunfischsoße,Wienerschnitzel,Kartoffelsalat,0,0,xlsx
 2026-11-16,Andreas,Nudel Mammarosa,Champignonschnitzel,Reis,0,0,xlsx
-2026-11-16,Johannes,Aglio olio,Champignonschnitzel,Reis,1,1,xlsx
+2026-11-16,Johannes,Aglio olio / Nudel mit Ragu,Champignonschnitzel,Reis,1,1,xlsx
 2026-11-16,Johannes Paul III,Amatriciana,Champignonschnitzel,Reis,0,0,xlsx
 2026-11-16,Lorenz,Amatriciana,Truthahngeschnetzeltes,Pommes,0.5,0.5,xlsx
 2026-11-16,Noah,Nudel Mammarosa,Champignonschnitzel,Reis,0,0,xlsx
-2026-11-17,Johannes Paul III,Schlutzer,Hühnerbrust,Pommes,0,,form
-2026-11-18,Johannes Paul III,Hirten,Schweinsschopf,Reis,0.5,,form
-2026-11-19,Johannes Paul III,Lasagne,Hühnerbrust,Spatzlen,1,,form
-2026-11-20,Johannes Paul III,Nudel mit Thunfischsoße,Hauswurst,Pommes,0,,form
-2026-11-23,Johannes Paul III,Arrabbiata,Champignonschnitzel,Reis,3,,form
-2026-11-24,Johannes Paul III,Lasagne,Leberkas,Pommes,1,,form
+2026-11-17,Andreas,Gnocchi mit Tomatensoße,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2026-11-17,Johannes,Gnocchi mit Tomatensoße,Wienerschnitzel,Pommes,0.5,0.5,xlsx
+2026-11-17,Johannes Paul III,Schlutzer,Hühnerbrust,Pommes,0,0,xlsx
+2026-11-17,Lorenz,Schlutzer,Cordon Bleu,Kartoffelsalat,0.5,0.5,xlsx
+2026-11-17,Noah,Hirten,Chilli con carne,Kartoffelsalat,0.5,0.5,xlsx
+2026-11-18,Andreas,Spinatspatzlen,Gulasch,Reis,0,0,xlsx
+2026-11-18,Johannes,Lasagne,Schweinsfilet,Spatzlen,0,0,xlsx
+2026-11-18,Johannes Paul III,Hirten,Schweinsschopf,Reis,0.5,0.5,xlsx
+2026-11-18,Lorenz,Gnocchi mit Tomatensoße,Hackbraten,Reis,0,0,xlsx
+2026-11-18,Noah,Carbonara,Champignonschnitzel,Reis,0,0,xlsx
+2026-11-19,Andreas,Hirten,Hühnerbrust,Röstkartoffeln,1.5,1.5,xlsx
+2026-11-19,Johannes,Hirten,Chilli con carne,Reis,1,1,xlsx
+2026-11-19,Johannes Paul III,Lasagne,Hühnerbrust,Spatzlen,1,1,xlsx
+2026-11-19,Lorenz,Hirten,Gulasch,Spatzlen,1.5,1.5,xlsx
+2026-11-19,Noah,Lasagne,Chilli con carne,Kartoffelgratin,0,0,xlsx
+2026-11-20,Andreas,Pizzastrudel,Leberkas,Pommes,0,0,xlsx
+2026-11-20,Johannes,Carbonara,Hauswurst,Kraut,0,0,xlsx
+2026-11-20,Johannes Paul III,Nudel mit Thunfischsoße,Hauswurst,Pommes,0,0,xlsx
+2026-11-20,Lorenz,Nudel mit Thunfischsoße,Chilli con carne,Reis,0,0,xlsx
+2026-11-20,Noah,Spinatspatzlen,Hauswurst,Plent,0,0,xlsx
+2026-11-23,Andreas,Nudel mit Thunfischsoße,Champignonschnitzel,Reis,1,1,xlsx
+2026-11-23,Johannes,Lasagne,Champignonschnitzel,Reis,1,1,xlsx
+2026-11-23,Johannes Paul III,Arrabbiata,Champignonschnitzel,Reis,3,3,xlsx
+2026-11-23,Lorenz,Nudel mit Thunfischsoße,Champignonschnitzel,Reis,1,1,xlsx
+2026-11-23,Noah,Amatriciana,Champignonschnitzel,Reis,1,1,xlsx
+2026-11-24,Andreas,Tortellini mit Schinken-Rahm,Currywurst,Pommes,0.5,0.5,xlsx
+2026-11-24,Johannes,Carbonara,Leberkas,Pommes,1,1,xlsx
+2026-11-24,Johannes Paul III,Lasagne,Leberkas,Pommes,1,1,xlsx
+2026-11-24,Lorenz,Tortellini mit Schinken-Rahm,Currywurst,Pommes,0.5,0.5,xlsx
+2026-11-24,Noah,Carbonara,Truthahngeschnetzeltes,Püree,0,0,xlsx

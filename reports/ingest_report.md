@@ -14,19 +14,19 @@ Quelle: `Tippspiel Essen.xlsx`
 |---|---|---|---|---|
 | 2024 | 34 | 0 | 0 | 1 |
 | 2025 | 221 | 0 | 0 | 0 |
-| 2026 | 204 | 15 | 3 | 26 |
+| 2026 | 210 | 19 | 3 | 16 |
 
 ## Spieler
 
-- Andreas: 448 Tipps
-- Johannes: 429 Tipps
-- Noah: 445 Tipps
-- Johannes Paul III: 189 Tipps
-- Lorenz: 11 Tipps
+- Andreas: 454 Tipps
+- Johannes: 435 Tipps
+- Noah: 451 Tipps
+- Johannes Paul III: 195 Tipps
+- Lorenz: 17 Tipps
 
 ## Einzigartige Gerichte (kanonisch, nur servierte)
 
-- vorspeise: 63
+- vorspeise: 65
 - hauptspeise: 50
 - beilage: 22
 

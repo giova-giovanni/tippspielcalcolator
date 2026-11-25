@@ -475,13 +475,13 @@ date,year,weekday,status,vorspeise,hauptspeise,beilage,vorspeise_norm,hauptspeis
 2026-11-11,2026,Mi,served,Gerstsuppe / Nudel mit Käsesoße,Truthahnbraten,Kroketten,Gerstsuppe / Nudel mit Käsesoße,Truthahnbraten,Kroketten,xlsx
 2026-11-12,2026,Do,served,Nudel mit Ragu,Schweinshax,Plent,Nudel mit Ragu,Schweinshaxe,Plent,xlsx
 2026-11-13,2026,Fr,served,Nudel mit Grillgemüseragu,Zwiebelrostbraten,Reis,Nudel mit Grillgemüseragu,Zwiebelrostbraten,Reis,xlsx
-2026-11-16,2026,Mo,served,Aglio olio,Truthahngeschnetzeltes,Püree,Aglio olio,Truthahngeschnetzeltes,Püree,xlsx
-2026-11-17,2026,Di,served,Nudel Mammarosa,Wienerschnitzel,Kartoffelsalat,Nudel Mammarosa,Wienerschnitzel,Kartoffelsalat,form
-2026-11-18,2026,Mi,served,Truthahn-Gemüse-Risotto,Schweinsschopf,Wedges,Truthahn-Gemüse-Risotto,Schweinsschopf,Wedges,form
-2026-11-19,2026,Do,served,Hirten,Hühnerbrust,Spatzlen,Hirten,Hühnerbrust,Spatzlen,form
-2026-11-20,2026,Fr,served,Gnocchi mit Käsesoße,Sparerips,Röstinchen,Gnocchi mit Käsesoße,Sparerips,Röstinchen,form
-2026-11-23,2026,Mo,served,Arrabbiata,Champignonschnitzel,Reis,Arrabbiata,Champignonschnitzel,Reis,form
-2026-11-24,2026,Di,served,Spinatravioli mit Schinken-Rahm,Leberkas,Pommes,Spinatravioli mit Schinken-Rahm,Leberkas,Pommes,form
+2026-11-16,2026,Mo,served,Aglio olio / Nudel mit Ragu,Truthahngeschnetzeltes,Püree,Aglio olio / Nudel mit Ragu,Truthahngeschnetzeltes,Püree,xlsx
+2026-11-17,2026,Di,served,Nudel Mammarosa,Wienerschnitzel,Kartoffelsalat,Nudel Mammarosa,Wienerschnitzel,Kartoffelsalat,xlsx
+2026-11-18,2026,Mi,served,Truthahn-Gemüse-Risotto,Schweinsschopf,Wedges,Truthahn-Gemüse-Risotto,Schweinsschopf,Wedges,xlsx
+2026-11-19,2026,Do,served,Hirten,Hühnerbrust,Spatzlen,Hirten,Hühnerbrust,Spatzlen,xlsx
+2026-11-20,2026,Fr,served,Gnocchi mit Käsesoße,Sparerips,Röstinchen,Gnocchi mit Käsesoße,Sparerips,Röstinchen,xlsx
+2026-11-23,2026,Mo,served,Arrabbiata,Champignonschnitzel,Reis,Arrabbiata,Champignonschnitzel,Reis,xlsx
+2026-11-24,2026,Di,served,Spinatravioli mit Schinken-Rahm,Leberkas,Pommes,Spinatravioli mit Schinken-Rahm,Leberkas,Pommes,xlsx
 2026-11-25,2026,Mi,pending,,,,,,,xlsx
 2026-11-26,2026,Do,pending,,,,,,,xlsx
 2026-11-27,2026,Fr,pending,,,,,,,xlsx
@@ -490,7 +490,7 @@ date,year,weekday,status,vorspeise,hauptspeise,beilage,vorspeise_norm,hauptspeis
 2026-12-02,2026,Mi,pending,,,,,,,xlsx
 2026-12-03,2026,Do,pending,,,,,,,xlsx
 2026-12-04,2026,Fr,pending,,,,,,,xlsx
-2026-12-07,2026,Mo,free,Frei,Frei,Frei,,,,form
+2026-12-07,2026,Mo,free,Frei,Frei,Frei,,,,xlsx
 2026-12-08,2026,Di,free,Frei,Frei,Frei,,,,xlsx
 2026-12-09,2026,Mi,pending,,,,,,,xlsx
 2026-12-10,2026,Do,pending,,,,,,,xlsx
@@ -500,6 +500,6 @@ date,year,weekday,status,vorspeise,hauptspeise,beilage,vorspeise_norm,hauptspeis
 2026-12-16,2026,Mi,pending,,,,,,,xlsx
 2026-12-17,2026,Do,pending,,,,,,,xlsx
 2026-12-18,2026,Fr,pending,,,,,,,xlsx
-2026-12-21,2026,Mo,pending,,,,,,,xlsx
-2026-12-22,2026,Di,pending,,,,,,,xlsx
-2026-12-23,2026,Mi,pending,,,,,,,xlsx
+2026-12-21,2026,Mo,free,Frei,Frei,Frei,,,,xlsx
+2026-12-22,2026,Di,free,Frei,Frei,Frei,,,,xlsx
+2026-12-23,2026,Mi,free,Frei,Frei,Frei,,,,xlsx
