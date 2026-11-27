@@ -25,7 +25,7 @@ Diese Paare erscheinen nicht unter den Fuzzy-Vorschlägen. „unklar“ = Entsch
 | Tomatenrisotto | Tomatenrisotto mit Mozzarella | 4 | 3 | unklar, bleibt getrennt. |
 | Röstinchen | Röstkartoffeln | 5 | 128 | unklar, bleibt getrennt. |
 | Paprika-Schweinegulasch | Schweinsgulasch | 1 | 15 | unklar, bleibt getrennt. |
-| Schweinsfilet mit Pfeffersoße | Schweinsfilet | 2 | 108 | eigene Variante. |
+| Schweinsfilet mit Pfeffersoße | Schweinsfilet | 2 | 109 | eigene Variante. |
 | Spinatknödel mit Käsesoße | Spinatknödel | 5 | 18 | eigene Variante. |
 | Schlutzer Schinken-Rahm | Schlutzer | 1 | 84 | eigene Variante. |
 
