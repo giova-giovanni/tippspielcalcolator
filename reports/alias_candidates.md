@@ -25,7 +25,7 @@ Diese Paare erscheinen nicht unter den Fuzzy-Vorschlägen. „unklar“ = Entsch
 | Tomatenrisotto | Tomatenrisotto mit Mozzarella | 4 | 3 | unklar, bleibt getrennt. |
 | Röstinchen | Röstkartoffeln | 5 | 128 | unklar, bleibt getrennt. |
 | Paprika-Schweinegulasch | Schweinsgulasch | 1 | 15 | unklar, bleibt getrennt. |
-| Schweinsfilet mit Pfeffersoße | Schweinsfilet | 2 | 109 | eigene Variante. |
+| Schweinsfilet mit Pfeffersoße | Schweinsfilet | 2 | 110 | eigene Variante. |
 | Spinatknödel mit Käsesoße | Spinatknödel | 5 | 18 | eigene Variante. |
 | Schlutzer Schinken-Rahm | Schlutzer | 1 | 84 | eigene Variante. |
 
@@ -135,11 +135,11 @@ Kandidaten: max(rapidfuzz `ratio`, `token_sort_ratio`) ≥ 88 auf kleingeschrieb
 
 | A | B | Score | Lev. | Hinweis | n(A) | n(B) |
 |---|---|---|---|---|---|---|
-| Nudel mit Lachs | Nudel mit Lachssoße | 88.2 | 4 | Variante? | 14 | 2 |
+| Nudel mit Lachs | Nudel mit Lachssoße | 88.2 | 4 | Variante? | 15 | 2 |
 | Nudel mit Tomatensoße | Nudel mit Tomatensoße und Schinken | 76.4 | 13 | Variante? | 2 | 1 |
 | Nudel mit Tomatensoße | Nudel mit Tomatensoße und Mozzarella | 73.7 | 15 | Variante? | 2 | 5 |
-| Nudel mit Lachs | Nudel mit Lachs und Rahmsoße | 69.8 | 13 | Variante? | 14 | 1 |
-| Nudel mit Lachs | Nudel mit Lachs und Tomantensoße | 63.8 | 17 | Variante? | 14 | 1 |
+| Nudel mit Lachs | Nudel mit Lachs und Rahmsoße | 69.8 | 13 | Variante? | 15 | 1 |
+| Nudel mit Lachs | Nudel mit Lachs und Tomantensoße | 63.8 | 17 | Variante? | 15 | 1 |
 | Gnocchi | Gnocchi mit Ragu | 60.9 | 9 | Variante? | 6 | 1 |
 | Spinatravioli | Spinatravioli mit Schinken-Rahm | 59.1 | 18 | Variante? | 3 | 1 |
 | Gnocchi | Gnocchi mit Lachs | 58.3 | 10 | Variante? | 6 | 1 |

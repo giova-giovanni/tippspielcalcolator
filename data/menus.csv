@@ -484,7 +484,7 @@ date,year,weekday,status,vorspeise,hauptspeise,beilage,vorspeise_norm,hauptspeis
 2026-11-24,2026,Di,served,Spinatravioli mit Schinken-Rahm,Leberkas,Pommes,Spinatravioli mit Schinken-Rahm,Leberkas,Pommes,xlsx
 2026-11-25,2026,Mi,served,Lasagne,Truthahnbraten,Püree,Lasagne,Truthahnbraten,Püree,form
 2026-11-26,2026,Do,served,Nudel Mammarosa,Hühnerhaxlen,Ofenkartoffeln,Nudel Mammarosa,Hühnerhaxlen,Ofenkartoffeln,form
-2026-11-27,2026,Fr,served,Nudel mit Lachs,Schweinsfilet,Kroketten,,,,form
+2026-11-27,2026,Fr,served,Nudel mit Lachs,Schweinsfilet,Kroketten,Nudel mit Lachs,Schweinsfilet,Kroketten,form
 2026-11-30,2026,Mo,pending,,,,,,,xlsx
 2026-12-01,2026,Di,pending,,,,,,,xlsx
 2026-12-02,2026,Mi,pending,,,,,,,xlsx
